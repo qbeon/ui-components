@@ -1,19 +1,23 @@
 <template>
 <div class="root">
-	<div class="body" @click="openContextMenu">
+	<div
+	class="body"
+	@click="openContextMenu">
 		<div class="when-selected">
 			<transition name="selection-title">
 				<div
-					class="selection-title"
-					v-if="currentSelection">
+				class="selection-title"
+				v-if="currentSelection">
 					{{title ? title : 'Untitled'}}
 				</div>
 			</transition>
 			<transition name="selection-value">
 				<div
-					class="selection-text"
-					v-if="currentSelection">
-					<transition name="selection-text" mode="out-in">
+				class="selection-text"
+				v-if="currentSelection">
+					<transition
+					name="selection-text"
+					mode="out-in">
 						<div :key="currentSelection">
 							{{options[currentSelection]}}
 						</div>
@@ -25,8 +29,8 @@
 		<div class="when-empty">
 			<transition name="field-title">
 				<div
-					class="title"
-					v-if="!currentSelection">
+				class="title"
+				v-if="!currentSelection">
 					<transition name="slide-fade">
 						<div :key="title">
 							{{title ? title : 'Untitled'}}
@@ -37,20 +41,19 @@
 		</div>
 	</div>
 	<div class="ctx-menu">
-		<transition name="context-menu">
-			<context-menu
-				v-if="showMenu"
-				@lostFocus="onMenuLostFocus">
-				<ul class="options-list">
-					<li
-						class="option"
-						@click="select(value)"
-						v-for="(name, value) in options"
-						:key="value">
-						{{name}}</li>
-				</ul>
-			</context-menu>
-		</transition>
+		<context-menu
+		:show="showMenu"
+		@lostFocus="onMenuLostFocus">
+			<ul class="options-list">
+				<li
+				class="option"
+				@click="select(value)"
+				v-for="(name, value) in options"
+				:key="value">
+					{{name}}
+				</li>
+			</ul>
+		</context-menu>
 	</div>
 </div>
 </template>
@@ -135,13 +138,16 @@ export default {
 
 .ctx-menu
 	position: absolute
-	width: 100%
+	min-width: 100%
+	max-height: 0px
 	top: 0px
 	left: 0px
 	z-index: 99999999
 
 .options-list
 	list-style-type: none
+	padding-top: .5rem
+	padding-bottom: .5rem
 	.option
 		padding: .5rem
 		padding-left: 1rem
