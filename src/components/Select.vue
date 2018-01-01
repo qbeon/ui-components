@@ -8,7 +8,7 @@
 				<div
 				class="selection-title"
 				v-if="currentSelection">
-					{{title ? title : 'Untitled'}}
+					<span>{{title ? title : 'Untitled'}}</span>
 				</div>
 			</transition>
 			<transition name="selection-value">
@@ -19,7 +19,7 @@
 					name="selection-text"
 					mode="out-in">
 						<div :key="currentSelection">
-							{{options[currentSelection]}}
+							<span>{{options[currentSelection]}}</span>
 						</div>
 					</transition>
 				</div>
@@ -33,7 +33,7 @@
 				v-if="!currentSelection">
 					<transition name="slide-fade">
 						<div :key="title">
-							{{title ? title : 'Untitled'}}
+							<span>{{title ? title : 'Untitled'}}</span>
 						</div>
 					</transition>
 				</div>
@@ -50,7 +50,7 @@
 				@click="select(value)"
 				v-for="(name, value) in options"
 				:key="value">
-					{{name}}
+					<span>{{name}}</span>
 				</li>
 			</ul>
 		</context-menu>
@@ -186,19 +186,20 @@ export default {
 	max-width: 100%
 	display: block
 	.title
-		display: block
-		max-width: 100%
-		white-space: nowrap
-		text-overflow: ellipsis
-		color: black
-		overflow: hidden
+		span
+			display: block
+			width: 100%
+			text-overflow: ellipsis
+			overflow: hidden
+			white-space: nowrap
 
 .selection-text
-	display: block
-	width: 100%
-	text-overflow: ellipsis
-	white-space: nowrap
-	overflow: hidden
+	span
+		display: block
+		width: 100%
+		text-overflow: ellipsis
+		overflow: hidden
+		white-space: nowrap
 
 .selection-title-enter-active
 	transition: all .3s
