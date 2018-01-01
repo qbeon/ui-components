@@ -1,7 +1,7 @@
 <template>
 	<r-select
 		class="field"
-		title="Automarke"
+		:title="title"
 		:options="options"
 		:selected="selected"
 		@selectionChanged="onSelectionChanged"

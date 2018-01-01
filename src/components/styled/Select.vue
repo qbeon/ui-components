@@ -1,8 +1,8 @@
 <template>
 	<r-select
 		class="field"
-		v-bind:class="{opened: opened}"
-		title="Automarke"
+		:class="{opened: opened}"
+		:title="title"
 		:options="options"
 		:selected="selected"
 		@selectionChanged="onSelectionChanged"
