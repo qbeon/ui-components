@@ -63,10 +63,10 @@ export default {
 <style lang="stylus" scoped>
 .field
 	cursor: pointer
-	width: 7.5rem
 	padding-bottom: .25rem
 	border: 1px solid #DDD
 	border-radius: .2rem
+	padding: .5rem
 	&.opened
 		border: 1px solid #FFF
 </style>
