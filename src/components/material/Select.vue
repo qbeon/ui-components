@@ -4,6 +4,7 @@
 		:title="title"
 		:options="options"
 		:selected="selected"
+		:appearance="appearance"
 		@selectionChanged="onSelectionChanged"
 		@opened="onOpened"
 		@closed="onClosed"
@@ -36,6 +37,12 @@ export default {
 		'selected': {
 			type: String,
 			required: false
+		},
+		'appearance': {
+			type: Object,
+			required: false,
+			default: () => Select.appearance.default,
+			validator: Select.appearance.validator
 		}
 	},
 	methods: {

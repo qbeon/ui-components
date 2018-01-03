@@ -131,7 +131,8 @@
 			title="Scrolled Select Field"
 			:options="options.actors"
 			:selected="selected.scrolled"
-			@selectionChanged="onSelectionChangedScrolled">
+			@selectionChanged="onSelectionChangedScrolled"
+			:appearance="{contextMenu: {screenSpaceMargin: 24}}">
 			</styled-select>
 
 			<div class="controls">

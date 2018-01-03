@@ -33,7 +33,18 @@ function defaultScrollTopGetter() {
 	).scrollTop
 }
 
+const appearance = {
+	default: {
+		screenSpaceMargin: 8
+	},
+	validator(val) {
+		if(typeof val.screenSpaceMargin !== 'number') return false
+		return true
+	}
+}
+
 export default {
+	appearance,
 	directives: {
 		onClickaway: clickaway
 	},
@@ -45,10 +56,16 @@ export default {
 		}
 	},
 	props: {
-		show: {
+		'show': {
 			type: Boolean,
 			required: true,
 			default: false
+		},
+		'appearance': {
+			type: [Object],
+			required: false,
+			default: () => appearance.default,
+			validator: appearance.validator
 		}
 	},
 	watch: {
@@ -56,7 +73,6 @@ export default {
 			if (!val) return
 			this.$nextTick(() => {
 				// ssm stands for screen space margin
-				const ssm = 8
 				let containerEl = this.$refs.container
 				let contentEl = this.$refs.content
 				let viewport = document.documentElement.getBoundingClientRect()
@@ -64,6 +80,8 @@ export default {
 				let content = contentEl.getBoundingClientRect()
 				let containerStyle = containerEl.style
 				let vpHeight = viewport.height
+
+				const ssm = this.appearance.screenSpaceMargin
 
 				// Get the current screen scroll position
 				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter

@@ -43,6 +43,7 @@
 	<div class="ctx-menu">
 		<context-menu
 		:show="showMenu"
+		:appearance="appearance.contextMenu"
 		@lostFocus="onMenuLostFocus">
 			<ul class="options-list">
 				<li
@@ -61,7 +62,19 @@
 <script>
 import ContextMenu from '../components/ContextMenu.vue'
 
+const appearance = {
+	default: {
+		contextMenu: ContextMenu.appearance.default
+	},
+	validator(val) {
+		// Validate context menu appearance
+		if (val.contextMenu && !ContextMenu.appearance.validator(val.contextMenu)) return false
+		return true
+	}
+}
+
 export default {
+	appearance,
 	components: {
 		'context-menu': ContextMenu
 	},
@@ -83,6 +96,12 @@ export default {
 		'selected': {
 			type: String,
 			required: false
+		},
+		'appearance': {
+			type: Object,
+			required: false,
+			default: () => appearance.default,
+			validator: appearance.validator
 		}
 	},
 	data() {
