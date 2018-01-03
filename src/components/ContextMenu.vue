@@ -5,17 +5,17 @@
 			ref="container"
 			class="container"
 			v-on-clickaway="loseFocus"
-			v-if="show"
-			v-bar="{
-				preventParentScroll: true,
-				scrollThrottle: 30,
-			}">
+			v-if="show">
 				<div
 				ref="content"
 				class="content"
 				tabindex="-1"
-				@contextmenu.capture.prevent>
-					<slot>Empty Slot</slot>
+				@contextmenu.capture.prevent
+				v-bar="{
+					preventParentScroll: true,
+					scrollThrottle: 30,
+				}">
+					<slot></slot>
 				</div>
 			</div>
 		</transition>
@@ -24,6 +24,14 @@
 
 <script>
 import { directive as clickaway } from 'vue-clickaway'
+
+function defaultScrollTopGetter() {
+	if (window.pageYOffset !== undefined) return window.pageYOffset
+	return (document.documentElement ||
+		document.body.parentNode ||
+		document.body
+	).scrollTop
+}
 
 export default {
 	directives: {
@@ -48,23 +56,41 @@ export default {
 			if (!val) return
 			this.$nextTick(() => {
 				// ssm stands for screen space margin
-				const ssm = 24
+				const ssm = 8
 				let containerEl = this.$refs.container
+				let contentEl = this.$refs.content
 				let viewport = document.documentElement.getBoundingClientRect()
 				let container = containerEl.getBoundingClientRect()
-				let content = this.$refs.content.getBoundingClientRect()
+				let content = contentEl.getBoundingClientRect()
+				let containerStyle = containerEl.style
+				let vpHeight = viewport.height
 
-				// If the context menu won't fit on the screen at all
-				if (viewport.height < content.height + ssm * 2) {
-					containerEl.style.height = (viewport.height - ssm * 2) + 'px'
-					containerEl.style.top = '-' + (container.top) + 'px'
+				// Get the current screen scroll position
+				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter
+				let scrollTop = this.$root.uic_scrollTop()
+
+				// If the context menu won't vertically fit on the screen at all
+				// then strech it over the entire screen height as much as possible
+				if (vpHeight < content.height + ssm * 2) {
+					containerStyle.height = (vpHeight - ssm * 2) + 'px'
+					containerStyle.top = ssm + 'px'
 					return
 				}
 
-				// If the context menu will fit but leave the screen
-				if (viewport.height < container.top + content.height + ssm) {
-					containerEl.style.top = '-' + (container.top + content.height + ssm - viewport.height) + 'px'
-				}
+				let contentBottomOnScreen = (content.top - scrollTop) + content.height
+
+				// Displace the context menu to prevent it from going off screen.
+
+				// In case the context menu goes over the bottom screen border
+				if (contentBottomOnScreen > vpHeight) containerStyle.top = (
+					(container.top - scrollTop) -
+					(contentBottomOnScreen - vpHeight) -
+					ssm
+				) + 'px'
+				// In case the context menu goes over the top screen border
+				else if (content.top - scrollTop - ssm < 0) containerStyle.top = ssm + 'px'
+				// In case the context menu doesn't leave the screen vertically
+				else containerStyle.top = (container.top - scrollTop) + 'px'
 			})
 		}
 	},
@@ -86,9 +112,7 @@ export default {
 
 <style lang="stylus" scoped>
 .container
-	//max-height: 160px
-	overflow-y: scroll
-	position: absolute
+	position: fixed
 	z-index: 99999999
 	margin: 0
 	padding: 0
@@ -96,8 +120,12 @@ export default {
 	border-radius: .1rem
 	box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12)
 	cursor: default
+	overflow: hidden
 	&:focus
 		outline: none
+
+.content
+	height: 100%
 
 .anim-enter-active
 	transition: all .3s

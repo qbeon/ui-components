@@ -27,7 +27,14 @@ export function createApp (ssrContext) {
 		router,
 		store,
 		ssrContext,
-		render: h => h(App)
+		data: {
+			// UI Controls configuration
+			// Scroll position retrieval method for vuebar support
+			uic_scrollTop() {
+				return this.$vuebar.getState(document.querySelector('#app')).el2.scrollTop
+			}
+		},
+		render: h => h(App),
 	})
 
 	// expose the app, the router and the store.
