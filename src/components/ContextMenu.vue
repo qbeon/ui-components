@@ -73,19 +73,19 @@ export default {
 			if (!val) return
 			this.$nextTick(() => {
 				// ssm stands for screen space margin
-				let containerEl = this.$refs.container
-				let contentEl = this.$refs.content
-				let viewport = document.documentElement.getBoundingClientRect()
-				let container = containerEl.getBoundingClientRect()
-				let content = contentEl.getBoundingClientRect()
-				let containerStyle = containerEl.style
-				let vpHeight = viewport.height
+				const containerEl = this.$refs.container
+				const contentEl = this.$refs.content
+				const viewport = document.documentElement.getBoundingClientRect()
+				const container = containerEl.getBoundingClientRect()
+				const content = contentEl.getBoundingClientRect()
+				const containerStyle = containerEl.style
+				const vpHeight = viewport.height
 
 				const ssm = this.appearance.screenSpaceMargin
 
 				// Get the current screen scroll position
 				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter
-				let scrollTop = this.$root.uic_scrollTop()
+				const scrollTop = this.$root.uic_scrollTop()
 
 				// If the context menu won't vertically fit on the screen at all
 				// then strech it over the entire screen height as much as possible
@@ -95,7 +95,7 @@ export default {
 					return
 				}
 
-				let contentBottomOnScreen = (content.top - scrollTop) + content.height
+				const contentBottomOnScreen = (content.top - scrollTop) + content.height
 
 				// Displace the context menu to prevent it from going off screen.
 
