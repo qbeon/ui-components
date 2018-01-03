@@ -130,10 +130,8 @@ export default {
 
 .body
 	position: relative
-	display: flex
 	font-size: 1rem
 	height: 2.5rem
-	align-items: center
 	cursor: pointer
 
 .ctx-menu
@@ -184,9 +182,8 @@ export default {
 	position: absolute
 
 .when-empty
-	max-width: 100%
-	display: block
 	.title
+		line-height: 2.5rem
 		span
 			display: block
 			width: 100%
