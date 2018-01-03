@@ -72,7 +72,6 @@ export default {
 		show(val) {
 			if (!val) return
 			this.$nextTick(() => {
-				// ssm stands for screen space margin
 				const containerEl = this.$refs.container
 				const contentEl = this.$refs.content
 				const viewport = document.documentElement.getBoundingClientRect()
