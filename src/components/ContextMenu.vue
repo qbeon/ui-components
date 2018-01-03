@@ -95,7 +95,7 @@ export default {
 					return
 				}
 
-				const contentBottomOnScreen = (content.top - scrollTop) + content.height
+				const contentBottomOnScreen = (content.top - scrollTop) + content.height + ssm
 
 				// Displace the context menu to prevent it from going off screen.
 
