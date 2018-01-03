@@ -160,6 +160,7 @@ export default {
 		-moz-user-select: none
 		-ms-user-select: none
 		user-select: none
+		transition: all .3s
 		&:hover
 			background-color: #EEE
 
