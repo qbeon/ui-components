@@ -2,6 +2,14 @@
 	<div>
 		<transition name="anim">
 			<div
+			ref="background"
+			class="background"
+			v-if="show">
+			</div>
+		</transition>
+
+		<transition name="anim">
+			<div
 			ref="container"
 			class="container"
 			v-on-clickaway="loseFocus"
@@ -72,6 +80,7 @@ export default {
 		show(val) {
 			if (!val) return
 			this.$nextTick(() => {
+				const backgroundEl = this.$refs.background
 				const containerEl = this.$refs.container
 				const contentEl = this.$refs.content
 				const viewport = document.documentElement.getBoundingClientRect()
@@ -81,6 +90,9 @@ export default {
 				const vpHeight = viewport.height
 
 				const ssm = this.appearance.screenSpaceMargin
+
+				// Close context menu on background touches
+				backgroundEl.addEventListener("touchstart", this.onInteract)
 
 				// Get the current screen scroll position
 				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter
@@ -152,6 +164,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.background
+	position: fixed
+	top: 0px
+	left: 0px
+	width: 100%
+	height: 100%
+	z-index: 99999998
+
 .container
 	position: fixed
 	z-index: 99999999
