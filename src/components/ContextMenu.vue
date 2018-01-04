@@ -4,7 +4,9 @@
 			<div
 			ref="background"
 			class="background"
-			v-if="show">
+			@wheel="onFocusLost"
+			v-if="show"
+			@click="onFocusLost">
 			</div>
 		</transition>
 
@@ -12,7 +14,6 @@
 			<div
 			ref="container"
 			class="container"
-			v-on-clickaway="loseFocus"
 			v-if="show">
 				<div
 				ref="content"
@@ -92,7 +93,7 @@ export default {
 				const ssm = this.appearance.screenSpaceMargin
 
 				// Close context menu on background touches
-				backgroundEl.addEventListener("touchstart", this.onInteract)
+				backgroundEl.addEventListener("touchstart", this.onFocusLost)
 
 				// Get the current screen scroll position
 				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter
@@ -125,14 +126,11 @@ export default {
 			// Close context menu when the 'Escape' key has been klicked,
 			// or the windows was resized
 			window.addEventListener('keydown', this.onKeydown)
-			window.addEventListener('resize', this.onInteract)
+			window.addEventListener('resize', this.onFocusLost)
 		}
 	},
 	methods: {
-		loseFocus() {
-			this.$emit("lostFocus")
-		},
-		onInteract() {
+		onFocusLost() {
 			this.$emit("lostFocus")
 			this.removeInteractionListeners()
 		},
@@ -149,7 +147,7 @@ export default {
 		removeInteractionListeners() {
 			// Remove aborting interaction event listeners
 			window.removeEventListener('keydown', this.onKeydown)
-			window.removeEventListener('resize', this.onInteract)
+			window.removeEventListener('resize', this.onFocusLost)
 		}
 	}
 }
