@@ -129,14 +129,6 @@ export default {
 		}
 	},
 	methods: {
-		setPosition(top, left) {
-			const largestHeight = window.innerHeight - this.$el.offsetHeight - 25
-			const largestWidth = window.innerWidth - this.$el.offsetWidth - 25
-			if (top > largestHeight) top = largestHeight
-			if (left > largestWidth) left = largestWidth
-			this.top = top
-			this.left = left
-		},
 		loseFocus() {
 			this.$emit("lostFocus")
 		},
