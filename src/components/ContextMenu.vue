@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import { directive as clickaway } from 'vue-clickaway'
-
 function defaultScrollTopGetter() {
 	if (window.pageYOffset !== undefined) return window.pageYOffset
 	return (document.documentElement ||
@@ -54,9 +52,6 @@ const appearance = {
 
 export default {
 	appearance,
-	directives: {
-		onClickaway: clickaway
-	},
 	name: 'context-menu',
 	data() {
 		return {
