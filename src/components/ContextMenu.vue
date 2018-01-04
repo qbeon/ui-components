@@ -109,6 +109,11 @@ export default {
 				// In case the context menu doesn't leave the screen vertically
 				else containerStyle.top = (container.top - scrollTop) + 'px'
 			})
+
+			// Close context menu when the 'Escape' key has been klicked,
+			// or the windows was resized
+			window.addEventListener('keydown', this.onKeydown)
+			window.addEventListener('resize', this.onInteract)
 		}
 	},
 	methods: {
@@ -122,6 +127,25 @@ export default {
 		},
 		loseFocus() {
 			this.$emit("lostFocus")
+		},
+		onInteract() {
+			this.$emit("lostFocus")
+			this.removeInteractionListeners()
+		},
+		onKeydown(event) {
+			if (
+				(event.key == 'Escape' || event.key == 'Esc' || event.keyCode == 27) &&
+				(event.target.nodeName == 'BODY')
+			) {
+				event.preventDefault()
+				this.$emit("lostFocus")
+				this.removeInteractionListeners()
+			}
+		},
+		removeInteractionListeners() {
+			// Remove aborting interaction event listeners
+			window.removeEventListener('keydown', this.onKeydown)
+			window.removeEventListener('resize', this.onInteract)
 		}
 	}
 }
