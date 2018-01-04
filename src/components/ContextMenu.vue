@@ -24,7 +24,9 @@
 					preventParentScroll: true,
 					scrollThrottle: 30,
 				}">
-					<slot></slot>
+					<div>
+						<slot></slot>
+					</div>
 				</div>
 			</div>
 		</transition>
