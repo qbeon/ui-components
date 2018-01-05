@@ -1,8 +1,18 @@
 <template>
-	<div>
+	<div class="__uic_scrollable_root">
 		<div
 		ref="container"
 		class="__uic_scrollable_container">
+			<transition name="__uic_scrollable_upperIndicator">
+				<div
+				v-show="showUpperIndicator"
+				class="__uic_scrollable_upperIndicator"></div>
+			</transition>
+			<transition name="__uic_scrollable_lowerIndicator">
+				<div
+				v-show="showLowerIndicator"
+				class="__uic_scrollable_lowerIndicator"></div>
+			</transition>
 			<div
 			ref="content"
 			class="__uic_scrollable_content">
@@ -96,6 +106,8 @@ export default {
 
 			// show dragger
 			draggerEnabled: null,
+			showUpperIndicator: false,
+			showLowerIndicator: false,
 
 			// properties computed for internal directive logic & DOM manipulations
 			visibleArea: 0, // ratio between container height and scrollable content height
@@ -257,6 +269,21 @@ export default {
 					removeClass(containerEl, conf.containerScrollingPhantomClass)
 				}, conf.scrollThrottle + conf.scrollingPhantomDelay)
 			}
+
+			this.updateIndicators()
+		},
+
+		updateIndicators() {
+			// Show the upper indicator only when there's an invisible
+			// area available at the top of the scroll container
+			const scrollTop = this.$refs.content.scrollTop
+			this.showUpperIndicator = scrollTop > 0 ? true : false
+
+			// Show the lower indicator only when there's an invisible
+			// area available at the bottom of the scroll container
+			const contentEl = this.$refs.content
+			const scrollDist = contentEl.scrollHeight - contentEl.clientHeight
+			this.showLowerIndicator = scrollTop >= scrollDist ? false : true
 		},
 
 		// this is an experimental feature
@@ -479,6 +506,9 @@ export default {
 
 <style lang="stylus" scoped>
 .__uic_scrollable
+	&_root
+		height: 100%
+		width: 100%
 	&_container
 		position: relative
 		height: 100%
@@ -490,12 +520,42 @@ export default {
 		overflow-y: scroll
 		height: 100%
 		width: 100%
+	&_upperIndicator, &_lowerIndicator
+		height: 1.5rem
+		width: 100%
+		position: absolute
+		z-index: 999998
+		left: 0px
+		pointer-events: none;
+	&_upperIndicator
+		top: 0px
+		background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)
+		background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
+		background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
+	&_lowerIndicator
+		bottom: 0px
+		background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
+		background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
+		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
+
+	&_upperIndicator-enter-active, &_lowerIndicator-enter-active
+		transition: all .3s
+	&_upperIndicator-leave-active, &_lowerIndicator-leave-active
+		transition: all .3s
+	&_upperIndicator-enter, &_lowerIndicator-enter
+		opacity: 0
+		transform: translateX(6px)
+	&_upperIndicator-leave-to, &_lowerIndicator-leave-to
+		opacity: 0
+		transform: translateX(6px)
+
+
 	&_dragger
 		display: block
 		position: absolute
 		right: 0px
 		width: 16px
-		z-index: 5
+		z-index: 999999
 		-webkit-backface-visibility: hidden
 		backface-visibility: hidden
 		&_wake
