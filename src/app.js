@@ -6,9 +6,7 @@ import { sync } from 'vuex-router-sync'
 import checkbox from '../node_modules/vue-material-checkbox/src/main'
 
 import './styles/vb.css'
-import vuebar from 'vuebar'
 
-Vue.use(vuebar)
 Vue.use(checkbox)
 
 export function createApp (ssrContext) {
@@ -31,7 +29,8 @@ export function createApp (ssrContext) {
 			// UI Controls configuration
 			// Scroll position retrieval method for vuebar support
 			uic_scrollTop() {
-				return this.$vuebar.getState(document.querySelector('#app')).el2.scrollTop
+				//return this.$vuebar.getState(document.querySelector('#app')).el2.scrollTop
+				return 0
 			}
 		},
 		render: h => h(App),

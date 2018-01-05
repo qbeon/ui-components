@@ -89,6 +89,9 @@ export default {
 
 				const ssm = this.appearance.screenSpaceMargin
 
+				containerEl.addEventListener('touchmove', this.containerTouchMove)
+				contentEl.addEventListener('touchmove', this.contentTouchMove)
+
 				// Close context menu on background touches
 				backgroundEl.addEventListener("touchstart", this.onFocusLost)
 
