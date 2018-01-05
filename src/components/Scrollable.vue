@@ -489,6 +489,7 @@ export default {
 		overflow-x: hidden
 		overflow-y: scroll
 		height: 100%
+		width: 100%
 	&_dragger
 		display: block
 		position: absolute
