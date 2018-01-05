@@ -35,8 +35,13 @@
 
 <script>
 const appearance = {
-	default: {},
+	default: {
+		scrollIndicators: true
+	},
 	validator(val) {
+		if (val.scrollIndicators &&
+			typeof val.scrollIndicators !== typeof(true)
+		) return false
 		return true
 	}
 }
@@ -77,6 +82,9 @@ export default {
 			}
 			this.draggerEnabled = false
 			styles['overflow-y'] = 'hidden'
+		},
+		appearance() {
+			this.refreshScrollbar()
 		}
 	},
 	data() {
@@ -281,6 +289,9 @@ export default {
 		},
 
 		updateIndicators() {
+			// Skip when the indicators are disabled by the appearance options
+			if (this.appearance.scrollIndicators === false) return
+
 			// Show the upper indicator only when there's an invisible
 			// area available at the top of the scroll container
 			const scrollTop = Math.ceil(this.$refs.content.scrollTop)
