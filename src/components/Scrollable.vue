@@ -240,6 +240,13 @@ export default {
 		updateDragger(options) {
 			options = options ? options : {}
 
+			// Hide dragger if there's no overflowing contents
+			if (this.visibleArea >= 1) {
+				this.draggerEnabled = false
+				return
+			}
+			else this.draggerEnabled = true
+
 			// setting dragger styles
 			const draggerStyles = this.$refs.dragger.style
 			draggerStyles.height = parseInt(Math.round(this.barHeight)) + 'px'
@@ -276,7 +283,7 @@ export default {
 		updateIndicators() {
 			// Show the upper indicator only when there's an invisible
 			// area available at the top of the scroll container
-			const scrollTop = this.$refs.content.scrollTop
+			const scrollTop = Math.ceil(this.$refs.content.scrollTop)
 			this.showUpperIndicator = scrollTop > 0 ? true : false
 
 			// Show the lower indicator only when there's an invisible
