@@ -1,32 +1,26 @@
 <template>
-	<div>
+	<div ref="root">
 		<transition name="anim">
 			<div
 			ref="background"
 			class="background"
 			@wheel="onFocusLost"
-			v-if="show"
+			v-show="show"
 			@click="onFocusLost">
 			</div>
 		</transition>
 
-		<transition name="anim">
+		<transition name="container">
 			<div
 			ref="container"
 			class="container"
-			v-if="show">
+			v-show="show">
 				<div
 				ref="content"
 				class="content"
 				tabindex="-1"
-				@contextmenu.capture.prevent
-				v-bar="{
-					preventParentScroll: true,
-					scrollThrottle: 30,
-				}">
-					<div>
-						<slot></slot>
-					</div>
+				@contextmenu.capture.prevent>
+					<slot></slot>
 				</div>
 			</div>
 		</transition>
@@ -44,7 +38,7 @@ function defaultScrollTopGetter() {
 
 const appearance = {
 	default: {
-		screenSpaceMargin: 8
+		screenSpaceMargin: 16
 	},
 	validator(val) {
 		if(typeof val.screenSpaceMargin !== 'number') return false
@@ -76,51 +70,22 @@ export default {
 	},
 	watch: {
 		show(val) {
-			if (!val) return
+			if (!val) {
+				this.onFocusLost()
+				return
+			}
+
 			this.$nextTick(() => {
-				const backgroundEl = this.$refs.background
-				const containerEl = this.$refs.container
-				const contentEl = this.$refs.content
-				const viewport = document.documentElement.getBoundingClientRect()
-				const container = containerEl.getBoundingClientRect()
-				const content = contentEl.getBoundingClientRect()
-				const containerStyle = containerEl.style
-				const vpHeight = viewport.height
-
-				const ssm = this.appearance.screenSpaceMargin
-
-				containerEl.addEventListener('touchmove', this.containerTouchMove)
-				contentEl.addEventListener('touchmove', this.contentTouchMove)
+				// Move the component elements to the document scope
+				// to prevent any backround interactions
+				document.body.prepend(this.$refs.background)
+				document.body.prepend(this.$refs.container)
 
 				// Close context menu on background touches
-				backgroundEl.addEventListener("touchstart", this.onFocusLost)
+				this.$refs.background.addEventListener("touchstart", this.onFocusLost)
 
-				// Get the current screen scroll position
-				if (!this.$root.uic_scrollTop) this.$root.uic_scrollTop = defaultScrollTopGetter
-				const scrollTop = this.$root.uic_scrollTop()
-
-				// If the context menu won't vertically fit on the screen at all
-				// then strech it over the entire screen height as much as possible
-				if (vpHeight < content.height + ssm * 2) {
-					containerStyle.height = (vpHeight - ssm * 2) + 'px'
-					containerStyle.top = ssm + 'px'
-					return
-				}
-
-				const contentBottomOnScreen = (content.top - scrollTop) + content.height + ssm
-
-				// Displace the context menu to prevent it from going off screen.
-
-				// In case the context menu goes over the bottom screen border
-				if (contentBottomOnScreen > vpHeight) containerStyle.top = (
-					(container.top - scrollTop) -
-					(contentBottomOnScreen - vpHeight) -
-					ssm
-				) + 'px'
-				// In case the context menu goes over the top screen border
-				else if (content.top - scrollTop - ssm < 0) containerStyle.top = ssm + 'px'
-				// In case the context menu doesn't leave the screen vertically
-				else containerStyle.top = (container.top - scrollTop) + 'px'
+				// Calculate and set on screen position
+				this.calculatePosition()
 			})
 
 			// Close context menu when the 'Escape' key has been klicked,
@@ -130,7 +95,47 @@ export default {
 		}
 	},
 	methods: {
+		// Calculates and directly sets the position of the context menu on screen
+		calculatePosition() {
+			const rootEl = this.$refs.root
+			const viewportDimensions = document.documentElement.getBoundingClientRect()
+			const contentDimensions = this.$refs.content.getBoundingClientRect()
+			const containerStyle = this.$refs.container.style
+			const ssm = this.appearance.screenSpaceMargin
+
+			// Get root screen coordinates and content dimensions
+			let posLeft = rootEl.getBoundingClientRect().x
+			let posTop = rootEl.getBoundingClientRect().y
+			let szHeight = contentDimensions.height
+			let szWidth = contentDimensions.width
+
+			// Determine actual screen space boundaries taking ssm into account
+			const maxWidth = viewportDimensions.width - ssm * 2
+			const maxHeight = viewportDimensions.height - ssm * 2
+
+			// Correct positioning to not cross the screen margin boundaries negatively
+			if (posLeft < ssm) posLeft = ssm
+			if (posTop < ssm) posTop = ssm
+
+			// Compute the final container container size to fit the screen space boundaries
+			if (szWidth > maxWidth) szWidth = maxWidth
+			if (szHeight > maxHeight) szHeight = maxHeight
+
+			// Compute the final context menu position so it doesn't cross the screen boundaries
+			if (szWidth + posLeft > maxWidth) posLeft = maxWidth - szWidth + ssm
+			if (szHeight + posTop > maxHeight) posTop = maxHeight - szHeight + ssm
+
+			// Finally set the container styles
+			containerStyle.left = posLeft + 'px'
+			containerStyle.top = posTop + 'px'
+			containerStyle.width = szWidth + 'px'
+			containerStyle.height = szHeight + 'px'
+		},
 		onFocusLost() {
+			// Move the elements back to the root scope
+			this.$refs.root.append(this.$refs.background)
+			this.$refs.root.append(this.$refs.container)
+
 			this.$emit("lostFocus")
 			this.removeInteractionListeners()
 		},
@@ -178,14 +183,14 @@ export default {
 .content
 	height: 100%
 
-.anim-enter-active
-	transition: all .3s
-.anim-leave-active
-	transition: all .3s
-.anim-enter
+.container-enter-active
+	transition: transform .3s, opacity .3s
+.container-leave-active
+	transition: transform .3s, opacity .3s
+.container-enter
 	opacity: 0
 	transform: translateY(-6px)
-.anim-leave-to
+.container-leave-to
 	opacity: 0
 	transform: translateX(-6px)
 </style>
