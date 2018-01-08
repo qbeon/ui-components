@@ -18,11 +18,11 @@
 			class="__uic_scrollable_content">
 				<slot></slot>
 			</div>
-			<transition name="dragger">
+			<transition name="__uic_scrollable_dragger">
 				<div
 				ref="dragger"
 				class="__uic_scrollable_dragger"
-				:class="{__uic_scrollable_dragger_active: barDragging}"
+				:class="{__uic_scrollable_dragger_dragging: barDragging}"
 				v-show="draggerEnabled">
 					<div class="__uic_scrollable_dragger_body"></div>
 				</div>
@@ -85,6 +85,9 @@ export default {
 		},
 		appearance() {
 			this.refreshScrollbar()
+		},
+		barDragging() {
+			this.setActivate()
 		}
 	},
 	data() {
@@ -98,18 +101,15 @@ export default {
 				resizeDebounce: 100,
 				unselectableBody: true,
 				overrideFloatingScrollbar: true,
-				scrollingPhantomDelay: 1000,
-				draggingPhantomDelay: 1000,
+				scrollingActiveDelay: 1000,
+				draggingActiveDelay: 1000,
 				preventParentScroll: false,
 				useScrollbarPseudo: false, // experimental
 
-				containerScrollVisibleClass: 'vb-visible',
-				containerScrollInvisibleClass: 'vb-invisible',
-				containerScrollingClass: 'vb-scrolling',
-				containerScrollingPhantomClass: 'vb-scrolling-phantom',
-				containerDraggingClass: 'vb-dragging',
-				containerDraggingPhantomClass: 'vb-dragging-phantom',
-				draggerClass: 'vb-dragger',
+				containerScrollingClass: '__uic_scrollable_scrolling',
+				containerScrollingActiveClass: '__uic_scrollable_active',
+				containerDraggingClass: '__uic_scrollable_dragging',
+				//containerDraggingActiveClass: '__uic_scrollable_dragging-active',
 			},
 
 			// show dragger
@@ -130,9 +130,8 @@ export default {
 
 			// references to timeouts for DOM class manipulation
 			scrollingClassTimeout: null,
-			draggingClassTimeout: null,
-			scrollingPhantomClassTimeout: null,
-			draggingPhantomClassTimeout: null,
+			scrollingActiveClassTimeout: null,
+			draggingActiveClassTimeout: null,
 
 			// references to a functions we'll need when removing events
 			barMousedownFn: null,
@@ -269,29 +268,9 @@ export default {
 			draggerStyles.height = parseInt(Math.round(this.barHeight)) + 'px'
 			draggerStyles.top = parseInt(Math.round(this.barTop)) + 'px'
 
-			const containerEl = this.$refs.container
-			const conf = this.config
-
 			if (options.withScrollingClasses) {
-				// add scrolling class
-				addClass(containerEl, conf.containerScrollingClass)
-
-				// remove scrolling class
-				this.scrollingClassTimeout ?
-					clearTimeout(this.scrollingClassTimeout) : null
-				this.scrollingClassTimeout = setTimeout(function() {
-					removeClass(containerEl, conf.containerScrollingClass)
-				}, conf.scrollThrottle + 5)
-
-				// add phantom scrolling class
-				addClass(containerEl, conf.containerScrollingPhantomClass)
-
-				// remove phantom scrolling class
-				this.scrollingPhantomClassTimeout ?
-					clearTimeout(this.scrollingPhantomClassTimeout) : null
-				this.scrollingPhantomClassTimeout = setTimeout(function() {
-					removeClass(containerEl, conf.containerScrollingPhantomClass)
-				}, conf.scrollThrottle + conf.scrollingPhantomDelay)
+				this.setActivate()
+				this.setScrolling()
 			}
 
 			this.updateIndicators()
@@ -434,10 +413,12 @@ export default {
 				this.config.unselectableBody ? compatStyle(document.body, 'UserSelect', '') : null
 
 				// remove dragging class
+				/*
 				removeClass(containerEl, this.config.containerDraggingClass)
-				this.draggingPhantomClassTimeout = setTimeout(() => {
-					removeClass(containerEl, this.config.containerDraggingPhantomClass)
-				}, this.config.draggingPhantomDelay)
+				this.draggingActiveClassTimeout = setTimeout(() => {
+					removeClass(containerEl, this.config.containerDraggingActiveClass)
+				}, this.config.draggingActiveDelay)
+				*/
 
 				// remove events
 				document.removeEventListener('mousemove', this.documentMousemoveFn, 0)
@@ -461,10 +442,12 @@ export default {
 				conf.unselectableBody ? compatStyle(document.body, 'UserSelect', 'none') : null
 
 				// add dragging class
+				/*
 				addClass(containerEl, conf.containerDraggingClass)
-				this.draggingPhantomClassTimeout ?
-					clearTimeout(this.draggingPhantomClassTimeout) : null
-				addClass(containerEl, conf.containerDraggingPhantomClass)
+				this.draggingActiveClassTimeout ?
+					clearTimeout(this.draggingActiveClassTimeout) : null
+				addClass(containerEl, conf.containerDraggingActiveClass)
+				*/
 
 				// add events
 				document.addEventListener('mousemove', this.documentMousemoveFn, 0)
@@ -492,6 +475,34 @@ export default {
 			})
 
 			return observer
+		},
+
+		setActivate() {
+			const conf = this.config
+			const containerEl = this.$refs.container
+
+			// Add active scrolling class
+			addClass(containerEl, conf.containerScrollingActiveClass)
+
+			// Set timeout for active scrolling class removal
+			if (this.scrollingActiveClassTimeout) clearTimeout(this.scrollingActiveClassTimeout)
+			this.scrollingActiveClassTimeout = setTimeout(function() {
+				removeClass(containerEl, conf.containerScrollingActiveClass)
+			}, conf.scrollThrottle + conf.scrollingActiveDelay)
+		},
+
+		setScrolling() {
+			const conf = this.config
+			const containerEl = this.$refs.container
+
+			// Add scrolling class
+			addClass(containerEl, conf.containerScrollingClass)
+
+			// Set timeout for scrolling class removal
+			if (this.scrollingClassTimeout) clearTimeout(this.scrollingClassTimeout)
+			this.scrollingClassTimeout = setTimeout(function() {
+				removeClass(containerEl, conf.containerScrollingClass)
+			}, conf.scrollThrottle + 5)
 		},
 
 		// Calculate the native scrollbar width using a temporal sample element
@@ -533,20 +544,27 @@ export default {
 
 <style lang="stylus" scoped>
 .__uic_scrollable
+	// Component root
 	&_root
 		height: 100%
 		width: 100%
+
+	// Main container
 	&_container
 		position: relative
 		height: 100%
 		width: 100%
 		overflow: hidden
+
+	// Content container
 	&_content
 		display: block
 		overflow-x: hidden
 		overflow-y: scroll
 		height: 100%
 		width: 100%
+
+	// Basic scroll indicator styles
 	&_upperIndicator, &_lowerIndicator
 		height: 1.5rem
 		width: 100%
@@ -554,29 +572,32 @@ export default {
 		z-index: 999998
 		left: 0px
 		pointer-events: none;
+		&-enter-active
+			transition: all .3s
+		&-leave-active
+			transition: all .3s
+		&-enter
+			opacity: 0
+			transform: translateX(6px)
+		&-leave-to
+			opacity: 0
+			transform: translateX(6px)
+
+	// Upper scroll indicator
 	&_upperIndicator
 		top: 0px
 		background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)
 		background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
 		background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
+
+	// Lower scroll indicator
 	&_lowerIndicator
 		bottom: 0px
 		background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
 		background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
 		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
 
-	&_upperIndicator-enter-active, &_lowerIndicator-enter-active
-		transition: all .3s
-	&_upperIndicator-leave-active, &_lowerIndicator-leave-active
-		transition: all .3s
-	&_upperIndicator-enter, &_lowerIndicator-enter
-		opacity: 0
-		transform: translateX(6px)
-	&_upperIndicator-leave-to, &_lowerIndicator-leave-to
-		opacity: 0
-		transform: translateX(6px)
-
-
+	// Dragger root
 	&_dragger
 		display: block
 		position: absolute
@@ -585,8 +606,18 @@ export default {
 		z-index: 999999
 		-webkit-backface-visibility: hidden
 		backface-visibility: hidden
-		&_wake
-			background-color: rgba(0, 0, 0, .3)
+		&-enter-active
+			transition: all .3s
+		&-leave-active
+			transition: all .3s
+		&-enter
+			opacity: 0
+			transform: translateX(6px)
+		&-leave-to
+			opacity: 0
+			transform: translateX(6px)
+
+		// Dragger body
 		&_body
 			-webkit-transition: all .3s cubic-bezier(0.19, 1, 0.22, 1)
 			transition: all .3s cubic-bezier(0.19, 1, 0.22, 1)
@@ -595,23 +626,20 @@ export default {
 			margin-top: 4px
 			height: calc(100% - 8px)
 			min-height: 4px
-			background-color: rgba(0, 0, 0, .15)
+			background-color: rgba(0, 0, 0, 0)
 			border-radius: 8px
-		&_active &_body, &:hover &_body
+
+		// Dragger body when the dragger is either hovered or being dragged
+		&_dragging &_body, &:hover &_body
 			width: 100%
 			margin-top: 0px
 			height: 100%
 			background-color: rgba(0, 0, 0, .5)
 			border-radius: 0px
 
-.dragger-enter-active
-	transition: all .3s
-.dragger-leave-active
-	transition: all .3s
-.dragger-enter
-	opacity: 0
-	transform: translateX(6px)
-.dragger-leave-to
-	opacity: 0
-	transform: translateX(6px)
+	&_active &_dragger
+		// Dragger body when the dragger is active
+		&_body
+			background-color: rgba(0, 0, 0, .2)
+
 </style>
