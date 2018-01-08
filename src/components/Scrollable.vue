@@ -54,6 +54,8 @@ import {
 	removeClass,
 } from './util.js'
 
+import registry from './registry.js'
+
 export default {
 	appearance,
 	name: 'scrollable',
@@ -148,8 +150,8 @@ export default {
 		const browser = detectBrowser()
 
 		// dragger enabled?
-		const elNativeScrollbarWidth = this.getNativeScrollbarWidth()
-		const overlayScrollbar = elNativeScrollbarWidth == 0
+		const nativeScrollbarWidth = this.getNativeScrollbarWidth()
+		const overlayScrollbar = nativeScrollbarWidth == 0
 		this.draggerEnabled = ((!overlayScrollbar) || conf.overrideFloatingScrollbar) ? 1 : 0
 
 		// create and reference event listeners
@@ -180,7 +182,7 @@ export default {
 
 			// hide original browser scrollbar behind element edges and hidden overflow
 			else {
-				contentEl.style.width = 'calc(100% + ' + elNativeScrollbarWidth + 'px)'
+				contentEl.style.width = 'calc(100% + ' + nativeScrollbarWidth + 'px)'
 			}
 		}
 
@@ -486,7 +488,7 @@ export default {
 		// Calculate the native scrollbar width using a temporal sample element
 		getNativeScrollbarWidth() {
 			// Check for existing results to prevent redundant computations
-			let computed = this.$root.__uic_scrollable_nativeScrollbarWidth
+			let computed = registry.nativeScrollbarWidth
 			if(computed) return computed
 
 			// Perform computation
@@ -512,7 +514,7 @@ export default {
 			container.removeChild(wrapper)
 
 			// Remember computation result
-			this.$root.__uic_scrollable_nativeScrollbarWidth = computed
+			registry.nativeScrollbarWidth = computed
 
 			return computed
 		}
