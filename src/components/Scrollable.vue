@@ -54,7 +54,7 @@ import {
 	removeClass,
 } from './util.js'
 
-import registry from './registry.js'
+import Registry from './registry.js'
 
 export default {
 	appearance,
@@ -147,7 +147,8 @@ export default {
 		const conf = this.config
 
 		// detect browser
-		const browser = detectBrowser()
+		if (!Registry.browserId) Registry.browserId = detectBrowser()
+		const browserId = Registry.browserId
 
 		// dragger enabled?
 		const nativeScrollbarWidth = this.getNativeScrollbarWidth()
@@ -170,7 +171,7 @@ export default {
 			const contentEl = this.$refs.content
 
 			// hide original browser scrollbar using pseudo css selectors (only chrome & safari)
-			if (conf.useScrollbarPseudo && (browser.chrome || browser.safari)) {
+			if (conf.useScrollbarPseudo && (browserId.chrome || browserId.safari)) {
 				this.hideScrollbarUsingPseudoElement()
 			}
 
@@ -488,7 +489,7 @@ export default {
 		// Calculate the native scrollbar width using a temporal sample element
 		getNativeScrollbarWidth() {
 			// Check for existing results to prevent redundant computations
-			let computed = registry.nativeScrollbarWidth
+			let computed = Registry.nativeScrollbarWidth
 			if(computed) return computed
 
 			// Perform computation
@@ -514,7 +515,7 @@ export default {
 			container.removeChild(wrapper)
 
 			// Remember computation result
-			registry.nativeScrollbarWidth = computed
+			Registry.nativeScrollbarWidth = computed
 
 			return computed
 		}
