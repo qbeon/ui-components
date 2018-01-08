@@ -45,21 +45,24 @@
 		:show="showMenu"
 		:appearance="appearance.contextMenu"
 		@lostFocus="onMenuLostFocus">
-			<ul class="options-list">
-				<li
-				class="option"
-				@click="select(value)"
-				v-for="(name, value) in options"
-				:key="value">
-					<span>{{name}}</span>
-				</li>
-			</ul>
+			<scrollable>
+				<ul class="options-list">
+					<li
+					class="option"
+					@click="select(value)"
+					v-for="(name, value) in options"
+					:key="value">
+						<span>{{name}}</span>
+					</li>
+				</ul>
+			</scrollable>
 		</context-menu>
 	</div>
 </div>
 </template>
 
 <script>
+import Scrollable from '../components/Scrollable.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
 const appearance = {
@@ -76,6 +79,7 @@ const appearance = {
 export default {
 	appearance,
 	components: {
+		'scrollable': Scrollable,
 		'context-menu': ContextMenu
 	},
 	props: {
