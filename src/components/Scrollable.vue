@@ -16,9 +16,7 @@
 			<div
 			ref="content"
 			class="__uic_scrollable_content">
-				<div>
-					<slot></slot>
-				</div>
+				<slot></slot>
 			</div>
 			<transition name="dragger">
 				<div
@@ -150,7 +148,7 @@ export default {
 		const browser = detectBrowser()
 
 		// dragger enabled?
-		const elNativeScrollbarWidth = this.getNativeScrollbarWidth(this.$el.firstElementChild)
+		const elNativeScrollbarWidth = this.getNativeScrollbarWidth()
 		const overlayScrollbar = elNativeScrollbarWidth == 0
 		this.draggerEnabled = ((!overlayScrollbar) || conf.overrideFloatingScrollbar) ? 1 : 0
 
@@ -171,7 +169,7 @@ export default {
 
 			// hide original browser scrollbar using pseudo css selectors (only chrome & safari)
 			if (conf.useScrollbarPseudo && (browser.chrome || browser.safari)) {
-				hideScrollbarUsingPseudoElement()
+				this.hideScrollbarUsingPseudoElement()
 			}
 
 			// hide original browser overlay scrollbar and add padding to compensate for that
@@ -485,14 +483,9 @@ export default {
 			return observer
 		},
 
-		/*------------------------------------*\
-			Calculate scrollbar width in element
-			- if the width is 0 it means the scrollbar is floated/overlayed
-			- accepts "container" paremeter because ie & edge can have different
-				scrollbar behaviors for different elements using '-ms-overflow-style'
-		\*------------------------------------*/
-		getNativeScrollbarWidth(container) {
-			container = container ? container : document.body
+		// Calculate the native scrollbar width using a temporal sample element
+		getNativeScrollbarWidth() {
+			const container = document.body
 
 			let fullWidth = 0
 			let barWidth = 0
@@ -510,7 +503,9 @@ export default {
 			wrapper.appendChild(child)
 			container.appendChild(wrapper)
 
+
 			fullWidth = child.offsetWidth
+
 			wrapper.style.overflowY = 'scroll'
 			barWidth = fullWidth - child.offsetWidth
 
