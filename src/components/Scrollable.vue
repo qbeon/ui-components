@@ -485,11 +485,12 @@ export default {
 
 		// Calculate the native scrollbar width using a temporal sample element
 		getNativeScrollbarWidth() {
+			// Check for existing results to prevent redundant computations
+			let computed = this.$root.__uic_scrollable_nativeScrollbarWidth
+			if(computed) return computed
+
+			// Perform computation
 			const container = document.body
-
-			let fullWidth = 0
-			let barWidth = 0
-
 			const wrapper = document.createElement('div')
 			const child = document.createElement('div')
 
@@ -503,15 +504,17 @@ export default {
 			wrapper.appendChild(child)
 			container.appendChild(wrapper)
 
-
-			fullWidth = child.offsetWidth
+			const fullWidth = child.offsetWidth
 
 			wrapper.style.overflowY = 'scroll'
-			barWidth = fullWidth - child.offsetWidth
+			computed = fullWidth - child.offsetWidth
 
 			container.removeChild(wrapper)
 
-			return barWidth
+			// Remember computation result
+			this.$root.__uic_scrollable_nativeScrollbarWidth = computed
+
+			return computed
 		}
 	}
 }
