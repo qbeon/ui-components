@@ -143,6 +143,14 @@ export default {
 			wheelHandlerFn: null,
 		}
 	},
+	beforeUpdate() {
+		// Verify the scrollbar position corresponds to the actual content scroll position
+		const contentEl = this.$refs.content
+		if (
+			Math.ceil(this.barTop * (contentEl.scrollHeight / contentEl.clientHeight)) !=
+			Math.ceil(contentEl.scrollTop)
+		) this.refreshScrollbar()
+	},
 	mounted() {
 		const conf = this.config
 
