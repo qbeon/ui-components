@@ -1,0 +1,9 @@
+stages:
+  - mirror
+
+mirror:github:
+  stage: mirror
+  script:
+    - git push --mirror https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/FromZeus/ui-controls.git &> /dev/null
+  tags:
+    - shell-runner-01
