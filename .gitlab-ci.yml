@@ -1,6 +1,9 @@
 stages:
   - mirror
 
+variables:
+  GIT_STRATEGY: clone
+
 mirror:github:
   stage: mirror
   script:
