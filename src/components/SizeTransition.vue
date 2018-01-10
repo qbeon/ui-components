@@ -20,31 +20,69 @@ export default {
 			type: Boolean,
 			required: false,
 			default: true
+		},
+		mode: {
+			type: String,
+			required: false,
+			default: 'both',
+			validator(val) {
+				switch(val) {
+				case 'width':
+				case 'height':
+				case 'both':
+					return true
+				default:
+					return false
+				}
+			}
 		}
 	},
 	mounted() {
 		const contentEl = this.$refs.content
 		const containerEl = this.$refs.container
+		this.setMode()
 		this.enableTransition()
 		new ResizeSensor(contentEl, () => {
-			console.log('Changed to ' + contentEl.offsetWidth + " x " + contentEl.offsetHeight)
 			this.updateContainer()
 		})
 	},
 	watch: {
 		enabled(enabled) {
-			console.log('ENABLED CHANGED:', enabled)
 			if (enabled) this.enableTransition()
 			else this.disableTransition()
+		},
+		mode() {
+			this.setMode()
 		}
 	},
 	methods: {
+		setMode() {
+			const contentEl = this.$refs.content
+			switch (this.mode) {
+			case 'width':
+				contentEl.style.height = '100%'
+				return
+			case 'height':
+				contentEl.style.width = '100%'
+				return
+			}
+		},
 		updateContainer() {
 			const contentEl = this.$refs.content
 			const containerEl = this.$refs.container
-			
-			containerEl.style.width = contentEl.offsetWidth + 'px'
-			containerEl.style.height = contentEl.offsetHeight + 'px'
+
+			switch (this.mode) {
+			case 'width':
+				containerEl.style.width = contentEl.offsetWidth + 'px'
+				return
+			case 'height':
+				containerEl.style.height = contentEl.offsetHeight + 'px'
+				return
+			default:
+				containerEl.style.width = contentEl.offsetWidth + 'px'
+				containerEl.style.height = contentEl.offsetHeight + 'px'
+				return
+			}
 		},
 		enableTransition() {
 			addClass(this.$refs.container, '__uic_size-transition_container_animated')
