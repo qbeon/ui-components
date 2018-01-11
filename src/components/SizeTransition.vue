@@ -42,6 +42,7 @@ export default {
 		const containerEl = this.$refs.container
 		this.setMode()
 		this.enableTransition()
+		this.updateContainer()
 		new ResizeSensor(contentEl, () => {
 			this.updateContainer()
 		})
