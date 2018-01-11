@@ -1,22 +1,17 @@
 <template>
-<div class="root">
-	<div
-	class="body"
-	@click="openContextMenu">
-		<div class="when-selected">
-			<transition name="selection-title">
+<div @click="openContextMenu">
+	<labeled-field
+	:title="title"
+	:selected="selected ? true : false"
+	:class="config.class.body">
+		<div slot="contents">
+			{{selected}}
+			<transition :name="config.class.selectionText">
 				<div
-				class="selection-title"
-				v-if="currentSelection">
-					<span>{{title ? title : 'Untitled'}}</span>
-				</div>
-			</transition>
-			<transition name="selection-value">
-				<div
-				class="selection-text"
+				:class="config.class.selectionText"
 				v-if="currentSelection">
 					<transition
-					name="selection-text"
+					:name="config.class.selectionText"
 					mode="out-in">
 						<div :key="currentSelection">
 							<span>{{options[currentSelection]}}</span>
@@ -25,30 +20,16 @@
 				</div>
 			</transition>
 		</div>
-
-		<div class="when-empty">
-			<transition name="field-title">
-				<div
-				class="title"
-				v-if="!currentSelection">
-					<transition name="slide-fade">
-						<div :key="title">
-							<span>{{title ? title : 'Untitled'}}</span>
-						</div>
-					</transition>
-				</div>
-			</transition>
-		</div>
-	</div>
-	<div class="ctx-menu">
+	</labeled-field>
+	<div :class="config.class.contextMenu">
 		<context-menu
 		:show="showMenu"
 		:appearance="appearance.contextMenu"
 		@lostFocus="onMenuLostFocus">
-			<scrollable>
-				<ul class="options-list">
+			<scrollable :class="config.class.scrollArea">
+				<ul :class="config.class.optionList">
 					<li
-					class="option"
+					:class="config.class.option"
 					@click="select(value)"
 					v-for="(name, value) in options"
 					:key="value">
@@ -62,6 +43,7 @@
 </template>
 
 <script>
+import LabeledField from '../components/LabeledField.vue'
 import Scrollable from '../components/Scrollable.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
@@ -79,6 +61,7 @@ const appearance = {
 export default {
 	appearance,
 	components: {
+		'labeled-field': LabeledField,
 		'scrollable': Scrollable,
 		'context-menu': ContextMenu
 	},
@@ -109,7 +92,17 @@ export default {
 		}
 	},
 	data() {
+		const prefix = '__uic_select_'
 		return {
+			config: {
+				class: {
+					selectionText: prefix + 'selection-text',
+					contextMenu: prefix + 'context-menu',
+					scrollArea: prefix + 'scroll-area',
+					optionList: prefix + 'option-list',
+					option: prefix + 'option'
+				}
+			},
 			showMenu: false,
 			currentSelection: null
 		}
@@ -147,29 +140,27 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.root
-	position: relative
-
-.body
-	position: relative
-	font-size: 1rem
-	height: 2.5rem
-	cursor: pointer
-
-.ctx-menu
-	position: absolute
-	min-width: 100%
-	max-height: 0px
-	top: 0px
-	left: 0px
-	z-index: 99999999
-
-.options-list
-	list-style-type: none
-	padding-top: .5rem
-	padding-bottom: .5rem
-	.option
+<style lang="stylus">
+.__uic_select_
+	&body
+		position: relative
+		font-size: 1rem
+		height: 2.5rem
+		cursor: pointer
+	&context-menu
+		position: absolute
+		min-width: 100%
+		max-height: 0px
+		top: 0px
+		left: 0px
+		z-index: 99999999
+	&scroll-area
+		height: 100%
+	&option-list
+		list-style-type: none
+		padding-top: .5rem
+		padding-bottom: .5rem
+	&option
 		padding: .5rem
 		padding-left: 1rem
 		padding-right: 1rem
@@ -184,92 +175,23 @@ export default {
 		transition: all .3s
 		&:hover
 			background-color: #EEE
-
-.selection-title
-	display: block
-	font-size: .8rem
-	color: #AAA
-	text-overflow: ellipsis
-	white-space: nowrap
-	max-width: 100%
-	overflow: hidden
-	-webkit-touch-callout: none
-	-webkit-user-select: none
-	-khtml-user-select: none
-	-moz-user-select: none
-	-ms-user-select: none
-	user-select: none
-
-.when-empty, .when-selected
-	max-width: 100%
-	position: absolute
-
-.when-empty
-	.title
-		line-height: 2.5rem
+	&selection-text
 		span
 			display: block
+			font-size: 1rem
 			width: 100%
+			height: 1.75rem
+			line-height: 1.75rem
 			text-overflow: ellipsis
 			overflow: hidden
 			white-space: nowrap
-
-.selection-text
-	span
-		display: block
-		width: 100%
-		text-overflow: ellipsis
-		overflow: hidden
-		white-space: nowrap
-
-.selection-title-enter-active
-	transition: all .3s
-.selection-title-leave-active
-	transition: all .2s
-.selection-title-enter
-	opacity: 0
-	transform: translateY(6px)
-.selection-title-leave-to
-	opacity: 0
-
-.selection-value-enter-active
-	transition: all .3s
-.selection-value-leave-active
-	transition: all .2s
-.selection-value-enter
-	opacity: 0
-	transform: translateX(6px)
-.selection-value-leave-to
-	opacity: 0
-
-.field-title-enter-active
-	transition: all .3s
-.field-title-leave-active
-	transition: all .2s
-.field-title-enter
-	opacity: 0
-	transform: translateX(6px)
-.field-title-leave-to
-	opacity: 0
-
-.selection-text-enter-active
-	transition: all .3s
-.selection-text-leave-active
-	transition: all .1s
-.selection-text-enter
-	opacity: 0
-	transform: translateX(6px)
-.selection-text-leave-to
-	opacity: 0
-
-.context-menu-enter-active
-	transition: all .3s
-.context-menu-leave-active
-	transition: all .3s
-.context-menu-enter
-	opacity: 0
-	transform: translateY(-6px)
-.context-menu-leave-to
-	opacity: 0
-	transform: translateX(-6px)
+		&-enter-active
+			transition: all .3s
+		&-leave-active
+			transition: all .1s
+		&-enter
+			opacity: 0
+			transform: translateX(6px)
+		&-leave-to
+			opacity: 0
 </style>
