@@ -1,5 +1,5 @@
 <template>
-<div :class="config.class.root">
+<div>
 	<size-transition
 	:class="config.class.sizer"
 	mode="height">
@@ -68,7 +68,6 @@ export default {
 		return {
 			config: {
 				class: {
-					root: prefix + 'root',
 					body: prefix + 'body',
 					sizer: prefix + 'sizer',
 					selectionTitle: prefix + 'selection-title',
