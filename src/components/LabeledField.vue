@@ -86,6 +86,7 @@ export default {
 <style lang="stylus">
 .__uic_labeled-field_
 	&body
+		font-size: 0px
 		position: relative
 		display: block
 		cursor: default
@@ -119,7 +120,6 @@ export default {
 			max-width: 100%
 			height: 1.25rem
 			line-height: 1.25rem
-			margin-bottom: .25rem
 			overflow: hidden
 			white-space: nowrap
 			text-overflow: ellipsis
