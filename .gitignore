@@ -1,4 +1,4 @@
-.DS_Store
+# General
 node_modules/
 dist/
 npm-debug.log
@@ -8,3 +8,10 @@ yarn-error.log
 
 # eslint cache
 .eslintcache
+
+# npm cache directory
+.npm
+
+# Mac specific
+.Trashes
+.DS_Store

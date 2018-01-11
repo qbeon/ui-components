@@ -1,9 +1,12 @@
 stages:
   - mirror
 
+variables:
+  GIT_STRATEGY: clone
+
 mirror:github:
   stage: mirror
   script:
-    - git push --mirror https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/FromZeus/ui-controls.git &> /dev/null
+    - git push --mirror https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/romshark/ui-controls.git &> /dev/null
   tags:
     - shell-runner-01
