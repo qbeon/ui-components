@@ -5,8 +5,10 @@ import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import checkbox from '../node_modules/vue-material-checkbox/src/main'
 
-import './styles/vb.css'
 
+import Ripple from './directives'
+
+Vue.use(Ripple)
 Vue.use(checkbox)
 
 export function createApp (ssrContext) {

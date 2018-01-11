@@ -5,11 +5,17 @@ Vue.use(Router)
 
 const _import = file => () => import(`../views/${file}.vue`).then(m => m.default)
 
-const routes = [{
-	path: '/',
-	name: 'Test',
-	component: _import('Test'),
-}]
+const routes = [
+	{
+		path: '/',
+		name: 'Test',
+		component: _import('Test'),
+	},
+	{
+		path: '/pg',
+		component: _import('Pg')
+	}
+]
 
 export function createRouter () {
 	return new Router({
