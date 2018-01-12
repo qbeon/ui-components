@@ -3,21 +3,21 @@
 		<transition name="anim">
 			<div
 			ref="background"
-			class="background"
+			:class="config.class.background"
 			@wheel="onFocusLost"
 			v-show="show"
 			@click="onFocusLost">
 			</div>
 		</transition>
 
-		<transition name="container">
+		<transition :name="config.class.container">
 			<div
 			ref="container"
-			class="container"
+			:class="config.class.container"
 			v-show="show">
 				<div
 				ref="content"
-				class="content"
+				:class="config.class.content"
 				tabindex="-1"
 				@contextmenu.capture.prevent>
 					<slot></slot>
@@ -50,9 +50,15 @@ export default {
 	appearance,
 	name: 'context-menu',
 	data() {
+		const prefix = '__uic_context-menu_'
 		return {
-			top: 0,
-			left: 0
+			config: {
+				class: {
+					background: prefix + 'background',
+					container: prefix + 'container',
+					content: prefix + 'content'
+				}
+			}
 		}
 	},
 	props: {
@@ -98,14 +104,15 @@ export default {
 		// Calculates and directly sets the position of the context menu on screen
 		calculatePosition() {
 			const rootEl = this.$refs.root
+			const rootRect = rootEl.getBoundingClientRect()
 			const viewportDimensions = document.documentElement.getBoundingClientRect()
 			const contentDimensions = this.$refs.content.getBoundingClientRect()
 			const containerStyle = this.$refs.container.style
 			const ssm = this.appearance.screenSpaceMargin
 
 			// Get root screen coordinates and content dimensions
-			let posLeft = rootEl.getBoundingClientRect().x
-			let posTop = rootEl.getBoundingClientRect().y
+			let posLeft = rootRect.x
+			let posTop = rootRect.y
 			let szHeight = contentDimensions.height
 			let szWidth = contentDimensions.width
 
@@ -158,39 +165,39 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.background
-	position: fixed
-	top: 0px
-	left: 0px
-	width: 100%
-	height: 100%
-	z-index: 99999998
+<style lang="stylus">
+.__uic_context-menu_
+	&background
+		position: fixed
+		top: 0px
+		left: 0px
+		width: 100%
+		height: 100%
+		z-index: 99999998
 
-.container
-	position: fixed
-	z-index: 99999999
-	margin: 0
-	padding: 0
-	background-color: #fff
-	border-radius: .1rem
-	box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12)
-	cursor: default
-	overflow: hidden
-	&:focus
-		outline: none
+	&container
+		position: fixed
+		z-index: 99999999
+		margin: 0
+		padding: 0
+		background-color: #fff
+		border-radius: .1rem
+		box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12)
+		cursor: default
+		overflow: hidden
+		&:focus
+			outline: none
+		&-enter-active
+			transition: transform .3s, opacity .3s
+		&-leave-active
+			transition: transform .3s, opacity .3s
+		&-enter
+			opacity: 0
+			transform: translateY(-6px)
+		&-leave-to
+			opacity: 0
+			transform: translateX(-6px)
 
-.content
-	height: 100%
-
-.container-enter-active
-	transition: transform .3s, opacity .3s
-.container-leave-active
-	transition: transform .3s, opacity .3s
-.container-enter
-	opacity: 0
-	transform: translateY(-6px)
-.container-leave-to
-	opacity: 0
-	transform: translateX(-6px)
+	&content
+		height: 100%
 </style>
