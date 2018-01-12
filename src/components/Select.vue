@@ -1,5 +1,7 @@
 <template>
-<div @click="openContextMenu">
+<div
+:class="config.class.root"
+@click="openContextMenu">
 	<labeled-field
 	:title="title"
 	:selected="selected ? true : false"
@@ -96,6 +98,7 @@ export default {
 		return {
 			config: {
 				class: {
+					root: prefix + 'root',
 					selectionText: prefix + 'selection-text',
 					contextMenu: prefix + 'context-menu',
 					scrollArea: prefix + 'scroll-area',
@@ -142,10 +145,10 @@ export default {
 
 <style lang="stylus">
 .__uic_select_
-	&body
+	&root
 		position: relative
-		font-size: 1rem
-		height: 2.5rem
+	&body
+		font-size: 0rem
 		cursor: pointer
 	&context-menu
 		position: absolute
@@ -185,6 +188,7 @@ export default {
 			text-overflow: ellipsis
 			overflow: hidden
 			white-space: nowrap
+			font-size: 1rem
 		&-enter-active
 			transition: all .3s
 		&-leave-active
