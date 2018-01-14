@@ -37,6 +37,12 @@ export default {
 			}
 		}
 	},
+	data() {
+		return {
+			lastWidth: 0,
+			lastHeight: 0
+		}
+	},
 	mounted() {
 		const contentEl = this.$refs.content
 		const containerEl = this.$refs.container
@@ -71,19 +77,36 @@ export default {
 		updateContainer() {
 			const contentEl = this.$refs.content
 			const containerEl = this.$refs.container
+			const style = containerEl.style
+			const contentWidth = contentEl.offsetWidth
+			const contentHeight = contentEl.offsetHeight
+
+			// Prevent unnecessary update
+			if (this.lastWidth == contentWidth &&
+				this.lastHeight == contentHeight
+			) return
 
 			switch (this.mode) {
 			case 'width':
-				containerEl.style.width = contentEl.offsetWidth + 'px'
-				return
+				style.width = contentWidth + 'px'
+				break
 			case 'height':
-				containerEl.style.height = contentEl.offsetHeight + 'px'
-				return
+				style.height = contentHeight + 'px'
+				break
 			default:
-				containerEl.style.width = contentEl.offsetWidth + 'px'
-				containerEl.style.height = contentEl.offsetHeight + 'px'
-				return
+				style.width = contentWidth + 'px'
+				style.height = contentHeight + 'px'
+				break
 			}
+
+			// Remember latest update
+			this.lastWidth = contentWidth
+			this.lastHeight = contentHeight
+
+			this.$emit('contentSizeChanged', {
+				width: contentWidth,
+				height: contentHeight
+			})
 		},
 		enableTransition() {
 			addClass(this.$refs.container, '__uic_size-transition_container_animated')
