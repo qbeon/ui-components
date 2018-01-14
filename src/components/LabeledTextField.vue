@@ -101,6 +101,9 @@ export default {
 		currentValue(value) {
 			// Update size only in case of multiline inputs
 			if (this.isMultiline()) this.$nextTick(this.updateSize)
+		},
+		maxLines() {
+			if (this.isMultiline()) this.$nextTick(this.updateSize)
 		}
 	},
 	methods: {
@@ -157,7 +160,10 @@ export default {
 			const lines = this.countLines()
 			let height = textarea.scrollHeight
 
-			if (lines.displayed === lines.total) return
+			if (
+				lines.displayed === lines.total &&
+				lines.displayed === this.maxLines
+			) return
 
 			if (this.maxLines > 0 && lines.total > this.maxLines) {
 				height = lines.height * this.maxLines
