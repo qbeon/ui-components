@@ -4,16 +4,28 @@
 @click="activate">
 	<labeled-field
 	:title="title"
-	:selected="activated"
+	:selected="!empty"
 	:class="config.class.body">
 		<div slot="contents">
 			<input
+			v-show="!isMultilineField"
 			ref="input"
 			:class="config.class.input"
 			v-model="currentValue"
 			@change="onInputComplete"
 			@input="onInput"
 			@blur="onBlur"/>
+
+			<textarea
+			v-show="isMultilineField"
+			ref="textarea"
+			:class="config.class.textarea"
+			:rows="currentLineNumber"
+			v-model="currentValue"
+			@change="onInputComplete"
+			@input="onInput"
+			@blur="onBlur">
+			</textarea>
 		</div>
 	</labeled-field>
 </div>
@@ -43,6 +55,10 @@ export default {
 			type: String,
 			required: false
 		},
+		maxLines: {
+			type: Number,
+			required: false
+		},
 		'appearance': {
 			type: Object,
 			required: false,
@@ -56,16 +72,23 @@ export default {
 			config: {
 				class: {
 					root: prefix + 'root',
-					input: prefix + 'input'
+					input: prefix + 'input',
+					textarea: prefix + 'textarea'
 				}
 			},
-			activated: false,
-			currentValue: ''
+			empty: true,
+			currentValue: '',
+			currentLineNumber: 1
+		}
+	},
+	computed: {
+		isMultilineField() {
+			return this.isMultiline()
 		}
 	},
 	created() {
 		if (this.value) {
-			this.activated = true
+			this.empty = false
 			this.currentValue = this.value
 		}
 	},
@@ -73,34 +96,99 @@ export default {
 		value(val) {
 			if (val && val.length > 0) this.setValue(val)
 			else this.setValue(null)
+		},
+		currentValue(value) {
+			// Update size only in case of multiline inputs
+			if (this.isMultiline()) this.$nextTick(this.updateSize)
 		}
 	},
 	methods: {
+		isMultiline() {
+			if (this.maxLines != null && this.maxLines != 1) return true
+			return false
+		},
 		onInputComplete() {
 			this.$emit('valueChanged', this.currentValue)
 		},
 		onInput() {
 			this.$emit('input', this.currentValue)
 		},
+		countLines() {
+			const textarea = this.$refs.textarea
+			const style = (window.getComputedStyle) ?
+				window.getComputedStyle(textarea) : textarea.currentStyle
+			const lineHeight = parseInt(style.lineHeight, 10)
+			const contentHeight = this.calculateContentHeight(lineHeight)
+			return {
+				height: lineHeight,
+				total: Math.floor(contentHeight / lineHeight),
+				displayed: textarea.clientHeight / lineHeight,
+			}
+		},
+		calculateContentHeight(scanAmount) {
+			const textarea = this.$refs.textarea
+			const styles = textarea.style
+			const initialHeight = styles.height
+			const initialScrollHeight = textarea.scrollHeight
+			let height = textarea.offsetHeight
+			// Only bother if the textarea is bigger than the content
+			if (height >= initialScrollHeight) {
+				// Verify the browser supports changing dimension
+				// calculations mid-way through a function call
+				styles.height = (height + scanAmount) + 'px'
+				if (initialScrollHeight < textarea.scrollHeight) {
+					// Scan the textareas height downwards
+					// until scrollHeight becomes larger than height
+					while (textarea.offsetHeight >= textarea.scrollHeight) {
+						styles.height = (height -= scanAmount) + 'px'
+					}
+					while (textarea.offsetHeight < textarea.scrollHeight) {
+						styles.height = (height++) + 'px'
+					}
+					// Reset the textarea back to its original height
+					styles.height = initialHeight
+					return height
+				}
+			} else return initialScrollHeight
+		},
+		updateSize() {
+			const textarea = this.$refs.textarea
+			const lines = this.countLines()
+			let height = textarea.scrollHeight
+
+			if (lines.displayed === lines.total) return
+
+			if (this.maxLines > 0 && lines.total > this.maxLines) {
+				height = lines.height * this.maxLines
+			} else height = lines.height * lines.total
+
+			this.currentLineNumber = lines.total
+			textarea.style.height = height + 'px'
+		},
 		setValue(value) {
 			if (value === null) {
 				this.currentValue = ''
-				if(this.$refs.input !== document.activeElement) this.activated = false
+				const activeEl = document.activeElement
+				if (
+					(!this.isMultiline() && this.$refs.input !== activeEl) ||
+					(this.isMultiline() && this.$refs.textarea !== activeEl)
+				) this.empty = true
 			} else {
 				this.currentValue = value
-				this.activated = true
+				this.empty = false
 			}
 			this.$emit('valueChanged', value)
 		},
 		activate() {
-			this.activated = true
+			this.empty = false
 			this.$nextTick(() => {
-				this.$refs.input.focus()
+				if (this.isMultiline()) this.$refs.textarea.focus()
+				else this.$refs.input.focus()
 			})
 		},
 		onBlur() {
 			if (this.currentValue && this.currentValue.length > 0) return
-			this.activated = false
+			this.empty = true
 		}
 	}
 }
@@ -109,9 +197,8 @@ export default {
 <style lang="stylus">
 .__uic_labeled-text-field_
 	&root
-		font-size: 0rem
+		font-size: 0px
 	&body
-		font-size: 0rem
 		cursor: pointer
 	&input
 		width: 100%
@@ -123,4 +210,11 @@ export default {
 		overflow: hidden
 		white-space: nowrap
 		text-overflow: ellipsis
+	&textarea
+		resize: none
+		width: 100%
+		outline: none
+		border: 0px
+		font-size: 1rem
+		line-height: 1.5rem
 </style>
