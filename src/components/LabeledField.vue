@@ -2,7 +2,8 @@
 <div>
 	<size-transition
 	:class="config.class.sizer"
-	mode="height">
+	mode="height"
+	@contentSizeChanged="onContentSizeChanged">
 		<div :class="config.class.body">
 			<div v-show="selected">
 				<transition :name="config.class.selectionTitle">
@@ -80,6 +81,11 @@ export default {
 			currentSelection: null
 		}
 	},
+	methods: {
+		onContentSizeChanged(newSize) {
+			this.$emit('contentSizeChanged', newSize)
+		}
+	}
 }
 </script>
 
