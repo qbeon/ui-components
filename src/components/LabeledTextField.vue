@@ -5,7 +5,8 @@
 	<labeled-field
 	:title="title"
 	:selected="!empty"
-	:class="config.class.body">
+	:class="config.class.body"
+	@contentSizeChanged="onContentSizeChanged">
 		<div slot="contents">
 			<input
 			v-show="!isMultilineField"
@@ -189,6 +190,9 @@ export default {
 		onBlur() {
 			if (this.currentValue && this.currentValue.length > 0) return
 			this.empty = true
+		},
+		onContentSizeChanged() {
+			if (this.isMultiline()) this.updateSize()
 		}
 	}
 }
