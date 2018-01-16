@@ -35,6 +35,7 @@
 				ref="input"
 				:class="config.class.input"
 				v-model="inputValue"
+				@click="focused = true"
 				@input="onInput"
 				@accepted="onInputFinished"
 				@blur="onBlur"
@@ -113,6 +114,7 @@ export default {
 			},
 
 			// Incremental id
+			focused: false,
 			inputValue: '',
 			icons: Icons,
 			chips: {},
@@ -147,6 +149,7 @@ export default {
 			return false
 		},
 		activate() {
+			this.focused = true
 			this.empty = false
 			this.$nextTick(() => {
 				if (this.isMultiline()) this.$refs.textarea.focus()
@@ -157,7 +160,7 @@ export default {
 			this.chips = {}
 
 			if (!this.values || this.values.length < 1) {
-				this.empty = true
+				if(!this.focused) this.empty = true
 				return
 			}
 			this.empty = false
@@ -215,6 +218,7 @@ export default {
 			this.removeChip(this.lastIndex)
 		},
 		onBlur() {
+			this.focused = false
 			if (this.values && this.values.length > 0) return
 			this.empty = true
 		},

@@ -11,6 +11,7 @@
 	@change="onInputComplete"
 	@input="onInput"
 	@blur="onBlur"
+	@click="onClick"
 	@keydown="onKeydown"/>
 </div>
 </template>
@@ -84,6 +85,9 @@ export default {
 		},
 		onKeydown(event) {
 			this.$emit('keydown', event)
+		},
+		onClick(event) {
+			this.$emit('click', event)
 		}
 	}
 }
