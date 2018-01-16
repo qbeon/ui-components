@@ -37,7 +37,8 @@
 				v-model="inputValue"
 				@input="onInput"
 				@accepted="onInputFinished"
-				@blur="onBlur"/>
+				@blur="onBlur"
+				@keydown="onKeydown"/>
 			</div>
 		</labeled-field>
 	</div>
@@ -115,6 +116,7 @@ export default {
 			inputValue: '',
 			icons: Icons,
 			chips: {},
+			lastIndex: -1,
 			empty: true,
 			currentLineNumber: 1
 		}
@@ -159,7 +161,6 @@ export default {
 				return
 			}
 			this.empty = false
-
 			for (let itr = 0; itr < this.values.length; itr++) {
 				const value = this.values[itr]
 				if (value.length < 0) continue
@@ -169,6 +170,7 @@ export default {
 					remove: () => this.removeChip(itr)
 				})
 			}
+			this.lastIndex = this.values.length - 1
 		},
 		addChip(value) {
 			if (value.length < 0) return
@@ -206,6 +208,11 @@ export default {
 			if (!value || value.length < 1) return
 			this.addChip(value)
 			this.inputValue = ''
+		},
+		onKeydown(event) {
+			const key = event.keyCode || event.charCode
+			if(key !== 8 || this.inputValue.length > 0 || this.lastIndex < 0) return
+			this.removeChip(this.lastIndex)
 		},
 		onBlur() {
 			if (this.values && this.values.length > 0) return

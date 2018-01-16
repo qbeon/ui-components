@@ -10,7 +10,8 @@
 	v-model="currentValue"
 	@change="onInputComplete"
 	@input="onInput"
-	@blur="onBlur"/>
+	@blur="onBlur"
+	@keydown="onKeydown"/>
 </div>
 </template>
 
@@ -80,6 +81,9 @@ export default {
 		},
 		onBlur(event) {
 			this.$emit('blur', event)
+		},
+		onKeydown(event) {
+			this.$emit('keydown', event)
 		}
 	}
 }
