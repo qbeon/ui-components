@@ -74,6 +74,21 @@ export default {
 			type: Number,
 			required: false
 		},
+		terminatingCharacters: {
+			type: Array,
+			required: false,
+			validator(arr) {
+				// Ensure the list of terminating characters doesn't contain strings
+				let itr = arr.length
+				while (itr--) {
+					if (arr[itr].length !== 1) {
+						console.error('Invalid terminating character: ' + arr[itr])
+						return false
+					}
+				}
+				return true
+			}
+		},
 		'appearance': {
 			type: Object,
 			required: false,
@@ -171,8 +186,21 @@ export default {
 			// Update size
 		},
 		onInput(value) {
-			// TODO: implement auto-terminating characters
 			this.inputValue = value
+			if (value.length < 1) return
+
+			// Check whether the last input character is a terminating character
+			if (!this.terminatingCharacters) return
+			const lastChar = value[value.length - 1]
+			if (this.terminatingCharacters.indexOf(lastChar) < 0) return
+
+			// Prevent terminating characters from being typed in the beginning of the string
+			if (value.length < 2) {
+				this.$nextTick(() => this.inputValue = '')
+				return
+			}
+			this.addChip(value.slice(0, value.length - 1))
+			this.inputValue = ''
 		},
 		onInputFinished(value) {
 			if (!value || value.length < 1) return
