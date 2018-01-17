@@ -1,10 +1,10 @@
 <template>
 	<div
 	:class="config.class.root"
-	@click="activate">
+	@click="focus">
 		<labeled-field
 		:title="title"
-		:selected="!empty"
+		:selected="focused || !empty"
 		:class="config.class.body"
 		@contentSizeChanged="onContentSizeChanged">
 			<div
@@ -146,7 +146,7 @@ export default {
 		init() {
 			this.chips = {}
 			if (this.value == null || this.value.length < 1) {
-				if(!this.focused) this.empty = true
+				this.empty = true
 				return
 			}
 			this.empty = false
@@ -165,9 +165,8 @@ export default {
 			if (this.maxLines != null && this.maxLines != 1) return true
 			return false
 		},
-		activate() {
+		focus() {
 			this.focused = true
-			this.empty = false
 			this.$nextTick(() => {
 				if (this.isMultiline()) this.$refs.textarea.focus()
 				else this.$refs.input.focus()
