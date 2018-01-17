@@ -69,7 +69,12 @@ export default {
 			required: false
 		},
 		value: {
-			required: false
+			type: [Object, Array],
+			required: false,
+			validator(value) {
+				if (!(value instanceof Array)) return false
+				return true
+			}
 		},
 		maxLines: {
 			type: Number,
