@@ -68,8 +68,7 @@ export default {
 			type: String,
 			required: false
 		},
-		'values': {
-			type: Array,
+		value: {
 			required: false
 		},
 		maxLines: {
@@ -129,11 +128,11 @@ export default {
 		}
 	},
 	created() {
-		this.createChipsFromValues()
+		this.init()
 	},
 	watch: {
-		values() {
-			this.createChipsFromValues()
+		value() {
+			this.init()
 		},
 		chips(value) {
 			// Update size only in case of multiline inputs
@@ -144,6 +143,24 @@ export default {
 		}
 	},
 	methods: {
+		init() {
+			this.chips = {}
+			if (this.value == null || this.value.length < 1) {
+				if(!this.focused) this.empty = true
+				return
+			}
+			this.empty = false
+			for (let itr = 0; itr < this.value.length; itr++) {
+				const value = this.value[itr]
+				if (value.length < 0) continue
+				this.$set(this.chips, itr, {
+					index: itr,
+					value: value,
+					remove: () => this.removeChip(itr)
+				})
+			}
+			this.lastIndex = this.value.length - 1
+		},
 		isMultiline() {
 			if (this.maxLines != null && this.maxLines != 1) return true
 			return false
@@ -156,36 +173,19 @@ export default {
 				else this.$refs.input.focus()
 			})
 		},
-		createChipsFromValues() {
-			this.chips = {}
-
-			if (!this.values || this.values.length < 1) {
-				if(!this.focused) this.empty = true
-				return
-			}
-			this.empty = false
-			for (let itr = 0; itr < this.values.length; itr++) {
-				const value = this.values[itr]
-				if (value.length < 0) continue
-				this.$set(this.chips, itr, {
-					index: itr,
-					value: value,
-					remove: () => this.removeChip(itr)
-				})
-			}
-			this.lastIndex = this.values.length - 1
-		},
 		addChip(value) {
 			if (value.length < 0) return
-			this.$emit('chipAdded', value)
+			const newValue = this.value ? this.value : []
+			newValue.push(value)
+			this.$emit('input', newValue)
 		},
 		removeChip(index) {
-			if (!(index in this.chips)) return
-			const value = this.chips[index].value
-			this.$emit('chipRemoved', {
-				value: value,
-				index: index
-			})
+			if (!this.value
+				|| !(index in this.chips)
+				|| this.value.length < 1
+			) return
+			this.value.splice(index, 1)
+			this.$emit('input', this.value)
 		},
 		updateSize() {
 			// Update size
@@ -219,7 +219,7 @@ export default {
 		},
 		onBlur() {
 			this.focused = false
-			if (this.values && this.values.length > 0) return
+			if (this.value && this.value.length > 0) return
 			this.empty = true
 		},
 		onContentSizeChanged() {
