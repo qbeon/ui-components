@@ -1,7 +1,9 @@
 <template>
 	<div
 	:class="config.class.root"
-	@click="focus">
+	@click="focus"
+	@mousedown="onMousedown"
+	@mouseup="onMouseup">
 		<labeled-field
 		:title="title"
 		:selected="focused || !empty"
@@ -35,7 +37,6 @@
 				ref="input"
 				:class="config.class.input"
 				v-model="inputValue"
-				@click="focused = true"
 				@input="onInput"
 				@accepted="onInputFinished"
 				@blur="onBlur"
@@ -117,13 +118,29 @@ export default {
 				}
 			},
 
-			// Incremental id
+			// Is set to true when the root element ist clicked
+			// to prevent unselecting on text field blur
+			mouseDown: false,
+
+			// Defines whether the labaled field is closed or opened
 			focused: false,
+
+			// Mirrors the text input value
 			inputValue: '',
+
+			// Provides the SVG icons
 			icons: Icons,
+
+			// Mirrors the value property providing the items additional
+			// information and funtionality such as the remove method
 			chips: {},
+
 			lastIndex: -1,
+
+			// Defines whether there are any chips in the field
 			empty: true,
+
+			// Defines the current number of lines
 			currentLineNumber: 1
 		}
 	},
@@ -138,10 +155,6 @@ export default {
 	watch: {
 		value() {
 			this.init()
-		},
-		chips(value) {
-			// Update size only in case of multiline inputs
-			if (this.isMultiline()) this.$nextTick(this.updateSize)
 		},
 		maxLines() {
 			if (this.isMultiline()) this.$nextTick(this.updateSize)
@@ -172,9 +185,9 @@ export default {
 		},
 		focus() {
 			this.focused = true
+			// Defer the focus until the input is actually rendered
 			this.$nextTick(() => {
-				if (this.isMultiline()) this.$refs.textarea.focus()
-				else this.$refs.input.focus()
+				this.$refs.input.focus()
 			})
 		},
 		addChip(value) {
@@ -193,6 +206,12 @@ export default {
 		},
 		updateSize() {
 			// Update size
+		},
+		onMousedown() {
+			this.mouseDown = true
+		},
+		onMouseup() {
+			this.mouseDown = false
 		},
 		onInput(value) {
 			this.inputValue = value
@@ -222,9 +241,10 @@ export default {
 			this.removeChip(this.lastIndex)
 		},
 		onBlur() {
+			// Don't unfocus the component when the root was clicked
+			// while the input was focused
+			if (this.mouseDown) return
 			this.focused = false
-			if (this.value && this.value.length > 0) return
-			this.empty = true
 		},
 		onContentSizeChanged() {
 			if (this.isMultiline()) this.updateSize()
