@@ -287,7 +287,7 @@ export default {
 		margin-left: .25rem
 		padding-top: .25rem
 		padding-bottom: .25rem
-		max-width: 100%
+		max-width: calc(100% - .5rem)
 		display: inline-block
 		font-size: 1rem
 		line-height: 1.5rem
