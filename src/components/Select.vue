@@ -74,9 +74,16 @@ export default {
 		'options': {
 			type: Object,
 			required: true,
-			validator(value) {
-				for (let option in value) {
-					if (typeof value[option] !== 'string') return false
+			validator(options) {
+				if (options == null) {
+					console.error('Missing options in select field')
+					return false
+				}
+				for (let option in options) {
+					if (typeof options[option] !== 'string') {
+						console.error('Non-string option in select field')
+						return false
+					}
 				}
 				return true
 			},
@@ -126,7 +133,7 @@ export default {
 				this.$emit('input', null)
 				return
 			}
-			if (!(value in this.options)) return
+			if (this.options == null || !(value in this.options)) return
 			this.currentSelection = value
 			this.$emit('input', this.currentSelection)
 		},
