@@ -146,6 +146,7 @@ export default {
 .__uic_select_
 	&root
 		position: relative
+		display: inline-block
 	&body
 		font-size: 0rem
 		cursor: pointer
