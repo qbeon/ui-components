@@ -4,10 +4,9 @@
 @click="openContextMenu">
 	<labeled-field
 	:title="title"
-	:selected="selected ? true : false"
+	:selected="value ? true : false"
 	:class="config.class.body">
 		<div slot="contents">
-			{{selected}}
 			<transition :name="config.class.selectionText">
 				<div
 				:class="config.class.selectionText"
@@ -82,7 +81,7 @@ export default {
 				return true
 			},
 		},
-		'selected': {
+		'value': {
 			type: String,
 			required: false
 		},
@@ -111,11 +110,11 @@ export default {
 		}
 	},
 	created() {
-		this.select(this.selected)
+		this.select(this.value)
 	},
 	watch: {
-		selected(newVal, oldVal) {
-			this.select(newVal)
+		value(value) {
+			this.select(value)
 		}
 	},
 	methods: {
@@ -124,12 +123,12 @@ export default {
 			this.$emit('closed')
 			if (value === null) {
 				this.currentSelection = null
-				this.$emit('selectionChanged', null)
+				this.$emit('input', null)
 				return
 			}
 			if (!(value in this.options)) return
 			this.currentSelection = value
-			this.$emit('selectionChanged', this.currentSelection)
+			this.$emit('input', this.currentSelection)
 		},
 		openContextMenu() {
 			this.showMenu = true
