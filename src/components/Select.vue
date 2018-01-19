@@ -156,6 +156,7 @@ export default {
 		display: inline-block
 		font-size: 0px
 		line-height: 0px
+		width: 8rem
 	&body
 		cursor: pointer
 	&context-menu
