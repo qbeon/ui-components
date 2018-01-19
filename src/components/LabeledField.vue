@@ -1,5 +1,4 @@
 <template>
-<div>
 	<size-transition
 	:class="config.class.sizer"
 	mode="height"
@@ -12,10 +11,9 @@
 					v-show="selected">
 						<transition
 						:name="config.class.selectionTitleText"
-						mode="out-in">
-							<div :key="title">
-								<span :class="config.class.selectionTitleText">{{title}}</span>
-							</div>
+						mode="out-in"
+						:key="title">
+							<span :class="config.class.selectionTitleText">{{title}}</span>
 						</transition>
 					</div>
 				</transition>
@@ -33,16 +31,14 @@
 				v-show="!selected">
 					<transition
 					:name="config.class.fieldTitleText"
-					mode="out-in">
-						<div :key="title">
-							<span :class="config.class.fieldTitleText">{{title}}</span>
-						</div>
+					mode="out-in"
+					:key="title">
+						<span :class="config.class.fieldTitleText">{{title}}</span>
 					</transition>
 				</div>
 			</transition>
 		</div>
 	</size-transition>
-</div>
 </template>
 
 <script>
@@ -105,6 +101,8 @@ export default {
 
 	&selection-title
 		max-width: 100%
+		height: 1.25rem
+		line-height: 1.25rem
 		-webkit-touch-callout: none
 		-webkit-user-select: none
 		-khtml-user-select: none
@@ -124,8 +122,6 @@ export default {
 			display: inline-block
 			width: 100%
 			max-width: 100%
-			height: 1.25rem
-			line-height: 1.25rem
 			overflow: hidden
 			white-space: nowrap
 			text-overflow: ellipsis

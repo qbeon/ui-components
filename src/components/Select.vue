@@ -147,8 +147,9 @@ export default {
 	&root
 		position: relative
 		display: inline-block
+		font-size: 0px
+		line-height: 0px
 	&body
-		font-size: 0rem
 		cursor: pointer
 	&context-menu
 		position: absolute
