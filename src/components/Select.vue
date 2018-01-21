@@ -185,12 +185,15 @@ export default {
 		-ms-user-select: none
 		user-select: none
 		transition: all .3s
+		font-size: 1rem
+		height: 1.5rem
+		box-sizing: content-box
+		line-height: 1.5rem
 		&:hover
 			background-color: #EEE
 	&selection-text
 		span
 			display: block
-			font-size: 1rem
 			width: 100%
 			height: 1.75rem
 			line-height: 1.75rem
