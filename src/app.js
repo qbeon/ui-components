@@ -5,8 +5,6 @@ import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import checkbox from '../node_modules/vue-material-checkbox/src/main'
 
-import './styles/vb.css'
-
 Vue.use(checkbox)
 
 export function createApp (ssrContext) {
