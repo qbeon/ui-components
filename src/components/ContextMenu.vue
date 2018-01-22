@@ -1,5 +1,7 @@
 <template>
-	<div ref="root">
+	<div
+	ref="root"
+	:style="{pointerEvents: blurred ? 'none' : 'auto'}">
 		<transition name="anim">
 			<div
 			ref="background"
@@ -58,7 +60,8 @@ export default {
 					container: prefix + 'container',
 					content: prefix + 'content'
 				}
-			}
+			},
+			blurred: false
 		}
 	},
 	props: {
@@ -78,8 +81,10 @@ export default {
 		show(val) {
 			if (!val) {
 				this.onFocusLost()
+				this.blurred = true
 				return
 			}
+			this.blurred = false
 
 			this.$nextTick(() => {
 				// Move the component elements to the document scope
