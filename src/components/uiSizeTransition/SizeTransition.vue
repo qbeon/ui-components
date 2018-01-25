@@ -11,10 +11,11 @@
 </template>
 
 <script>
-import { addClass, removeClass } from './util.js'
+import { addClass, removeClass } from '../util.js'
 import { ResizeSensor } from 'css-element-queries'
 
 export default {
+	name: 'size-transition',
 	props: {
 		enabled: {
 			type: Boolean,

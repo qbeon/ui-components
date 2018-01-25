@@ -5,7 +5,7 @@
 				<slot></slot>
 			</label>
 			<input v-if="!multiline"
-				type="text" class="input-field"
+				class="input-field"
 				ref="input"
 				@focus="focus()"
 				@blur="blur()"

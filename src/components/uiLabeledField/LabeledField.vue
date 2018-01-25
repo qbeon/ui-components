@@ -1,8 +1,8 @@
 <template>
 <div :class="config.class.root">
 	<size-transition
-	:class="config.class.sizer"
-	mode="height">
+		:class="config.class.sizer"
+		mode="height">
 		<div :class="config.class.body">
 			<div v-show="selected">
 				<transition :name="config.class.selectionTitle">
@@ -10,8 +10,8 @@
 					:class="config.class.selectionTitle"
 					v-show="selected">
 						<transition
-						:name="config.class.selectionTitleText"
-						mode="out-in">
+							:name="config.class.selectionTitleText"
+							mode="out-in">
 							<div :key="title">
 								<span :class="config.class.selectionTitleText">{{title}}</span>
 							</div>
@@ -20,19 +20,19 @@
 				</transition>
 				<transition :name="config.class.contents">
 					<div
-					:class="config.class.contents"
-					v-show="selected">
+							:class="config.class.contents"
+							v-show="selected">
 						<slot name="contents"></slot>
 					</div>
 				</transition>
 			</div>
 			<transition :name="config.class.fieldTitle">
 				<div
-				:class="config.class.fieldTitle"
-				v-show="!selected">
+					:class="config.class.fieldTitle"
+					v-show="!selected">
 					<transition
-					:name="config.class.fieldTitleText"
-					mode="out-in">
+						:name="config.class.fieldTitleText"
+						mode="out-in">
 						<div :key="title">
 							<span :class="config.class.fieldTitleText">{{title}}</span>
 						</div>
@@ -45,9 +45,12 @@
 </template>
 
 <script>
-import SizeTransition from './SizeTransition.vue'
+import SizeTransition from '../uiSizeTransition/SizeTransition.vue'
+
+const prefix = '__uic_labeled-field_'
 
 export default {
+	name: 'labeled-field',
 	components: {
 		'size-transition': SizeTransition
 	},
@@ -64,7 +67,6 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-field_'
 		return {
 			config: {
 				class: {

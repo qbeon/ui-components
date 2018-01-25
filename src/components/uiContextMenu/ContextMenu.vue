@@ -48,6 +48,7 @@ const appearance = {
 
 export default {
 	appearance,
+	// the name is important to have in every component
 	name: 'context-menu',
 	data() {
 		return {

@@ -52,9 +52,9 @@ import {
 	hasClass,
 	addClass,
 	removeClass,
-} from './util.js'
+} from '../util.js'
 
-import Registry from './registry.js'
+import Registry from '../registry.js'
 
 export default {
 	appearance,

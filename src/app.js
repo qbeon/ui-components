@@ -4,9 +4,10 @@ import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import checkbox from '../node_modules/vue-material-checkbox/src/main'
-
-
 import Ripple from './directives'
+
+import uiControls from './install'
+Vue.use(uiControls)
 
 Vue.use(Ripple)
 Vue.use(checkbox)

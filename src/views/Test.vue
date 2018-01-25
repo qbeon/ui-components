@@ -5,29 +5,29 @@
 			<h3>Default select fields</h3>
 			<p>Unstyled default select fields</p>
 
-			<r-select
+			<ui-select
 			class="field small"
 			title="Small Default Select Field"
 			:options="options.cars"
 			:selected="selected.default"
 			@selectionChanged="onSelectionChangedDefault">
-			</r-select>
+			</ui-select>
 
-			<r-select
+			<ui-select
 			class="field"
 			title="Default Select Field"
 			:options="options.cars"
 			:selected="selected.default"
 			@selectionChanged="onSelectionChangedDefault">
-			</r-select>
+			</ui-select>
 
-			<r-select
+			<ui-select
 			class="field large"
 			title="Large Default Select Field"
 			:options="options.cars"
 			:selected="selected.default"
 			@selectionChanged="onSelectionChangedDefault">
-			</r-select>
+			</ui-select>
 
 			<div class="controls">
 				<button @click="resetDefault">reset</button>
@@ -36,7 +36,7 @@
 		</section>
 
 		<!-- Custom -->
-		<section>
+		<!-- <section>
 			<h3>Custom select fields</h3>
 			<p>Customized select fields</p>
 
@@ -68,10 +68,10 @@
 				<button @click="resetCustom">reset</button>
 				<button @click="randomCustom">random</button>
 			</div>
-		</section>
+		</section> -->
 
 		<!-- Material -->
-		<section>
+		<!-- <section>
 			<h3>Material style</h3>
 			<p>Google Material-styled select fields</p>
 
@@ -103,10 +103,10 @@
 				<button @click="resetMaterial">reset</button>
 				<button @click="randomMaterial">random</button>
 			</div>
-		</section>
+		</section> -->
 
 		<!-- Scrolled -->
-		<section>
+		<!-- <section>
 			<h3>Scrolled selects</h3>
 			<p>Select fields with many options not fitting the screen</p>
 
@@ -139,14 +139,14 @@
 				<button @click="resetScrolled">reset</button>
 				<button @click="randomScrolled">random</button>
 			</div>
-		</section>
+		</section> -->
 	</div>
 </template>
 
 <script>
-import Select from '../components/Select.vue'
-import StyledSelect from '../components/styled/Select.vue'
-import MaterialSelect from '../components/material/Select.vue'
+// import Select from '../components/Select.vue'
+// import StyledSelect from '../components/styled/Select.vue'
+// import MaterialSelect from '../components/material/Select.vue'
 
 function random(set) {
 	let allKeys = Object.keys(set)
@@ -237,11 +237,7 @@ let options = {
 }
 
 export default {
-	components: {
-		'material-select': MaterialSelect,
-		'styled-select': StyledSelect,
-		'r-select': Select
-	},
+
 	data() {
 		return {
 			options: options,

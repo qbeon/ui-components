@@ -10,12 +10,9 @@
 </template>
 
 <script>
-import Scrollable from './components/Scrollable.vue';
 
 export default {
-	components: {
-		'scrollable': Scrollable
-	}
+
 }
 </script>
 

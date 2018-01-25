@@ -62,25 +62,27 @@
 </template>
 
 <script>
-import Scrollable from '../components/Scrollable.vue'
-import ContextMenu from '../components/ContextMenu.vue'
+import Scrollable from '../uiScrollable/Scrollable.vue'
+import ctx from '../uiContextMenu/ContextMenu.vue'
+
 
 const appearance = {
 	default: {
-		contextMenu: ContextMenu.appearance.default
+		ctx: ctx.appearance.default
 	},
 	validator(val) {
 		// Validate context menu appearance
-		if (val.contextMenu && !ContextMenu.appearance.validator(val.contextMenu)) return false
+		if (val.ctx && !ctx.appearance.validator(val.ctx)) return false
 		return true
 	}
 }
 
 export default {
+	name: 'ui-select',
 	appearance,
 	components: {
 		'scrollable': Scrollable,
-		'context-menu': ContextMenu
+		'context-menu': ctx
 	},
 	props: {
 		'title': {
