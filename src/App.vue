@@ -8,7 +8,7 @@
 				<div
 				class="logo"
 				@click="goHome"></div>
-				<selection-field
+				<labeled-select-field
 				class="pageSelector"
 				title="Page"
 				:options="pages"
@@ -25,20 +25,14 @@
 
 <script>
 import Router from './router'
-import SelectionField from './components/Select.vue'
-import Scrollable from './components/Scrollable.vue'
 
 export default {
-	components: {
-		'selection-field': SelectionField,
-		'scrollable': Scrollable
-	},
 	data() {
 		return {
 			pages: {
 				'Home': 'Home',
 				'TextFieldComponent': 'Text Field Component',
-				'SelectFieldComponent': 'Select Field Component',
+				'LabeledSelectFieldComponent': 'Labeled Select Field Component',
 				'LabeledChipFieldComponent': 'Labeled Chip Field Component',
 				'ScrollableComponent': 'Scrollable Component',
 				'LabeledFieldComponent': 'Labaled Field Component',

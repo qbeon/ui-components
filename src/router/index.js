@@ -15,8 +15,8 @@ const routes = [{
 	component: _import('LabeledTextFieldComponent')
 }, {
 	path: '/select-field-component',
-	name: 'SelectFieldComponent',
-	component: _import('SelectFieldComponent')
+	name: 'LabeledSelectFieldComponent',
+	component: _import('LabeledSelectFieldComponent')
 }, {
 	path: '/chip-field-component',
 	name: 'LabeledChipFieldComponent',

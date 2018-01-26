@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import TextField from './TextField.vue'
-import LabeledField from './LabeledField.vue'
-import Icons from './icons.js'
+import TextField from '../TextField/TextField.vue'
+import LabeledField from '../LabeledField/LabeledField.vue'
+import Icons from '../icons.js'
 
 const appearance = {
 	default: {},
@@ -59,6 +59,7 @@ const appearance = {
 }
 
 export default {
+	name: 'labeled-chip-field',
 	appearance,
 	components: {
 		'text-field': TextField,

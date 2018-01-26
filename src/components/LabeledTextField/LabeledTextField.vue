@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import LabeledField from '../components/LabeledField.vue'
+import LabeledField from '../LabeledField/LabeledField.vue'
 
 const appearance = {
 	default: {},
@@ -43,6 +43,7 @@ const appearance = {
 }
 
 export default {
+	name: 'labeled-text-field',
 	appearance,
 	components: {
 		'labeled-field': LabeledField,

@@ -42,9 +42,10 @@
 </template>
 
 <script>
-import SizeTransition from './SizeTransition.vue'
+import SizeTransition from '../SizeTransition/SizeTransition.vue'
 
 export default {
+	name: 'labeled-field',
 	components: {
 		'size-transition': SizeTransition
 	},

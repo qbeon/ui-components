@@ -44,9 +44,9 @@
 </template>
 
 <script>
-import LabeledField from '../components/LabeledField.vue'
-import Scrollable from '../components/Scrollable.vue'
-import ContextMenu from '../components/ContextMenu.vue'
+import LabeledField from '../LabeledField/LabeledField.vue'
+import Scrollable from '../Scrollable/Scrollable.vue'
+import ContextMenu from '../ContextMenu/ContextMenu.vue'
 
 const appearance = {
 	default: {
@@ -60,6 +60,7 @@ const appearance = {
 }
 
 export default {
+	name: 'labeled-select-field',
 	appearance,
 	components: {
 		'labeled-field': LabeledField,

@@ -1,6 +1,6 @@
 <template>
 <component-page
-name="Select Field"
+name="Labeled Select Field"
 :subComponents="{
 	LabeledFieldComponent: 'LabeledField',
 	MenuComponent: 'Menu',
@@ -22,19 +22,19 @@ name="Select Field"
 			}
 		}">
 			<p slot="description">The default raw select field is mostly unstyled</p>
-			<select-field
+			<labeled-select-field
 			class="field"
 			title="Many options"
 			:options="elements"
 			v-model="default_values[0]">
-			</select-field>
+			</labeled-select-field>
 
-			<select-field
+			<labeled-select-field
 			class="field"
 			title="Few options"
 			:options="elementGroupNobleGases"
 			v-model="default_values[1]">
-			</select-field>
+			</labeled-select-field>
 		</section-card>
 
 		<!-- Customization -->
@@ -50,37 +50,35 @@ name="Select Field"
 			}
 		}">
 			<p slot="description">The select field component can be customized and styled</p>
-			<select-field
+			<labeled-select-field
 			class="field styled small"
 			title="Many options"
 			:options="elements"
 			v-model="customization_values[0]">
-			</select-field>
+			</labeled-select-field>
 
-			<select-field
+			<labeled-select-field
 			class="field styled large"
 			title="Few options (wide)"
 			:options="elementGroupNobleGases"
 			v-model="customization_values[1]">
-			</select-field>
+			</labeled-select-field>
 		</section-card>
 
 		<!-- Grouped Options -->
 		<section-card name="Grouped Options">
-			<select-field
+			<labeled-select-field
 			class="field styled large"
 			title="Grouped"
 			:options="elements"
 			v-model="groupedOptions_values[0]">
-			</select-field>
+			</labeled-select-field>
 		</section-card>
 	</div>
 </component-page>
 </template>
 
 <script>
-import SelectField from '../components/Select.vue'
-
 import {
 	elements,
 	elementGroupNobleGases,
@@ -93,7 +91,6 @@ import SectionCard from '../util/SectionCard.vue'
 export default {
 	components: {
 		'component-page': UtilComponentPage,
-		'select-field': SelectField,
 		'section-card': SectionCard,
 	},
 	data() {

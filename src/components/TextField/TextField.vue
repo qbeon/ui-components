@@ -19,6 +19,7 @@
 <script>
 
 export default {
+	name: 'text-field',
 	props: {
 		'value': {
 			type: String,

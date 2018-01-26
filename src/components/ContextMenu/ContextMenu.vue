@@ -49,8 +49,8 @@ const appearance = {
 }
 
 export default {
-	appearance,
 	name: 'context-menu',
+	appearance,
 	data() {
 		const prefix = '__uic_context-menu_'
 		return {

@@ -3,9 +3,10 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import checkbox from '../node_modules/vue-material-checkbox/src/main'
 
-Vue.use(checkbox)
+import Controls from './install'
+
+Vue.use(Controls)
 
 export function createApp (ssrContext) {
 	// create store and router instances
