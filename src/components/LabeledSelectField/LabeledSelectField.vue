@@ -1,18 +1,18 @@
 <template>
 <div
-:class="config.class.root"
+class="__uic_lsf_root"
 @click="openContextMenu">
 	<labeled-field
 	:title="title"
 	:selected="value ? true : false"
-	:class="config.class.body">
+	class="__uic_lsf_body">
 		<div slot="contents">
-			<transition :name="config.class.selectionText">
+			<transition name="__uic_lsf_selection-text">
 				<div
-				:class="config.class.selectionText"
+				class="__uic_lsf_selection-text"
 				v-if="currentSelection">
 					<transition
-					:name="config.class.selectionText"
+					name="__uic_lsf_selection-text"
 					mode="out-in">
 						<div :key="currentSelection">
 							<span>{{options[currentSelection]}}</span>
@@ -22,15 +22,15 @@
 			</transition>
 		</div>
 	</labeled-field>
-	<div :class="config.class.contextMenu">
+	<div class="__uic_lsf_context-menu">
 		<context-menu
 		:show="showMenu"
 		:appearance="appearance.contextMenu"
 		@lostFocus="onMenuLostFocus">
-			<scrollable :class="config.class.scrollArea">
-				<ul :class="config.class.optionList">
+			<scrollable class="__uic_lsf_scroll-area">
+				<ul class="__uic_lsf_option-list">
 					<li
-					:class="config.class.option"
+					class="__uic_lsf_option"
 					@click="select(value)"
 					v-for="(name, value) in options"
 					:key="value">
@@ -101,18 +101,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-select-field_'
 		return {
-			config: {
-				class: {
-					root: prefix + 'root',
-					selectionText: prefix + 'selection-text',
-					contextMenu: prefix + 'context-menu',
-					scrollArea: prefix + 'scroll-area',
-					optionList: prefix + 'option-list',
-					option: prefix + 'option'
-				}
-			},
 			showMenu: false,
 			currentSelection: null
 		}
@@ -151,7 +140,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_labeled-select-field_
+.__uic_lsf_
 	&root
 		position: relative
 		display: inline-block

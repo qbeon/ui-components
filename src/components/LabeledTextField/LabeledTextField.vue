@@ -1,17 +1,17 @@
 <template>
 <div
-:class="config.class.root"
+class="__uic_ltf_root"
 @click="activate">
 	<labeled-field
 	:title="title"
 	:selected="!empty"
-	:class="config.class.body"
+	class="__uic_ltf_body"
 	@contentSizeChanged="onContentSizeChanged">
 		<div slot="contents">
 			<input
 			v-show="!isMultilineField"
 			ref="input"
-			:class="config.class.input"
+			class="__uic_ltf_input"
 			v-model="currentValue"
 			@change="onInputComplete"
 			@input="onInput"
@@ -20,7 +20,7 @@
 			<textarea
 			v-show="isMultilineField"
 			ref="textarea"
-			:class="config.class.textarea"
+			class="__uic_ltf_textarea"
 			:rows="currentLineNumber"
 			v-model="currentValue"
 			@change="onInputComplete"
@@ -69,15 +69,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-text-field_'
 		return {
-			config: {
-				class: {
-					root: prefix + 'root',
-					input: prefix + 'input',
-					textarea: prefix + 'textarea'
-				}
-			},
 			empty: true,
 			currentValue: '',
 			currentLineNumber: 1
@@ -206,7 +198,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_labeled-text-field_
+.__uic_ltf_
 	&root
 		font-size: 0px
 	&body

@@ -1,12 +1,11 @@
 <template>
-<div
-:class="config.class.root">
+<div class="__uic_tf_root">
 	<span
 	ref="pseudo"
-	:class="config.class.pseudo"></span>
+	class="__uic_tf_pseudo"></span>
 	<input
 	ref="input"
-	:class="config.class.input"
+	class="__uic_tf_input"
 	v-model="currentValue"
 	@change="onInputComplete"
 	@input="onInput"
@@ -27,16 +26,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_text-field_'
 		return {
-			config: {
-				class: {
-					root: prefix + 'root',
-					input: prefix + 'input',
-					textarea: prefix + 'textarea',
-					pseudo: prefix + 'pseudo'
-				}
-			},
 			currentValue: ''
 		}
 	},
@@ -96,7 +86,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_text-field_
+.__uic_tf_
 	&root
 		font-size: 0px
 	&body

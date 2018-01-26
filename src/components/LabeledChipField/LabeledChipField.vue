@@ -1,32 +1,32 @@
 <template>
 	<div
-	:class="config.class.root"
+	class="__uic_lcf_root"
 	@click="focus"
 	@mousedown="onMousedown"
 	@mouseup="onMouseup">
 		<labeled-field
 		:title="title"
 		:selected="focused || !empty"
-		:class="config.class.body"
+		class="__uic_lcf_body"
 		@contentSizeChanged="onContentSizeChanged">
 			<div
 			slot="contents"
-			:class="config.class.list">
+			class="__uic_lcf_list">
 				<transition-group
-				:name="config.class.listItem"
+				name="__uic_lcf_list-item"
 				mode="out-in">
 					<div
-					:class="config.class.listItem"
+					class="__uic_lcf_list-item"
 					v-for="chip in chips"
 					:key="chip.index">
 						<slot
 						:index="chip.index"
 						:value="chip.value"
 						:remove="chip.remove">
-							<div :class="config.class.chip">
+							<div class="__uic_lcf_chip">
 								<span>{{chip.value}}</span>
 								<div
-								:class="config.class.removeButton"
+								class="__uic_lcf_remove-button"
 								v-html="icons.cross"
 								@click="chip.remove()"></div>
 							</div>
@@ -35,7 +35,7 @@
 				</transition-group>
 				<text-field
 				ref="input"
-				:class="config.class.input"
+				class="__uic_lcf_input"
 				v-model="inputValue"
 				@input="onInput"
 				@accepted="onInputFinished"
@@ -105,20 +105,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-chip-field_'
 		return {
-			config: {
-				class: {
-					root: prefix + 'root',
-					body: prefix + 'body',
-					list: prefix + 'list',
-					listItem: prefix + 'list-item',
-					chip: prefix + 'chip',
-					input: prefix + 'input',
-					removeButton: prefix + 'remove-button'
-				}
-			},
-
 			// Is set to true when the root element ist clicked
 			// to prevent unselecting on text field blur
 			mouseDown: false,
@@ -255,7 +242,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_labeled-chip-field_
+.__uic_lcf_
 	&root
 		font-size: 0px
 

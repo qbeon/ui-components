@@ -1,30 +1,30 @@
 <template>
-	<div class="__uic_scrollable_root">
+	<div class="__uic_scr_root">
 		<div
 		ref="container"
-		class="__uic_scrollable_container">
-			<transition name="__uic_scrollable_upperIndicator">
+		class="__uic_scr_container">
+			<transition name="__uic_scr_upper-indicator">
 				<div
 				v-show="showUpperIndicator"
-				class="__uic_scrollable_upperIndicator"></div>
+				class="__uic_scr_upper-indicator"></div>
 			</transition>
-			<transition name="__uic_scrollable_lowerIndicator">
+			<transition name="__uic_scr_lower-indicator">
 				<div
 				v-show="showLowerIndicator"
-				class="__uic_scrollable_lowerIndicator"></div>
+				class="__uic_scr_lower-indicator"></div>
 			</transition>
 			<div
 			ref="content"
-			class="__uic_scrollable_content">
+			class="__uic_scr_content">
 				<slot></slot>
 			</div>
-			<transition name="__uic_scrollable_dragger">
+			<transition name="__uic_scr_dragger">
 				<div
 				ref="dragger"
-				class="__uic_scrollable_dragger"
-				:class="{__uic_scrollable_dragger_dragging: barDragging}"
+				class="__uic_scr_dragger"
+				:class="{__uic_scr_dragger_dragging: barDragging}"
 				v-show="draggerEnabled">
-					<div class="__uic_scrollable_dragger_body"></div>
+					<div class="__uic_scr_dragger-body"></div>
 				</div>
 			</transition>
 		</div>
@@ -106,10 +106,10 @@ export default {
 				preventParentScroll: false,
 				useScrollbarPseudo: false, // experimental
 
-				containerScrollingClass: '__uic_scrollable_scrolling',
-				containerScrollingActiveClass: '__uic_scrollable_active',
-				containerDraggingClass: '__uic_scrollable_dragging',
-				//containerDraggingActiveClass: '__uic_scrollable_dragging-active',
+				containerScrollingClass: '__uic_scr_scrolling',
+				containerScrollingActiveClass: '__uic_scr_active',
+				containerDraggingClass: '__uic_scr_dragging',
+				//containerDraggingActiveClass: '__uic_scr_dragging-active',
 			},
 
 			// show dragger
@@ -298,7 +298,7 @@ export default {
 		//   we hide scrollbar using pseudo-element selector ::-webkit-scrollbar
 		hideScrollbarUsingPseudoElement() {
 			const idName = 'vuebar-pseudo-element-styles'
-			const selector = '.__uic_scrollable_content::-webkit-scrollbar'
+			const selector = '.__uic_scr_content::-webkit-scrollbar'
 			let styleElm = document.getElementById(idName)
 			let sheet = null
 
@@ -542,22 +542,22 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.__uic_scrollable
+<style lang="stylus">
+.__uic_scr_
 	// Component root
-	&_root
+	&root
 		height: 100%
 		width: 100%
 
 	// Main container
-	&_container
+	&container
 		position: relative
 		height: 100%
 		width: 100%
 		overflow: hidden
 
 	// Content container
-	&_content
+	&content
 		display: block
 		overflow-x: hidden
 		overflow-y: scroll
@@ -565,7 +565,7 @@ export default {
 		width: 100%
 
 	// Basic scroll indicator styles
-	&_upperIndicator, &_lowerIndicator
+	&upper-indicator, &lower-indicator
 		height: 1.5rem
 		width: 100%
 		position: absolute
@@ -584,21 +584,21 @@ export default {
 			transform: translateX(6px)
 
 	// Upper scroll indicator
-	&_upperIndicator
+	&upper-indicator
 		top: 0px
 		background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)
 		background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
 		background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%)
 
 	// Lower scroll indicator
-	&_lowerIndicator
+	&lower-indicator
 		bottom: 0px
 		background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
 		background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
 		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%)
 
 	// Dragger root
-	&_dragger
+	&dragger
 		display: block
 		position: absolute
 		right: 0px
@@ -618,7 +618,7 @@ export default {
 			transform: translateX(6px)
 
 		// Dragger body
-		&_body
+		&-body
 			-webkit-transition: all .3s cubic-bezier(0.19, 1, 0.22, 1)
 			transition: all .3s cubic-bezier(0.19, 1, 0.22, 1)
 			margin: auto
@@ -630,16 +630,16 @@ export default {
 			border-radius: 8px
 
 		// Dragger body when the dragger is either hovered or being dragged
-		&_dragging &_body, &:hover &_body
+		&dragging &-body, &:hover &-body
 			width: 100%
 			margin-top: 0px
 			height: 100%
 			background-color: rgba(0, 0, 0, .5)
 			border-radius: 0px
 
-	&_active &_dragger
+	&active &dragger
 		// Dragger body when the dragger is active
-		&_body
+		&-body
 			background-color: rgba(0, 0, 0, .2)
 
 </style>

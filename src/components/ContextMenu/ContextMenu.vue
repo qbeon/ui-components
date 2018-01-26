@@ -5,21 +5,21 @@
 		<transition name="anim">
 			<div
 			ref="background"
-			:class="config.class.background"
+			class="__uic_ctxm_background"
 			@wheel="onFocusLost"
 			v-show="show"
 			@click="onFocusLost">
 			</div>
 		</transition>
 
-		<transition :name="config.class.container">
+		<transition name="__uic_ctxm_container">
 			<div
 			ref="container"
-			:class="config.class.container"
+			class="__uic_ctxm_container"
 			v-show="show">
 				<div
 				ref="content"
-				:class="config.class.content"
+				class="__uic_ctxm_content"
 				tabindex="-1"
 				@contextmenu.capture.prevent>
 					<slot></slot>
@@ -52,15 +52,7 @@ export default {
 	name: 'context-menu',
 	appearance,
 	data() {
-		const prefix = '__uic_context-menu_'
 		return {
-			config: {
-				class: {
-					background: prefix + 'background',
-					container: prefix + 'container',
-					content: prefix + 'content'
-				}
-			},
 			blurred: false
 		}
 	},
@@ -171,7 +163,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_context-menu_
+.__uic_ctxm_
 	&background
 		position: fixed
 		top: 0px

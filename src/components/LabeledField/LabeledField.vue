@@ -1,39 +1,39 @@
 <template>
 	<size-transition
-	:class="config.class.sizer"
+	class="__uic_lf_sizer"
 	mode="height"
 	@contentSizeChanged="onContentSizeChanged">
-		<div :class="config.class.body">
+		<div class="__uic_lf_body">
 			<div v-show="selected">
-				<transition :name="config.class.selectionTitle">
+				<transition name="__uic_lf_selection-title">
 					<div
-					:class="config.class.selectionTitle"
+					class="__uic_lf_selection-title"
 					v-show="selected">
 						<transition
-						:name="config.class.selectionTitleText"
+						name="__uic_lf_selection-title-text"
 						mode="out-in"
 						:key="title">
-							<span :class="config.class.selectionTitleText">{{title}}</span>
+							<span class="__uic_lf_selection-title-text">{{title}}</span>
 						</transition>
 					</div>
 				</transition>
-				<transition :name="config.class.contents">
+				<transition name="__uic_lf_contents">
 					<div
-					:class="config.class.contents"
+					class="__uic_lf_contents"
 					v-show="selected">
 						<slot name="contents"></slot>
 					</div>
 				</transition>
 			</div>
-			<transition :name="config.class.fieldTitle">
+			<transition name="__uic_lf_field-title">
 				<div
-				:class="config.class.fieldTitle"
+				class="__uic_lf_field-title"
 				v-show="!selected">
 					<transition
-					:name="config.class.fieldTitleText"
+					name="__uic_lf_field-title-text"
 					mode="out-in"
 					:key="title">
-						<span :class="config.class.fieldTitleText">{{title}}</span>
+						<span class="__uic_lf_field-title-text">{{title}}</span>
 					</transition>
 				</div>
 			</transition>
@@ -62,19 +62,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-field_'
 		return {
-			config: {
-				class: {
-					body: prefix + 'body',
-					sizer: prefix + 'sizer',
-					selectionTitle: prefix + 'selection-title',
-					selectionTitleText: prefix + 'selection-title-text',
-					contents: prefix + 'contents',
-					fieldTitle: prefix + 'field-title',
-					fieldTitleText: prefix + 'field-title-text'
-				}
-			},
 			currentSelection: null
 		}
 	},
@@ -87,7 +75,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_labeled-field_
+.__uic_lf_
 	&body
 		font-size: 0px
 		position: relative

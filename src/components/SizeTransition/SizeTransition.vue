@@ -1,10 +1,10 @@
 <template>
 	<div
 	ref="container"
-	class="__uic_size-transition_container">
+	class="__uic_szt_container">
 		<div
 		ref="content"
-		class="__uic_size-transition_content">
+		class="__uic_szt_content">
 			<slot></slot>
 		</div>
 	</div>
@@ -110,24 +110,24 @@ export default {
 			})
 		},
 		enableTransition() {
-			addClass(this.$refs.container, '__uic_size-transition_container_animated')
+			addClass(this.$refs.container, '__uic_szt_container_animated')
 		},
 		disableTransition() {
-			removeClass(this.$refs.container, '__uic_size-transition_container_animated')
+			removeClass(this.$refs.container, '__uic_szt_container_animated')
 		}
 	}
 }
 </script>
 
 <style lang="stylus">
-.__uic_size-transition
-	&_container
+.__uic_szt_
+	&container
 		box-sizing: content-box
 		display: inline-block
 		&_animated
 			-webkit-transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
 			transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
 
-	&_content
+	&content
 		display: inline-block
 </style>
