@@ -1,14 +1,12 @@
 <template>
 	<div id="app">
-		<scrollable
-		:appearance="{
-			scrollIndicators: false
-		}">
+		<uic-scrollable
+		:appearance="{scrollIndicators: false}">
 			<div class="navigation">
 				<div
 				class="logo"
 				@click="goHome"></div>
-				<labeled-select-field
+				<uic-labeled-select-field
 				class="pageSelector"
 				title="Page"
 				:options="pages"
@@ -19,7 +17,7 @@
 			mode="out-in">
 				<router-view></router-view>
 			</transition>
-		</scrollable>
+		</uic-scrollable>
 	</div>
 </template>
 
@@ -71,6 +69,7 @@ export default {
 	box-sizing: content-box
 	height: 6rem
 	display: flex
+	flex-flow: row nowrap
 	align-items: center
 	z-index: 1000
 	margin: auto
@@ -81,10 +80,12 @@ export default {
 		background-image: url(/public/logo.png)
 		background-size: contain
 		background-position: center
+		background-repeat: no-repeat
 		$default-transition(.5s)
 		&:hover
 			transform: scale(1.2)
 	.pageSelector
+		flex-grow: 1
 		margin-left: 1rem
 
 .router-view
