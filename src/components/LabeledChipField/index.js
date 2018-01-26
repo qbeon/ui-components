@@ -1,7 +1,8 @@
+import { componentName } from '../util.js'
 import LabeledChipField from './LabeledChipField.vue'
 
 export { LabeledChipField }
 
 export default function install(Vue) {
-	Vue.component(LabeledChipField.name, LabeledChipField)
+	Vue.component(componentName(LabeledChipField.name), LabeledChipField)
 }

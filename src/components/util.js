@@ -1,3 +1,7 @@
+export function componentName(name) {
+	return 'uic-' + name
+}
+
 export function detectBrowser() {
 	// get ie version helper
 	function getIEVersion() {

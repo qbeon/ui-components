@@ -22,19 +22,19 @@ name="Labeled Select Field"
 			}
 		}">
 			<p slot="description">The default raw select field is mostly unstyled</p>
-			<labeled-select-field
+			<uic-labeled-select-field
 			class="field"
 			title="Many options"
 			:options="elements"
 			v-model="default_values[0]">
-			</labeled-select-field>
+			</uic-labeled-select-field>
 
-			<labeled-select-field
+			<uic-labeled-select-field
 			class="field"
 			title="Few options"
 			:options="elementGroupNobleGases"
 			v-model="default_values[1]">
-			</labeled-select-field>
+			</uic-labeled-select-field>
 		</section-card>
 
 		<!-- Customization -->
@@ -50,29 +50,29 @@ name="Labeled Select Field"
 			}
 		}">
 			<p slot="description">The select field component can be customized and styled</p>
-			<labeled-select-field
+			<uic-labeled-select-field
 			class="field styled small"
 			title="Many options"
 			:options="elements"
 			v-model="customization_values[0]">
-			</labeled-select-field>
+			</uic-labeled-select-field>
 
-			<labeled-select-field
+			<uic-labeled-select-field
 			class="field styled large"
 			title="Few options (wide)"
 			:options="elementGroupNobleGases"
 			v-model="customization_values[1]">
-			</labeled-select-field>
+			</uic-labeled-select-field>
 		</section-card>
 
 		<!-- Grouped Options -->
 		<section-card name="Grouped Options">
-			<labeled-select-field
+			<uic-labeled-select-field
 			class="field styled large"
 			title="Grouped"
 			:options="elements"
 			v-model="groupedOptions_values[0]">
-			</labeled-select-field>
+			</uic-labeled-select-field>
 		</section-card>
 	</div>
 </component-page>
