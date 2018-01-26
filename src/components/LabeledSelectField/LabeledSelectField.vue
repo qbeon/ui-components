@@ -101,7 +101,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_select_'
+		const prefix = '__uic_labeled-select-field_'
 		return {
 			config: {
 				class: {
@@ -151,7 +151,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_select_
+.__uic_labeled-select-field_
 	&root
 		position: relative
 		display: inline-block

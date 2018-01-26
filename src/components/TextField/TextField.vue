@@ -27,7 +27,7 @@ export default {
 		}
 	},
 	data() {
-		const prefix = '__uic_labeled-text-field_'
+		const prefix = '__uic_text-field_'
 		return {
 			config: {
 				class: {
@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.__uic_labeled-text-field_
+.__uic_text-field_
 	&root
 		font-size: 0px
 	&body
