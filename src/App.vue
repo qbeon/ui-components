@@ -30,6 +30,7 @@ export default {
 			pages: {
 				'Home': 'Home',
 				'TextFieldComponent': 'Text Field Component',
+				'LabeledTextFieldComponent': 'Labeled Text Field Component',
 				'LabeledSelectFieldComponent': 'Labeled Select Field Component',
 				'LabeledChipFieldComponent': 'Labeled Chip Field Component',
 				'ScrollableComponent': 'Scrollable Component',

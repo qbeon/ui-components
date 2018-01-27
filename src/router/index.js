@@ -10,7 +10,7 @@ const routes = [{
 	name: 'Home',
 	component: _import('Home')
 }, {
-	path: '/text-field-component',
+	path: '/labeled-text-field-component',
 	name: 'LabeledTextFieldComponent',
 	component: _import('LabeledTextFieldComponent')
 }, {
