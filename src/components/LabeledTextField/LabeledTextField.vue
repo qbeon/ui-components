@@ -61,6 +61,19 @@ export default {
 			type: Number,
 			required: false
 		},
+		validator: {
+			type: Function,
+			required: false
+		},
+		validateOn: {
+			type: String,
+			required: false,
+			default: 'complete',
+			validator(val) {
+				if (val !== 'input' && val !== 'complete') return false
+				return true
+			}
+		},
 		'appearance': {
 			type: Object,
 			required: false,
@@ -85,6 +98,7 @@ export default {
 			this.empty = false
 			this.currentValue = this.value
 		}
+		this.onInput()
 	},
 	watch: {
 		value(val) {
@@ -106,9 +120,22 @@ export default {
 		},
 		onInputComplete() {
 			this.$emit('valueChanged', this.currentValue)
+
+			// Validate if necessary
+			if (this.validateOn === 'complete') this.validate()
 		},
 		onInput() {
 			this.$emit('input', this.currentValue)
+
+			// Validate if necessary
+			if (this.validateOn === 'input') this.validate()
+		},
+		validate() {
+			if (this.validator) {
+				if (this.validator(this.currentValue) === true) this.$emit('valid')
+				else this.$emit('invalid')
+				return
+			}
 		},
 		countLines() {
 			const textarea = this.$refs.textarea
