@@ -241,6 +241,7 @@ export default {
 		white-space: nowrap
 		text-overflow: ellipsis
 		background: none
+		color: inherit
 	&textarea
 		resize: none
 		width: 100%
@@ -249,4 +250,5 @@ export default {
 		font-size: 1rem
 		line-height: 1.5rem
 		background: none
+		color: inherit
 </style>
