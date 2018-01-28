@@ -104,6 +104,8 @@ export default {
 		value(val) {
 			if (val && val.length > 0) this.setValue(val)
 			else this.setValue(null)
+
+			this.validate()
 		},
 		currentValue(value) {
 			// Update size only in case of multiline inputs
