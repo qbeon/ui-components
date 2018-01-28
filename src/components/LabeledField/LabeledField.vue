@@ -80,7 +80,6 @@ export default {
 		font-size: 0px
 		position: relative
 		display: block
-		cursor: default
 		min-height: 3rem
 		width: 100%
 		overflow: hidden

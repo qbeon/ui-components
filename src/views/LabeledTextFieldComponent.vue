@@ -139,6 +139,7 @@ h6
 .field
 	display: block
 	margin-bottom: 1rem
+	cursor: pointer
 	&.inlined
 		display: inline-block
 	&:last-child
