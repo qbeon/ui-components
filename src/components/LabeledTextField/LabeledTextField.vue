@@ -240,6 +240,7 @@ export default {
 		overflow: hidden
 		white-space: nowrap
 		text-overflow: ellipsis
+		background: none
 	&textarea
 		resize: none
 		width: 100%
@@ -247,4 +248,5 @@ export default {
 		border: 0px
 		font-size: 1rem
 		line-height: 1.5rem
+		background: none
 </style>
