@@ -143,6 +143,7 @@ export default {
 	watch: {
 		value() {
 			this.init()
+			this.$emit('input', this.value)
 		},
 		maxLines() {
 			if (this.isMultiline()) this.$nextTick(this.updateSize)
