@@ -48,7 +48,9 @@
 					:class="{'inactive': !hasPreviousMonthPage}"
 					@click="previousMonthPage"
 					v-html="arrowRightIcon"/>
-					<span class="__uic_dp_current-displayed-months">
+					<span
+					class="__uic_dp_current-displayed-months"
+					@click="goToYearSelection">
 						{{selectedYear}}
 					</span>
 					<div
@@ -80,7 +82,9 @@
 					:class="{'inactive': !hasPreviousDayPage}"
 					@click="previousDayPage"
 					v-html="arrowRightIcon"/>
-					<span class="__uic_dp_current-displayed-months">
+					<span
+					class="__uic_dp_current-displayed-months"
+					@click="goToMonthSelection">
 						{{months[selectedMonth].name}} {{selectedYear}}
 					</span>
 					<div
@@ -246,7 +250,7 @@ export default {
 			return new Date(
 				this.selectedYear != null ? this.selectedYear : 1970,
 				this.selectedMonth != null ? this.selectedMonth : 0,
-				this.selectedDay != null ? this.selectedDay : 0,
+				this.selectedDay != null ? this.selectedDay : 1,
 			)
 		}
 	},
@@ -357,6 +361,12 @@ export default {
 				this.selectedYear--
 				this.selectedMonth = 11
 			} else this.selectedMonth--
+		},
+		goToYearSelection() {
+			this.currentPicker = 'year'
+		},
+		goToMonthSelection() {
+			this.currentPicker = 'month'
 		},
 
 		selectYear(year) {
@@ -536,6 +546,7 @@ export default {
 		font-size: 1rem
 		height: 1.5rem
 		line-height: 1.5rem
+		cursor: pointer
 		i
 			color: #AAA
 
