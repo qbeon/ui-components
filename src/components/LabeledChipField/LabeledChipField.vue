@@ -27,7 +27,7 @@
 								<span>{{chip.value}}</span>
 								<div
 								class="__uic_lcf_remove-button"
-								v-html="icons.cross"
+								v-html="crossIcon"
 								@click="chip.remove()"></div>
 							</div>
 						</slot>
@@ -49,7 +49,7 @@
 <script>
 import TextField from '../TextField/TextField.vue'
 import LabeledField from '../LabeledField/LabeledField.vue'
-import Icons from '../icons.js'
+import { Cross } from '../icons'
 
 const appearance = {
 	default: {},
@@ -116,8 +116,8 @@ export default {
 			// Mirrors the text input value
 			inputValue: '',
 
-			// Provides the SVG icons
-			icons: Icons,
+			// Provides the SVG icon
+			crossIcon: Cross,
 
 			// Mirrors the value property providing the items additional
 			// information and funtionality such as the remove method

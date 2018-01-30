@@ -17,6 +17,8 @@ export function createApp (ssrContext) {
 	// this registers `store.state.route`
 	sync(store, router)
 
+	Vue.config.productionTip = false
+
 	// create the app instance.
 	// here we inject the router, store and ssr context to all child components,
 	// making them available everywhere as `this.$router` and `this.$store`.

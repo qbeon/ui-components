@@ -10,6 +10,10 @@ const routes = [{
 	name: 'Home',
 	component: _import('Home')
 }, {
+	path: '/date-picker-component',
+	name: 'DatePickerComponent',
+	component: _import('DatePickerComponent')
+}, {
 	path: '/labeled-text-field-component',
 	name: 'LabeledTextFieldComponent',
 	component: _import('LabeledTextFieldComponent')
