@@ -128,8 +128,8 @@
 
 <script>
 import Scrollable from '../Scrollable/Scrollable.vue'
-import getMonthDayRows from './getMonthDayRows'
-import { ArrowRight } from '../icons.js'
+import getMonthDayRows from '../getMonthCalendar'
+import { ArrowRight } from '../icons'
 
 // Month is 1-indexed (January is 1, February is 2, etc).
 function daysInMonth(month, year) {
@@ -185,6 +185,13 @@ export default {
 			type: Number,
 			required: false,
 			default: 2100
+		},
+		// Includes extra foreign weeks
+		// to preserve the 6-rows layout when enabled
+		fullMonthCalendar: {
+			type: Boolean,
+			required: false,
+			default: true
 		}
 	},
 	data() {
@@ -385,7 +392,7 @@ export default {
 
 		renewDaysTable() {
 			this.dayTable = getMonthDayRows(
-				this.selectedYear, this.selectedMonth, true
+				this.selectedYear, this.selectedMonth, this.fullMonthCalendar
 			)
 		}
 	}
