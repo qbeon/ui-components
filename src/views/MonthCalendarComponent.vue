@@ -56,12 +56,30 @@ name="Month Calendar">
 			v-model="selection_model"
 			selectionMode="day"/>
 
+			<p><b>Selection:</b> {{selection_model.selectedDay}}</p>
+
 			<p v-if="selection_model.selectedDay.date">
 				<b>Selected day:</b>
-				{{selection_model.selectedDay.date.getFullYear()}}
-				- {{selection_model.selectedDay.date.getMonth() + 1}}
-				- {{selection_model.selectedDay.date.getDate()}}<br>
-				{{selection_model.selectedDay.date.toUTCString()}}<br>
+				{{selection_model.selectedDay.date.toUTCString()}}
+			</p>
+		</section-card>
+
+		<!-- Non-Switching Selection -->
+		<section-card
+		name="Non-Switching Selection">
+			<p slot="description">The calendar can be explicitly instructed to not switch the displayed month on foreign day (days from the previous or next month) selection.</p>
+			<uic-month-calendar
+			class="field"
+			:navigable="true"
+			disableSwitchingOnSelection
+			v-model="nonSwitchingSelection_model"
+			selectionMode="day"/>
+
+			<p><b>Selection:</b> {{nonSwitchingSelection_model.selectedDay}}</p>
+
+			<p v-if="nonSwitchingSelection_model.selectedDay.date">
+				<b>Selected day:</b>
+				{{nonSwitchingSelection_model.selectedDay.date.toUTCString()}}
 			</p>
 		</section-card>
 	</div>
@@ -85,6 +103,12 @@ export default {
 			// Sections
 			navigation_model: {displayedMonth: new Date()},
 			selection_model: {
+				displayedMonth: new Date(),
+				selectedDay: {
+					date: new Date(Date.now())
+				},
+			},
+			nonSwitchingSelection_model: {
 				displayedMonth: new Date(),
 				selectedDay: {
 					date: new Date(Date.now())

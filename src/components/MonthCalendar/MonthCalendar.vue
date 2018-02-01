@@ -6,17 +6,17 @@
 			v-if="navigable"
 			class="__uic_mc_to-previous-page"
 			:class="{'inactive': !hasPreviousPage}"
-			@click="goToPreviousPage"
+			@click="onPreviousClicked"
 			v-html="arrowRightIcon"/>
 			<span
 			class="__uic_mc_displayed-month"
 			:class="{'clickable': navigable}"
-			@click="$emit('monthClick')">{{monthNames[selectedMonth]}} {{selectedYear}}</span>
+			@click="$emit('monthClick')">{{monthNames[month]}} {{year}}</span>
 			<div
 			v-if="navigable"
 			class="__uic_mc_to-next-page"
 			:class="{'inactive': !hasNextPage}"
-			@click="goToNextPage"
+			@click="onNextClicked"
 			v-html="arrowRightIcon"/>
 		</div>
 		<div class="__uic_mc_table">
@@ -37,7 +37,7 @@
 				class="__uic_mc_table-cell"
 				:class="{
 					'selectable': selectionMode === 'day',
-					'foreign': day.foreign,
+					'foreign': day.origin !== 0,
 					'selected': isSelectedDay(day),
 				}"
 				v-for="day in week"
@@ -114,6 +114,12 @@ export default {
 			required: false,
 			default: false
 		},
+		// Will disable switching to the origin month of foreign days on selection
+		disableSwitchingOnSelection: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		selectionMode: {
 			type: String,
 			required: false,
@@ -146,8 +152,8 @@ export default {
 				'December'
 			],
 
-			selectedYear: null,
-			selectedMonth: null,
+			year: null,
+			month: null,
 
 			arrowRightIcon: ArrowRight,
 			dayTable: null
@@ -157,15 +163,15 @@ export default {
 		hasNextPage() {
 			// If the next month is the first of the next year
 			// and the next year is bigger maximum - then no
-			if (this.selectedMonth + 1 > 11 &&
-				this.selectedYear + 1 > this.maxYear) return false
+			if (this.month + 1 > 11 &&
+				this.year + 1 > this.maxYear) return false
 			return true
 		},
 		hasPreviousPage() {
 			// If the previous month is the last of the previous year
 			// and the previous year is smaller minimum - then no
-			if (this.selectedMonth - 1 < 0 &&
-				this.selectedYear - 1 < this.minYear) return false
+			if (this.month - 1 < 0 &&
+				this.year - 1 < this.minYear) return false
 			return true
 		},
 	},
@@ -180,75 +186,80 @@ export default {
 	methods: {
 		init() {
 			if (this.value != null && this.value.displayedMonth != null) {
-				this.selectedYear = this.value.displayedMonth.getFullYear()
-				this.selectedMonth = this.value.displayedMonth.getMonth()
+				this.year = this.value.displayedMonth.getFullYear()
+				this.month = this.value.displayedMonth.getMonth()
 				this.verifyRange()
 			} else {
-				this.selectedYear = this.minYear
-				this.selectedMonth = 0
+				this.year = this.minYear
+				this.month = 0
 			}
 			this.dayTable = getMonthCalendar(
-				this.selectedYear, this.selectedMonth, this.fullMonthCalendar
+				this.year, this.month, this.fullMonthCalendar
 			)
 		},
 		verifyRange() {
-			if (this.selectedYear < this.minYear) printWarning(
+			if (this.year < this.minYear) printWarning(
 				'displayed year (' +
-					this.selectedYear +
+					this.year +
 					') exceeds minimum (' +
 					this.minYear +
 					')'
 			)
-			if (this.selectedYear > this.maxYear) printWarning(
+			if (this.year > this.maxYear) printWarning(
 				'displayed year (' +
-					this.selectedYear +
+					this.year +
 					') exceeds maximum (' +
 					this.maxYear +
 					')'
 			)
 		},
 		goToNextPage() {
-			if (!this.hasNextPage) return
+			if (!this.hasNextPage) return false
 			// Increment year after december and set month to january
-			let year = this.selectedYear
-			let month = this.selectedMonth
-			if (month + 1 > 11) {
-				year++
-				month = 0
-			} else month++
-			this.$emit('navigation', {
-				navDir: -1,
-				year: year,
-				month: month
-			})
-			this.emitInput(year, month)
+			if (this.month + 1 > 11) {
+				this.year++
+				this.month = 0
+			} else this.month++
+			return true
 		},
 		goToPreviousPage() {
 			if (!this.hasPreviousPage) return
 			// Decrement year after january and set month to december
-			let year = this.selectedYear
-			let month = this.selectedMonth
-			if (month - 1 < 0) {
-				year--
-				month = 11
-			} else month--
-			this.$emit('navigation', {
-				navDir: 1,
-				year: year,
-				month: month
-			})
-			this.emitInput(year, month)
+			if (this.month - 1 < 0) {
+				this.year--
+				this.month = 11
+			} else this.month--
+			return true
+		},
+		onPreviousClicked() {
+			// Don't emit input if page transition failed
+			if (this.goToPreviousPage()) this.emitInput()
+		},
+		onNextClicked() {
+			// Don't emit input if page transition failed
+			if (this.goToNextPage()) this.emitInput()
 		},
 		onDaySelected(day) {
 			if (this.selectionMode === 'none') return
-			this.emitInput(this.selectedYear, this.selectedMonth, day)
+
+			if (!this.disableSwitchingOnSelection) {
+				if (day.origin < 0) {
+					// Switch to previous month
+					if (!this.goToPreviousPage()) return
+				} else if (day.origin > 0) {
+					// Switch to next month
+					if (!this.goToNextPage()) return
+				}
+			}
+
+			this.emitInput(day)
 		},
-		emitInput(year, month, selectedDay) {
+		emitInput(selectedDay) {
 			if (selectedDay == null && this.value != null) {
 				selectedDay = this.value.selectedDay
 			}
 			this.$emit('input', {
-				displayedMonth: new Date(year, month, 1),
+				displayedMonth: new Date(this.year, this.month, 1),
 				selectedDay: selectedDay
 			})
 		},
@@ -298,16 +309,14 @@ export default {
 		width: 2rem
 		height: 2rem
 		cursor: pointer
-		-webkit-transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
-		transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
+		$default-transition(.5s)
 		display: flex
 		justify-content: center
 		align-items: center
 		svg
 			height: 1rem
 			width: 1rem
-			-webkit-transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
-			transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
+			$default-transition(.5s)
 			fill: #AAA
 		&:hover
 			svg
@@ -354,8 +363,7 @@ export default {
 	&table-cell
 		cursor: pointer
 		border-radius: .2rem
-		-webkit-transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
-		transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
+		$default-color-transition(.2s)
 		&:hover
 			background-color: #EEE
 		&.foreign

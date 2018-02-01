@@ -47,7 +47,7 @@ function prevMonthDaysFromEnd(firstDay) {
 		days.unshift({
 			weekIndex: weekDayIndex,
 			monthIndex: monthDayIndex,
-			foreign: true,
+			origin: -1,
 			date: getPrevMonthDay(firstDay, monthDayIndex)
 		})
 		monthDayIndex--
@@ -80,7 +80,7 @@ export default function getMonthCalendar(
 		allDays.push({
 			weekIndex: weekDayIndex,
 			monthIndex: itr,
-			foreign: false,
+			origin: 0,
 			date: new Date(Date.UTC(selectedYear, selectedMonth, itr + 1))
 		})
 		
@@ -101,7 +101,7 @@ export default function getMonthCalendar(
 			allDays.push({
 				weekIndex: weekDayIndex,
 				monthIndex: monthDayIndex,
-				foreign: true,
+				origin: 1,
 				date: getNextMonthDay(firstDayDate, monthDayIndex)
 			})
 			monthDayIndex++
@@ -127,7 +127,7 @@ export default function getMonthCalendar(
 			extraWeek.push({
 				weekIndex: itr,
 				monthIndex: monthDayIndex,
-				foreign: true,
+				origin: 1,
 				date: getNextMonthDay(firstDayDate, monthDayIndex)
 			})
 		}
