@@ -116,7 +116,7 @@ export default {
 			required: false,
 			default: function() {
 				return {
-					displayedMonth: new Date(),
+					displayedMonth: new Date(Date.UTC()),
 					selectedDay: null
 				}
 			}
@@ -225,9 +225,9 @@ export default {
 		currentPicker(currentPicker) {
 			// Calculate date from selected year and month
 			// for the month calendar element when day picker is activated
-			if (currentPicker === 'day') this.monthCalendarDate = new Date(
+			if (currentPicker === 'day') this.monthCalendarDate = new Date(Date.UTC(
 				this.selectedYear, this.selectedMonth, 1
-			)
+			))
 		}
 	},
 	methods: {

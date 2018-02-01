@@ -11,7 +11,23 @@ function incrementWeekDay(weekDayIndex) {
 }
 
 function daysInMonth(date) {
-	return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+	return new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0)).getDate()
+}
+
+function getNextMonthDay(firstDay, dayIndex) {
+	const dt = new Date(firstDay)
+	dt.setMonth(dt.getMonth() + 1)
+	// The Date-API days are 1-based, thus add 1
+	dt.setDate(dayIndex + 1)
+	return dt
+}
+
+function getPrevMonthDay(firstDay, dayIndex) {
+	const dt = new Date(firstDay)
+	dt.setMonth(dt.getMonth() - 1)
+	// The Date-API days are 1-based, thus add 1
+	dt.setDate(dayIndex + 1)
+	return dt
 }
 
 // Returns the given number of days from the previous month in a reserved order
@@ -31,7 +47,8 @@ function prevMonthDaysFromEnd(firstDay) {
 		days.unshift({
 			weekIndex: weekDayIndex,
 			monthIndex: monthDayIndex,
-			foreign: true
+			foreign: true,
+			date: getPrevMonthDay(firstDay, monthDayIndex)
 		})
 		monthDayIndex--
 		weekDayIndex = decrementWeekDay(weekDayIndex)
@@ -48,7 +65,7 @@ export default function getMonthCalendar(
 	if (selectedYear == null || selectedMonth == null) return
 
 	let allDays = []
-	var firstDayDate = new Date(selectedYear, selectedMonth, 1)
+	var firstDayDate = new Date(Date.UTC(selectedYear, selectedMonth, 1))
 	const dayOfWeek = firstDayDate.getDay()
 
 	// Include foreign days from the previous month
@@ -63,7 +80,8 @@ export default function getMonthCalendar(
 		allDays.push({
 			weekIndex: weekDayIndex,
 			monthIndex: itr,
-			foreign: false
+			foreign: false,
+			date: new Date(Date.UTC(selectedYear, selectedMonth, itr + 1))
 		})
 		
 		// Count up the week day index
@@ -83,7 +101,8 @@ export default function getMonthCalendar(
 			allDays.push({
 				weekIndex: weekDayIndex,
 				monthIndex: monthDayIndex,
-				foreign: true
+				foreign: true,
+				date: getNextMonthDay(firstDayDate, monthDayIndex)
 			})
 			monthDayIndex++
 			weekDayIndex = incrementWeekDay(weekDayIndex)
@@ -108,7 +127,8 @@ export default function getMonthCalendar(
 			extraWeek.push({
 				weekIndex: itr,
 				monthIndex: monthDayIndex,
-				foreign: true
+				foreign: true,
+				date: getNextMonthDay(firstDayDate, monthDayIndex)
 			})
 		}
 		table.push(extraWeek)

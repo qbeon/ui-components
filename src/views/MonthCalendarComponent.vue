@@ -8,40 +8,58 @@ name="Month Calendar">
 		<section-card
 		name="Default">
 			<p slot="description">The default date picker is mostly unstyled, points at January 1970 and prints a full 6-row layout. The individual days are not selectable by default.</p>
+			
 			<uic-month-calendar/>
 		</section-card>
 
 		<!-- Customization -->
 		<section-card
-		name="Customization"
+		name="Customization">
+			<p slot="description">The visuals appearance can be customized.</p>
+			<uic-month-calendar
+			class="field styled"
+			:value="{displayedMonth: new Date(Date.now()), selectedDay: {date: new Date(Date.now())}}"
+			:maxYear="maxYear"
+			:minYear="minYear"/>
+		</section-card>
+
+		<!-- Navigation -->
+		<section-card
+		name="Navigation"
 		:controls="{
 			'Default': () => {
-				customization_model = {displayedMonth: null, selectedDay: null}
+				navigation_model = {}
 			},
 			'Random': () => {
-				customization_model = {
-					displayedMonth: randomDate(), selectedDay: null
+				navigation_model = {
+					displayedMonth: randomDate()
 				}
 			}
 		}">
-			<p slot="description">The visuals and behavior can be customized. In the following example the month calendar is set to only be navigable between the year 2010 and 2020 and be day-selectable.</p>
+			<p slot="description">The month calendar can be navigated back and forth.</p>
 			<uic-month-calendar
-			class="field styled"
-			v-model="customization_model"
-			selectionMode="day"
+			class="field"
 			:maxYear="maxYear"
 			:minYear="minYear"
-			@daySelected="day => customization_model.selectedDay = day"/>
+			v-model="navigation_model"/>
+			<p><b>Displayed Month:</b> {{formatMonth(navigation_model.displayedMonth)}}</p>
+		</section-card>
 
-			<p>Min year: {{minYear}}</p>
-			<p>Max year: {{maxYear}}</p>
-			<p v-if="customization_model.displayedMonth">
-				Displayed month:
-				{{customization_model.displayedMonth.getFullYear()}}
-				- {{customization_model.displayedMonth.getMonth() + 1}}
-			</p>
-			<p v-if="customization_model.selectedDay">
-				Selected day: {{customization_model.selectedDay}}
+		<!-- Selection -->
+		<section-card
+		name="Selection">
+			<p slot="description">Individual days can be selected</p>
+			<uic-month-calendar
+			class="field"
+			v-model="selection_model"
+			selectionMode="day"/>
+
+			<p v-if="selection_model.selectedDay.date">
+				<b>Selected day:</b>
+				{{selection_model.selectedDay.date.getFullYear()}}
+				- {{selection_model.selectedDay.date.getMonth() + 1}}
+				- {{selection_model.selectedDay.date.getDate()}}<br>
+				{{selection_model.selectedDay.date.toUTCString()}}<br>
 			</p>
 		</section-card>
 	</div>
@@ -61,13 +79,14 @@ export default {
 		'section-card': SectionCard,
 	},
 	data() {
-		const currentMonth = new Date()
-		currentMonth.setHours(0, 0, 0, 0)
 		return {
 			// Sections
-			customization_model: {
-				displayedMonth: currentMonth,
-				selectedDay: 1,
+			navigation_model: {displayedMonth: new Date()},
+			selection_model: {
+				displayedMonth: new Date(),
+				selectedDay: {
+					date: new Date(Date.now())
+				},
 			},
 		}
 	},
@@ -90,6 +109,13 @@ export default {
 				randomNumber(0, 11),
 				1
 			)
+		},
+		formatMonth(date) {
+			const monthNames = [
+				"January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"
+			]
+			return monthNames[date.getMonth()] + ' ' + date.getFullYear()
 		}
 	}
 }

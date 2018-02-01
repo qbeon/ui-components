@@ -9,9 +9,7 @@
 			v-html="arrowRightIcon"/>
 			<span
 			class="__uic_mc_displayed-month"
-			@click="$emit('monthClick')">
-				{{monthNames[selectedMonth]}} {{selectedYear}}
-			</span>
+			@click="$emit('monthClick')">{{monthNames[selectedMonth]}} {{selectedYear}}</span>
 			<div
 			class="__uic_mc_to-next-page"
 			:class="{'inactive': !hasNextPage}"
@@ -37,12 +35,11 @@
 				:class="{
 					'selectable': selectionMode === 'day',
 					'foreign': day.foreign,
+					'selected': isSelectedDay(day),
 				}"
 				v-for="day in week"
 				:key="day.monthIndex"
-				@click="onDaySelected(day)">
-					{{day.monthIndex + 1}}
-				</div>
+				@click="onDaySelected(day)">{{day.monthIndex + 1}}</div>
 			</div>
 		</div>
 	</div>
@@ -61,6 +58,10 @@ function printWarning(msg) {
 	console.warn('UI Controls - MonthCalendar: ' + msg)
 }
 
+function printError(msg) {
+	console.error('UI Controls - MonthCalendar: ' + msg)
+}
+
 export default {
 	name: 'month-calendar',
 	props: {
@@ -72,6 +73,20 @@ export default {
 					displayedMonth: new Date(),
 					selectedDay: null,
 				}
+			},
+			validator(value) {
+				// If selected day is defined then the date property must be of type Date
+				if (value.selectedDay != null && (
+					value.selectedDay.date == null ||
+					typeof value.selectedDay.date.getTime !== 'function'
+				)) {
+					printError('invalid selected day date: ' +
+						value.selectedDay.date +
+						'(' + typeof value.selectedDay.date + ')'
+					)
+					return false
+				}
+				return true
 			}
 		},
 		minYear: {
@@ -228,6 +243,14 @@ export default {
 				displayedMonth: new Date(year, month, 1),
 				selectedDay: selectedDay
 			})
+		},
+		isSelectedDay(day) {
+			if (this.value.selectedDay != null &&
+				this.value.selectedDay.date.getFullYear() == day.date.getFullYear() &&
+				this.value.selectedDay.date.getMonth() == day.date.getMonth() &&
+				this.value.selectedDay.date.getDate() == day.date.getDate()
+			) return true
+			return false
 		}
 	}
 }
@@ -312,7 +335,7 @@ export default {
 		width: 14.285714285714286%
 		height: 2rem
 		line-height: 2rem
-		flex-grow: 1
+		//flex-grow: 1
 		text-align: center
 	&table-head-cell
 		cursor: default
