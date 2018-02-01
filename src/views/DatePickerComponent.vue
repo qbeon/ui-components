@@ -9,30 +9,25 @@ name="Date Picker"
 	<div slot="demo">
 		<!-- Default -->
 		<section-card
-		name="Default"
-		:controls="{
-			'Clear': () => {default_value = [null, null]},
-			'Random': () => {
-				default_value = [
-					random(),
-					random()
-				]
-			}
-		}">
+		name="Default">
 			<p slot="description">The default date picker is mostly unstyled</p>
-			<uic-date-picker
-			v-model="default_value[0]">
-			</uic-date-picker>
-			<p>{{default_value[0]}}</p>
+			<uic-date-picker/>
 		</section-card>
 
-		<!-- Styled -->
+		<!-- Customization -->
 		<section-card
-		name="Styled">
+		name="Customization"
+		:controls="{
+			'Clear': () => {customization_model = null},
+			'Random': () => {customization_model = randomDate()}
+		}">
 			<uic-date-picker
 			class="field styled"
-			v-model="customization_values[0]">
-			</uic-date-picker>
+			v-model="customization_model"/>
+
+			<p v-if="customization_model">
+				Selected date: {{customization_model}}
+			</p>
 		</section-card>
 	</div>
 </component-page>
@@ -52,19 +47,12 @@ export default {
 	data() {
 		return {
 			// Sections
-			default_value: [null, null],
-
-			customization_values: [null],
+			customization_model: null,
 		}
 	},
 	methods: {
-		random() {
-			const keys = Object.keys(elements)
-			return elements[keys[Math.floor(Math.random() * keys.length)]]
-		},
-		isBigger4(val) {
-			console.log('VAL', val)
-			if(val != null && val.length > 4) return true
+		randomDate() {
+			return new Date(randomNumber(1970, 2100), randomNumber(0, 11), 1)
 		}
 	}
 }
@@ -90,8 +78,7 @@ h6
 	&:last-child
 		margin-bottom: 0px
 	&.styled
-		box-sizing: border-box
-		width: 100%
+		width: calc(100% - 2rem)
 		border: 1px solid #DDD
 		border-radius: .25rem
 		//padding: .2rem

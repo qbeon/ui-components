@@ -10,6 +10,10 @@ const routes = [{
 	name: 'Home',
 	component: _import('Home')
 }, {
+	path: '/month-calendar-component',
+	name: 'MonthCalendarComponent',
+	component: _import('MonthCalendarComponent')
+}, {
 	path: '/date-picker-component',
 	name: 'DatePickerComponent',
 	component: _import('DatePickerComponent')

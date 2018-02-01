@@ -29,6 +29,7 @@ export default {
 		return {
 			pages: {
 				'Home': 'Home',
+				'MonthCalendarComponent': 'Month Calendar Component',
 				'DatePickerComponent': 'Date Picker Component',
 				'TextFieldComponent': 'Text Field Component',
 				'LabeledTextFieldComponent': 'Labeled Text Field Component',
