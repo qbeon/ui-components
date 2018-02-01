@@ -3,14 +3,17 @@
 	<div class="__uic_mc_body">
 		<div class="__uic_mc_header">
 			<div
+			v-if="navigable"
 			class="__uic_mc_to-previous-page"
 			:class="{'inactive': !hasPreviousPage}"
 			@click="goToPreviousPage"
 			v-html="arrowRightIcon"/>
 			<span
 			class="__uic_mc_displayed-month"
+			:class="{'clickable': navigable}"
 			@click="$emit('monthClick')">{{monthNames[selectedMonth]}} {{selectedYear}}</span>
 			<div
+			v-if="navigable"
 			class="__uic_mc_to-next-page"
 			:class="{'inactive': !hasNextPage}"
 			@click="goToNextPage"
@@ -105,6 +108,11 @@ export default {
 			type: Boolean,
 			required: false,
 			default: true
+		},
+		navigable: {
+			type: Boolean,
+			required: false,
+			default: false
 		},
 		selectionMode: {
 			type: String,
@@ -257,6 +265,8 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '../../styles/vars'
+
 .__uic_mc_
 	&root
 		width: 17rem
@@ -264,6 +274,7 @@ export default {
 	&body
 		width: 100%
 		height: 100%
+		selectable(none)
 
 	&header
 		display: flex
@@ -272,15 +283,15 @@ export default {
 		height: 3rem
 		padding-left: .5rem
 		padding-right: .5rem
-		cursor: pointer
 
 	&displayed-month
 		font-size: 1rem
 		height: 1.5rem
 		line-height: 1.5rem
-		cursor: pointer
 		i
 			color: #AAA
+		&.clickable
+			cursor: pointer
 
 	&to-previous-page
 	&to-next-page

@@ -39,6 +39,7 @@ name="Month Calendar">
 			<p slot="description">The month calendar can be navigated back and forth.</p>
 			<uic-month-calendar
 			class="field"
+			:navigable="true"
 			:maxYear="maxYear"
 			:minYear="minYear"
 			v-model="navigation_model"/>
@@ -51,6 +52,7 @@ name="Month Calendar">
 			<p slot="description">Individual days can be selected</p>
 			<uic-month-calendar
 			class="field"
+			:navigable="true"
 			v-model="selection_model"
 			selectionMode="day"/>
 
@@ -135,7 +137,6 @@ h6
 .field
 	display: block
 	margin-bottom: 1rem
-	cursor: pointer
 	&.inlined
 		display: inline-block
 	&:last-child
