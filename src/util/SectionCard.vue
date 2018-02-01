@@ -60,6 +60,7 @@ export default {
 			color: #888
 	&header, &content
 		padding: 1rem
+		font-size: 0px
 	&header
 		border-bottom: 1px solid #FAFAFA
 	&footer
