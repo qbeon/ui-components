@@ -93,8 +93,10 @@ export default function getMonthCalendar(
 	weekDayIndex = decrementWeekDay(weekDayIndex)
 
 	// Fill in foreign days from the beginning of the next month
+	let includesDaysFromPrevMonth = false
 	if (weekDayIndex < 6) {
 		// Include disabled days from the next month
+		includesDaysFromPrevMonth = true
 		let monthDayIndex = 0
 		while(weekDayIndex < 6) {
 			// Calculate the day week index
@@ -121,7 +123,7 @@ export default function getMonthCalendar(
 		const extraWeek = []
 
 		// Get the month index of the last known day
-		let monthDayIndex = table[table.length - 1][6].monthIndex
+		let monthDayIndex = includesDaysFromPrevMonth ? table[table.length - 1][6].monthIndex : -1
 		for (let itr = 0; itr < 7; itr++) {
 			monthDayIndex++
 			extraWeek.push({
