@@ -82,6 +82,25 @@ name="Month Calendar">
 				{{nonSwitchingSelection_model.selectedDay.date.toUTCString()}}
 			</p>
 		</section-card>
+
+		<!-- Non-Selectable Foreign Days -->
+		<section-card
+		name="Non-Selectable Foreign Days">
+			<p slot="description">The calendar can be explicitly instructed to make the days from the previous and next month non-selectable.</p>
+			<uic-month-calendar
+			class="field"
+			:navigable="true"
+			disableForeignSelection
+			v-model="nonSelectableForeign_model"
+			selectionMode="day"/>
+
+			<p><b>Selection:</b> {{nonSelectableForeign_model.selectedDay}}</p>
+
+			<p v-if="nonSelectableForeign_model.selectedDay.date">
+				<b>Selected day:</b>
+				{{nonSelectableForeign_model.selectedDay.date.toUTCString()}}
+			</p>
+		</section-card>
 	</div>
 </component-page>
 </template>
@@ -109,6 +128,12 @@ export default {
 				},
 			},
 			nonSwitchingSelection_model: {
+				displayedMonth: new Date(),
+				selectedDay: {
+					date: new Date(Date.now())
+				},
+			},
+			nonSelectableForeign_model: {
 				displayedMonth: new Date(),
 				selectedDay: {
 					date: new Date(Date.now())

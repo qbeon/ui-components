@@ -36,9 +36,9 @@
 				<div
 				class="__uic_mc_table-cell"
 				:class="{
-					'selectable': selectionMode === 'day',
+					'selectable': isSelectable(day),
 					'foreign': day.origin !== 0,
-					'selected': isSelectedDay(day),
+					'selected': isSelected(day),
 				}"
 				v-for="day in week"
 				:key="day.monthIndex"
@@ -116,6 +116,12 @@ export default {
 		},
 		// Will disable switching to the origin month of foreign days on selection
 		disableSwitchingOnSelection: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+		// Will disable selection of foreign days (days of the previous or next month)
+		disableForeignSelection: {
 			type: Boolean,
 			required: false,
 			default: false
@@ -241,6 +247,7 @@ export default {
 		},
 		onDaySelected(day) {
 			if (this.selectionMode === 'none') return
+			if (this.disableForeignSelection && day.origin !== 0) return
 
 			if (!this.disableSwitchingOnSelection) {
 				if (day.origin < 0) {
@@ -263,13 +270,18 @@ export default {
 				selectedDay: selectedDay
 			})
 		},
-		isSelectedDay(day) {
+		isSelected(day) {
 			if (this.value.selectedDay != null &&
 				this.value.selectedDay.date.getFullYear() == day.date.getFullYear() &&
 				this.value.selectedDay.date.getMonth() == day.date.getMonth() &&
 				this.value.selectedDay.date.getDate() == day.date.getDate()
 			) return true
 			return false
+		},
+		isSelectable(day) {
+			if (this.disableForeignSelection && day.origin !== 0) return false
+			if (this.selectionMode !== 'day') return false
+			return true
 		}
 	}
 }
@@ -361,16 +373,17 @@ export default {
 		cursor: default
 		font-size: .8rem
 	&table-cell
-		cursor: pointer
 		border-radius: .2rem
 		$default-color-transition(.2s)
-		&:hover
-			background-color: #EEE
 		&.foreign
 			color: #CCC
 		&.selected
 			background-color: #333
 			color: white
+		&.selectable
+			cursor: pointer
+			&:hover
+				background-color: #EEE
 
 	&table-head-cell
 		font-size: .8rem
