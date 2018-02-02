@@ -15,11 +15,7 @@ function daysInMonth(date) {
 }
 
 function getNextMonthDay(firstDay, dayIndex) {
-	const dt = new Date(firstDay)
-	dt.setMonth(dt.getMonth() + 1)
-	// The Date-API days are 1-based, thus add 1
-	dt.setDate(dayIndex + 1)
-	return dt
+	return new Date(Date.UTC(firstDay.getFullYear(), firstDay.getMonth() + 1, dayIndex + 1))
 }
 
 function getPrevMonthDay(firstDay, dayIndex) {
@@ -97,17 +93,17 @@ export default function getMonthCalendar(
 	if (weekDayIndex < 6) {
 		// Include disabled days from the next month
 		includesDaysFromPrevMonth = true
-		let monthDayIndex = 0
+		let monthDayIndex = -1
 		while(weekDayIndex < 6) {
 			// Calculate the day week index
+			weekDayIndex = incrementWeekDay(weekDayIndex)
+			monthDayIndex++
 			allDays.push({
 				weekIndex: weekDayIndex,
 				monthIndex: monthDayIndex,
 				origin: 1,
 				date: getNextMonthDay(firstDayDate, monthDayIndex)
 			})
-			monthDayIndex++
-			weekDayIndex = incrementWeekDay(weekDayIndex)
 		}
 	}
 
@@ -121,7 +117,6 @@ export default function getMonthCalendar(
 	// then append an extra week from the next month
 	if (fillAllRows && table.length < 6) {
 		const extraWeek = []
-
 		// Get the month index of the last known day
 		let monthDayIndex = includesDaysFromPrevMonth ? table[table.length - 1][6].monthIndex : -1
 		for (let itr = 0; itr < 7; itr++) {
