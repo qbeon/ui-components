@@ -369,7 +369,6 @@ export default {
 		//flex-grow: 1
 		text-align: center
 	&table-head-cell
-		cursor: default
 		font-size: .8rem
 	&table-cell
 		border-radius: .2rem
@@ -386,11 +385,6 @@ export default {
 			cursor: pointer
 			&:hover
 				background-color: #EEE
-
-	&table-head-cell
-		font-size: .8rem
-	
-
 
 	&current-displayed-days
 		font-size: 1rem
