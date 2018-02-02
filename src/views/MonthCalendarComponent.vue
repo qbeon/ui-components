@@ -39,7 +39,7 @@ name="Month Calendar">
 			<p slot="description">The month calendar can be navigated back and forth.</p>
 			<uic-month-calendar
 			class="field"
-			:navigable="true"
+			navigable
 			:maxYear="maxYear"
 			:minYear="minYear"
 			v-model="navigation_model"/>
@@ -52,7 +52,7 @@ name="Month Calendar">
 			<p slot="description">Individual days can be selected</p>
 			<uic-month-calendar
 			class="field"
-			:navigable="true"
+			navigable
 			v-model="selection_model"
 			selectionMode="day"/>
 
@@ -70,7 +70,7 @@ name="Month Calendar">
 			<p slot="description">The calendar can be explicitly instructed to not switch the displayed month on foreign day (days from the previous or next month) selection.</p>
 			<uic-month-calendar
 			class="field"
-			:navigable="true"
+			navigable
 			disableSwitchingOnSelection
 			v-model="nonSwitchingSelection_model"
 			selectionMode="day"/>
@@ -89,7 +89,7 @@ name="Month Calendar">
 			<p slot="description">The calendar can be explicitly instructed to make the days from the previous and next month non-selectable.</p>
 			<uic-month-calendar
 			class="field"
-			:navigable="true"
+			navigable
 			disableForeignSelection
 			v-model="nonSelectableForeign_model"
 			selectionMode="day"/>
