@@ -335,6 +335,11 @@ export default {
 				fill: #000
 		&.inactive
 			cursor: default
+			svg
+				fill: #DDD
+			&:hover
+				svg
+					transform: none
 	&to-previous-page
 		margin-right: 1rem
 		svg
@@ -342,17 +347,11 @@ export default {
 		&:hover
 			svg
 				transform: rotate(180deg) translateX(6px)
-		&.inactive
-			svg
-				fill: #DDD
 	&to-next-page
 		margin-left: 1rem
 		&:hover
 			svg
 				transform: translateX(6px)
-		&.inactive
-			svg
-				fill: #DDD
 
 	&table-head
 	&table-row
