@@ -377,9 +377,12 @@ export default {
 		$default-color-transition(.2s)
 		&.foreign
 			color: #CCC
-		&.selected
+		// Selected must have а higher specificity than selectable
+		&.selected.selected
 			background-color: #333
 			color: white
+			&:hover
+				background-color: #888
 		&.selectable
 			cursor: pointer
 			&:hover
