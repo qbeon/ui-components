@@ -79,13 +79,9 @@ export default {
 			},
 			validator(value) {
 				// If selected day is defined then the date property must be of type Date
-				if (value.selectedDay != null && (
-					value.selectedDay.date == null ||
-					typeof value.selectedDay.date.getTime !== 'function'
-				)) {
+				if (value.selectedDay != null && typeof value.selectedDay.getTime !== 'function') {
 					printError('invalid selected day date: ' +
-						value.selectedDay.date +
-						'(' + typeof value.selectedDay.date + ')'
+						value.selectedDay + '(' + typeof value.selectedDay + ')'
 					)
 					return false
 				}
@@ -259,22 +255,21 @@ export default {
 				}
 			}
 
-			this.emitInput(day)
+			this.emitInput(day.date)
 		},
 		emitInput(selectedDay) {
-			if (selectedDay == null && this.value != null) {
-				selectedDay = this.value.selectedDay
-			}
+			if (selectedDay == null && this.value != null) selectedDay = this.value.selectedDay
 			this.$emit('input', {
 				displayedMonth: new Date(this.year, this.month, 1),
-				selectedDay: selectedDay
+				selectedDay
 			})
 		},
 		isSelected(day) {
-			if (this.value.selectedDay != null &&
-				this.value.selectedDay.date.getFullYear() == day.date.getFullYear() &&
-				this.value.selectedDay.date.getMonth() == day.date.getMonth() &&
-				this.value.selectedDay.date.getDate() == day.date.getDate()
+			if (this.value != null &&
+				this.value.selectedDay != null &&
+				this.value.selectedDay.getFullYear() == day.date.getFullYear() &&
+				this.value.selectedDay.getMonth() == day.date.getMonth() &&
+				this.value.selectedDay.getDate() == day.date.getDate()
 			) return true
 			return false
 		},

@@ -18,7 +18,7 @@ name="Month Calendar">
 			<p slot="description">The visuals appearance can be customized.</p>
 			<uic-month-calendar
 			class="field styled"
-			:value="{displayedMonth: new Date(Date.now()), selectedDay: {date: new Date(Date.now())}}"
+			:value="{displayedMonth: new Date(Date.now()), selectedDay: new Date(Date.now())}"
 			:maxYear="maxYear"
 			:minYear="minYear"/>
 		</section-card>
@@ -58,9 +58,9 @@ name="Month Calendar">
 
 			<p><b>Selection:</b> {{selection_model.selectedDay}}</p>
 
-			<p v-if="selection_model.selectedDay.date">
+			<p v-if="selection_model.selectedDay">
 				<b>Selected day:</b>
-				{{selection_model.selectedDay.date.toUTCString()}}
+				{{selection_model.selectedDay.toUTCString()}}
 			</p>
 		</section-card>
 
@@ -77,9 +77,9 @@ name="Month Calendar">
 
 			<p><b>Selection:</b> {{nonSwitchingSelection_model.selectedDay}}</p>
 
-			<p v-if="nonSwitchingSelection_model.selectedDay.date">
+			<p v-if="nonSwitchingSelection_model.selectedDay">
 				<b>Selected day:</b>
-				{{nonSwitchingSelection_model.selectedDay.date.toUTCString()}}
+				{{nonSwitchingSelection_model.selectedDay.toUTCString()}}
 			</p>
 		</section-card>
 
@@ -96,9 +96,9 @@ name="Month Calendar">
 
 			<p><b>Selection:</b> {{nonSelectableForeign_model.selectedDay}}</p>
 
-			<p v-if="nonSelectableForeign_model.selectedDay.date">
+			<p v-if="nonSelectableForeign_model.selectedDay">
 				<b>Selected day:</b>
-				{{nonSelectableForeign_model.selectedDay.date.toUTCString()}}
+				{{nonSelectableForeign_model.selectedDay.toUTCString()}}
 			</p>
 		</section-card>
 	</div>
@@ -123,21 +123,15 @@ export default {
 			navigation_model: {displayedMonth: new Date()},
 			selection_model: {
 				displayedMonth: new Date(),
-				selectedDay: {
-					date: new Date(Date.now())
-				},
+				selectedDay: new Date(Date.now())
 			},
 			nonSwitchingSelection_model: {
 				displayedMonth: new Date(),
-				selectedDay: {
-					date: new Date(Date.now())
-				},
+				selectedDay:  new Date(Date.now())
 			},
 			nonSelectableForeign_model: {
 				displayedMonth: new Date(),
-				selectedDay: {
-					date: new Date(Date.now())
-				},
+				selectedDay: new Date(Date.now())
 			},
 		}
 	},

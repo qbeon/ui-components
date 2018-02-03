@@ -62,9 +62,9 @@
 				<ul class="__uic_dp_month-list">
 					<li
 					class="__uic_dp_month"
-					v-for="month in months"
-					:key="month.index"
-					@click="selectMonth(month.index)">{{month.name}}</li>
+					v-for="(monthName, index) in monthNames"
+					:key="index"
+					@click="selectMonth(index)">{{monthName}}</li>
 				</ul>
 			</scrollable>
 		</transition>
@@ -76,7 +76,9 @@
 			<month-calendar
 			class="__uic_dp_month-calendar"
 			v-if="currentPicker === 'day'"
-			:value="value"
+			navigable
+			selectionMode="day"
+			v-model="monthCalendarModel"
 			:maxYear="maxYear"
 			:minYear="minYear"
 			:fullMonthCalendar="fullMonthCalendar"
@@ -112,14 +114,8 @@ export default {
 	},
 	props: {
 		value: {
-			type: Object,
-			required: false,
-			default: function() {
-				return {
-					displayedMonth: new Date(Date.UTC()),
-					selectedDay: null
-				}
-			}
+			type: Date,
+			required: false
 		},
 		mode: {
 			type: String,
@@ -157,31 +153,26 @@ export default {
 		return {
 			// Provides the SVG icon
 			arrowRightIcon: ArrowRight,
-
-			years: [],
-			months: [
-				{index: 0, name: 'January'},
-				{index: 1, name: 'February'},
-				{index: 2, name: 'March'},
-				{index: 3, name: 'April'},
-				{index: 4, name: 'May'},
-				{index: 5, name: 'June'},
-				{index: 6, name: 'July'},
-				{index: 7, name: 'August'},
-				{index: 8, name: 'September'},
-				{index: 9, name: 'October'},
-				{index: 10, name: 'November'},
-				{index: 11, name: 'December'}
+			monthNames: [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
 			],
 
-			displayedYears: calculateMiddleYearSpan(
-				this.minYear, this.maxYear, this.yearsPerPage
-			),
+			years: [],
+			displayedYears: null,
 			selectedYear: null,
 			selectedMonth: null,
-			selectedDay: null,
-			monthCalendarDate: null,
-
+			monthCalendarModel: null,
 			currentPicker: 'year',
 		}
 	},
@@ -200,37 +191,44 @@ export default {
 		}
 	},
 	created() {
-		// Ensure minimum year is smaller maximum
-		if (this.minYear > this.maxYear) console.error(
-			'WARNING: min year (' + minYear +
-			') is smaller than max year (' + maxYear + ')'
-		)
-		
-		// Initialize years
-		for (let itr = this.displayedYears.from;
-			itr <= this.displayedYears.to;
-			itr++
-		) this.years.push(itr)
+		this.init()
 	},
 	watch: {
-		value(val) {
-			if (val.displayedMonth == null) {
-				this.selectedYear = 1970
-				this.selectedMonth = 0
-			} else {
-				this.selectedYear = val.displayedMonth.getFullYear()
-				this.selectedMonth = val.displayedMonth.getMonth()
-			}
-		},
-		currentPicker(currentPicker) {
-			// Calculate date from selected year and month
-			// for the month calendar element when day picker is activated
-			if (currentPicker === 'day') this.monthCalendarDate = new Date(Date.UTC(
-				this.selectedYear, this.selectedMonth, 1
-			))
+		value() {
+			this.init()
 		}
 	},
 	methods: {
+		init() {
+			// Ensure minimum year is smaller maximum
+			if (this.minYear > this.maxYear) console.error(
+				'WARNING: min year (' + minYear +
+				') is smaller than max year (' + maxYear + ')'
+			)
+
+				// Initialize years
+			this.displayedYears = calculateMiddleYearSpan(
+				this.minYear, this.maxYear, this.yearsPerPage
+			)
+			for (let itr = this.displayedYears.from;
+				itr <= this.displayedYears.to;
+				itr++
+			) this.years.push(itr)
+
+			if (this.value == null) {
+				this.selectedYear = 1970
+				this.selectedMonth = 0
+				this.currentPicker = 'year'
+			} else {
+				this.selectedYear = this.value.getFullYear()
+				this.selectedMonth = this.value.getMonth()
+				this.monthCalendarModel = {
+					displayedMonth: this.value,
+					selectedDay: this.value
+				}
+				this.currentPicker = 'day'
+			}
+		},
 		// Fills currently displayed years with the next page of years
 		nextYearPage() {
 			const from = this.displayedYears.from
@@ -306,9 +304,28 @@ export default {
 		selectMonth(month) {
 			this.selectedMonth = month
 			this.currentPicker = 'day'
+			this.monthCalendarModel = {
+				displayedMonth: new Date(Date.UTC(this.selectedYear, this.selectedMonth, 1)),
+				selectedDay: this.selectedDay
+			}
 		},
 		onInput(val) {
-			this.$emit('input', val)
+			this.selectedYear = val.displayedMonth.getFullYear()
+			this.selectedMonth = val.displayedMonth.getMonth()
+
+			// Emit input only if the selected day has changed
+			// XOR
+			if (val.selectedDay == null && this.selectedDay == null) return
+			if ((this.selectedDay == null && val.selectedDay != null) ||
+				(val.selectedDay == null && this.selectedDay != null)
+			) {
+				this.$emit('input', val.selectedDay)
+				return
+			}
+
+			if (this.selectedDay.getTime() != val.selectedDay.getTime()) {
+				this.$emit('input', val.selectedDay)
+			}
 		}
 	}
 }

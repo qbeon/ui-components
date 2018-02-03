@@ -26,7 +26,7 @@ name="Date Picker"
 			v-model="customization_model"/>
 
 			<p v-if="customization_model">
-				Selected date: {{customization_model}}
+				<b>Selected date:</b> {{customization_model}}
 			</p>
 		</section-card>
 	</div>
@@ -47,7 +47,7 @@ export default {
 	data() {
 		return {
 			// Sections
-			customization_model: null,
+			customization_model: new Date(Date.now())
 		}
 	},
 	methods: {
