@@ -215,16 +215,18 @@ export default {
 				itr++
 			) this.years.push(itr)
 
-			if (this.value == null) {
+			this.selectedDay = this.value
+
+			if (this.selectedDay == null) {
 				this.selectedYear = 1970
 				this.selectedMonth = 0
 				this.currentPicker = 'year'
 			} else {
-				this.selectedYear = this.value.getFullYear()
-				this.selectedMonth = this.value.getMonth()
+				this.selectedYear = this.selectedDay.getFullYear()
+				this.selectedMonth = this.selectedDay.getMonth()
 				this.monthCalendarModel = {
-					displayedMonth: this.value,
-					selectedDay: this.value
+					displayedMonth: this.selectedDay,
+					selectedDay: this.selectedDay
 				}
 				this.currentPicker = 'day'
 			}
