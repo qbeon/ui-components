@@ -210,6 +210,7 @@ export default {
 			this.displayedYears = calculateMiddleYearSpan(
 				this.minYear, this.maxYear, this.yearsPerPage
 			)
+			this.years = []
 			for (let itr = this.displayedYears.from;
 				itr <= this.displayedYears.to;
 				itr++
