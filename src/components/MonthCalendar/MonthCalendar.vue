@@ -11,7 +11,7 @@
 			<span
 			class="__uic_mc_displayed-month"
 			:class="{'clickable': navigable}"
-			@click="$emit('monthClick')">{{monthNames[month]}} {{year}}</span>
+			@click="$emit('monthClick')">{{monthName}} {{year}}</span>
 			<div
 			v-if="navigable"
 			class="__uic_mc_to-next-page"
@@ -21,13 +21,10 @@
 		</div>
 		<div class="__uic_mc_table">
 			<div class="__uic_mc_table-head">
-				<div class="__uic_mc_table-head-cell">Sun</div>
-				<div class="__uic_mc_table-head-cell">Mon</div>
-				<div class="__uic_mc_table-head-cell">Tue</div>
-				<div class="__uic_mc_table-head-cell">Wed</div>
-				<div class="__uic_mc_table-head-cell">Thu</div>
-				<div class="__uic_mc_table-head-cell">Fri</div>
-				<div class="__uic_mc_table-head-cell">Sat</div>
+				<div
+				class="__uic_mc_table-head-cell"
+				v-for="columnName in columnNames"
+				:key="columnName">{{columnName}}</div>
 			</div>
 			<div
 			class="__uic_mc_table-row"
@@ -52,6 +49,8 @@
 <script>
 import { ArrowRight } from '../icons'
 import getMonthCalendar from '../getMonthCalendar'
+import getWeekdayNames from '../getWeekdayNames'
+import getMonthName from '../getMonthName'
 
 function logInvalidProp(prop) {
 	logInvalidProperty('MonthCalendar', prop, ...arguments)
@@ -68,6 +67,11 @@ function printError(msg) {
 export default {
 	name: 'month-calendar',
 	props: {
+		locale: {
+			type: String,
+			required: false,
+			default: 'en-US'
+		},
 		value: {
 			type: Object,
 			required: false,
@@ -135,24 +139,26 @@ export default {
 				logInvalidProp('selectionMode', selectionMode)
 				return false
 			}
+		},
+		weekdayDisplayFormat: {
+			type: String,
+			required: false,
+			default: 'short',
+			validator(format) {
+				switch(format) {
+				case 'narrow':
+				case 'short':
+				case 'long':
+					return true
+				}
+				logInvalidProp('week-day-display-format', format)
+				return false
+			}
 		}
 	},
 	data() {
 		return {
-			monthNames: [
-				'January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			],
+			getWeekdayNames: null,
 
 			year: null,
 			month: null,
@@ -162,6 +168,14 @@ export default {
 		}
 	},
 	computed: {
+		monthName() {
+			return getMonthName(
+				new Date(Date.UTC(this.year, this.month, 1)),
+				this.locale,
+				'long'
+			)
+			return name.charAt(0).toUpperCase() + name.slice(1)
+		},
 		hasNextPage() {
 			// If the next month is the first of the next year
 			// and the next year is bigger maximum - then no
@@ -179,10 +193,14 @@ export default {
 	},
 	created() {
 		this.init()
+		this.columnNames = getWeekdayNames(this.locale, 0, this.weekdayDisplayFormat)
 	},
 	watch: {
 		value() {
 			this.init()
+		},
+		locale() {
+			this.columnNames = getWeekdayNames(this.locale, 0, this.weekdayDisplayFormat)
 		}
 	},
 	methods: {

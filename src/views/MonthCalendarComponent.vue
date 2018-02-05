@@ -18,6 +18,7 @@ name="Month Calendar">
 			<p slot="description">The visuals appearance can be customized.</p>
 			<uic-month-calendar
 			class="field styled"
+			weekday-display-format="long"
 			:value="{displayedMonth: new Date(Date.now()), selectedDay: new Date(Date.now())}"
 			:maxYear="maxYear"
 			:minYear="minYear"/>
@@ -101,6 +102,23 @@ name="Month Calendar">
 				{{nonSelectableForeign_model.selectedDay.toUTCString()}}
 			</p>
 		</section-card>
+
+		<!-- Internationalization -->
+		<section-card
+		name="Internationalization">
+			<p slot="description">The locale property defines the translations locale of all texts of the component.</p>
+			<uic-month-calendar
+			class="field"
+			navigable
+			:locale="i18n_locale"
+			v-model="i18n_model"
+			selectionMode="day"/>
+
+			<uic-labeled-text-field
+			title="Locale"
+			:value="i18n_locale"
+			@input="i18n_localeChanged"/>
+		</section-card>
 	</div>
 </component-page>
 </template>
@@ -133,6 +151,11 @@ export default {
 				displayedMonth: new Date(),
 				selectedDay: new Date(Date.now())
 			},
+			i18n_model: {
+				displayedMonth: new Date(),
+				selectedDay: new Date(Date.now())
+			},
+			i18n_locale: 'ru-RU'
 		}
 	},
 	computed: {
@@ -156,11 +179,11 @@ export default {
 			)
 		},
 		formatMonth(date) {
-			const monthNames = [
-				"January", "February", "March", "April", "May", "June",
-				"July", "August", "September", "October", "November", "December"
-			]
-			return monthNames[date.getMonth()] + ' ' + date.getFullYear()
+			return date.toLocaleString('en-US', {month: 'long', year: 'numeric'})
+		},
+		i18n_localeChanged(val) {
+			if (val.length != 5) return
+			else this.i18n_locale = val
 		}
 	}
 }

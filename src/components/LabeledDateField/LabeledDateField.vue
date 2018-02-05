@@ -28,6 +28,7 @@ class="__uic_ldf_root"
 		:appearance="appearance.contextMenu"
 		@lostFocus="onMenuLostFocus">
 			<date-picker class="__uic_ldf_picker"
+			:locale="locale"
 			:value="value"
 			:min-year="minYear"
 			:max-year="maxYear"

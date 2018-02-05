@@ -29,6 +29,23 @@ name="Date Picker"
 				<b>Selected date:</b> {{customization_model}}
 			</p>
 		</section-card>
+
+		<!-- Internationalization -->
+		<section-card
+		name="Internationalization">
+			<p slot="description">The locale property defines the translations locale of all texts of the component.</p>
+			<uic-date-picker
+			class="field"
+			navigable
+			:locale="i18n_locale"
+			v-model="i18n_model"
+			selectionMode="day"/>
+
+			<uic-labeled-text-field
+			title="Locale"
+			:value="i18n_locale"
+			@input="i18n_localeChanged"/>
+		</section-card>
 	</div>
 </component-page>
 </template>
@@ -47,12 +64,18 @@ export default {
 	data() {
 		return {
 			// Sections
-			customization_model: new Date(Date.now())
+			customization_model: new Date(Date.now()),
+			i18n_model: null,
+			i18n_locale: 'ru-RU'
 		}
 	},
 	methods: {
 		randomDate() {
 			return new Date(randomNumber(1970, 2100), randomNumber(0, 11), 1)
+		},
+		i18n_localeChanged(val) {
+			if (val.length != 5) return
+			else this.i18n_locale = val
 		}
 	}
 }

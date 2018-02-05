@@ -78,6 +78,7 @@
 			v-if="currentPicker === 'day'"
 			navigable
 			selectionMode="day"
+			:locale="locale"
 			v-model="monthCalendarModel"
 			:maxYear="maxYear"
 			:minYear="minYear"
@@ -93,6 +94,7 @@
 import MonthCalendar from '../MonthCalendar/MonthCalendar.vue'
 import Scrollable from '../Scrollable/Scrollable.vue'
 import { ArrowRight } from '../icons'
+import getMonthName from '../getMonthName'
 
 function calculateMiddleYearSpan(min, max, perPage) {
 	// Prevent out of range
@@ -113,6 +115,11 @@ export default {
 		'month-calendar': MonthCalendar,
 	},
 	props: {
+		locale: {
+			type: String,
+			required: false,
+			default: 'en-US'
+		},
 		value: {
 			type: Date,
 			required: false
@@ -153,20 +160,7 @@ export default {
 		return {
 			// Provides the SVG icon
 			arrowRightIcon: ArrowRight,
-			monthNames: [
-				'January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			],
+			monthNames: null,
 
 			years: [],
 			displayedYears: null,
@@ -192,13 +186,26 @@ export default {
 	},
 	created() {
 		this.init()
+		this.initMonthNames()
 	},
 	watch: {
 		value() {
 			this.init()
+		},
+		locale() {
+			this.initMonthNames()
 		}
 	},
 	methods: {
+		initMonthNames() {
+			this.monthNames = []
+			const current = new Date(Date.UTC(1970, 0, 1))
+			this.monthNames.push(getMonthName(current, this.locale, 'long'))
+			for (let itr = 1; itr < 12; itr++) {
+				current.setUTCMonth(current.getUTCMonth() + 1)
+				this.monthNames.push(getMonthName(current, this.locale, 'long'))
+			}
+		},
 		init() {
 			// Ensure minimum year is smaller maximum
 			if (this.minYear > this.maxYear) console.error(
