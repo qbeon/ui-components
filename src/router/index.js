@@ -18,6 +18,10 @@ const routes = [{
 	name: 'DatePickerComponent',
 	component: _import('DatePickerComponent')
 }, {
+	path: '/labeled-date-field-component',
+	name: 'LabeledDateFieldComponent',
+	component: _import('LabeledDateFieldComponent')
+}, {
 	path: '/labeled-text-field-component',
 	name: 'LabeledTextFieldComponent',
 	component: _import('LabeledTextFieldComponent')

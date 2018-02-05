@@ -32,6 +32,7 @@ export default {
 				'MonthCalendarComponent': 'Month Calendar Component',
 				'DatePickerComponent': 'Date Picker Component',
 				'TextFieldComponent': 'Text Field Component',
+				'LabeledDateFieldComponent': 'Labeled Date Field Component',
 				'LabeledTextFieldComponent': 'Labeled Text Field Component',
 				'LabeledSelectFieldComponent': 'Labeled Select Field Component',
 				'LabeledChipFieldComponent': 'Labeled Chip Field Component',
