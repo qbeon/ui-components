@@ -104,7 +104,7 @@ export default {
 				scrollingActiveDelay: 1000,
 				draggingActiveDelay: 1000,
 				preventParentScroll: false,
-				useScrollbarPseudo: false, // experimental
+				useScrollbarPseudo: true, // experimental
 
 				containerScrollingClass: '__uic_scr_scrolling',
 				containerScrollingActiveClass: '__uic_scr_active',
@@ -192,6 +192,11 @@ export default {
 			else {
 				contentEl.style.width = 'calc(100% + ' + nativeScrollbarWidth + 'px)'
 			}
+
+			// Finally make the content scrollable which was initially hidden to prevent
+			// the systems scrollbar to be temporarily visible during initialization
+			// causing abrupt content jumping on page load
+			contentEl.style.overflowY = 'scroll'
 		}
 
 		// add events
@@ -559,8 +564,7 @@ export default {
 	// Content container
 	&content
 		display: block
-		overflow-x: hidden
-		overflow-y: scroll
+		overflow: hidden
 		height: 100%
 		width: 100%
 
