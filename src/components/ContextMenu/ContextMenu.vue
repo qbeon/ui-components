@@ -30,13 +30,7 @@
 </template>
 
 <script>
-function defaultScrollTopGetter() {
-	if (window.pageYOffset !== undefined) return window.pageYOffset
-	return (document.documentElement ||
-		document.body.parentNode ||
-		document.body
-	).scrollTop
-}
+import { prependElement } from '../util'
 
 const appearance = {
 	default: {
@@ -81,8 +75,8 @@ export default {
 			this.$nextTick(() => {
 				// Move the component elements to the document scope
 				// to prevent any backround interactions
-				document.body.prepend(this.$refs.background)
-				document.body.prepend(this.$refs.container)
+				prependElement(document.body, this.$refs.background)
+				prependElement(document.body, this.$refs.container)
 
 				// Close context menu on background touches
 				this.$refs.background.addEventListener("touchstart", this.onFocusLost)
@@ -108,8 +102,8 @@ export default {
 			const ssm = this.appearance.screenSpaceMargin
 
 			// Get root screen coordinates and content dimensions
-			let posLeft = rootRect.x
-			let posTop = rootRect.y
+			let posLeft = rootRect.left
+			let posTop = rootRect.top
 			let szHeight = contentDimensions.height
 			let szWidth = contentDimensions.width
 
@@ -137,8 +131,8 @@ export default {
 		},
 		onFocusLost() {
 			// Move the elements back to the root scope
-			this.$refs.root.append(this.$refs.background)
-			this.$refs.root.append(this.$refs.container)
+			prependElement(this.$refs.root, this.$refs.container)
+			prependElement(this.$refs.root, this.$refs.background)
 
 			this.$emit("lostFocus")
 			this.removeInteractionListeners()

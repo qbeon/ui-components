@@ -105,3 +105,11 @@ export function removeClass(el, className) {
 	if (el.classList) el.classList.remove(className)
 	else el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '')
 }
+
+export function prependElement(node, el) {
+	try {
+		node.insertBefore(el, node.children[0])
+	} catch(err) {
+		throw new Error(err.toString())
+	}
+}
