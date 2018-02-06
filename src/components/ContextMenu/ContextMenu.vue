@@ -190,4 +190,5 @@ export default {
 	&content
 		height: 100%
 		outline: none
+		display: inline-block
 </style>
