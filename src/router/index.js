@@ -49,6 +49,10 @@ const routes = [{
 	path: '/menu-component',
 	name: 'MenuComponent',
 	component: _import('MenuComponent')
+}, {
+	path: '/async-image-component',
+	name: 'AsyncImageComponent',
+	component: _import('AsyncImageComponent')
 }]
 
 export function createRouter () {

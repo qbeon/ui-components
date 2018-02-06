@@ -40,6 +40,7 @@ export default {
 				'LabeledFieldComponent': 'Labaled Field Component',
 				'SizeTransitionComponent': 'Size Transition Component',
 				'MenuComponent': 'Menu Component',
+				'AsyncImageComponent': 'Async Image',
 			},
 			currentPage: 'Home'
 		}
