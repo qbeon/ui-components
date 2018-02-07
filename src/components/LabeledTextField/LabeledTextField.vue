@@ -1,7 +1,8 @@
 <template>
 <div
 class="__uic_ltf_root"
-@click="activate">
+:tabindex="tabindex"
+@focus="onFocused">
 	<labeled-field
 	:title="title"
 	:selected="!empty"
@@ -12,7 +13,9 @@ class="__uic_ltf_root"
 			v-show="!isMultilineField"
 			ref="input"
 			class="__uic_ltf_input"
+			tabindex="-1"
 			v-model="currentValue"
+			@focus="onInputFocused"
 			@change="onInputComplete"
 			@input="onInput"
 			@blur="onBlur"/>
@@ -22,7 +25,9 @@ class="__uic_ltf_root"
 			ref="textarea"
 			class="__uic_ltf_textarea"
 			:rows="currentLineNumber"
+			tabindex="-1"
 			v-model="currentValue"
+			@focus="onInputFocused"
 			@change="onInputComplete"
 			@input="onInput"
 			@blur="onBlur">
@@ -85,7 +90,8 @@ export default {
 		return {
 			empty: true,
 			currentValue: '',
-			currentLineNumber: 1
+			currentLineNumber: 1,
+			tabindex: 0
 		}
 	},
 	computed: {
@@ -208,7 +214,10 @@ export default {
 			}
 			this.$emit('valueChanged', value)
 		},
-		activate() {
+		onInputFocused() {
+			this.tabindex = -1
+		},
+		onFocused() {
 			this.empty = false
 			this.$nextTick(() => {
 				if (this.isMultiline()) this.$refs.textarea.focus()
@@ -216,6 +225,7 @@ export default {
 			})
 		},
 		onBlur() {
+			this.tabindex = 0
 			if (this.currentValue && this.currentValue.length > 0) return
 			this.empty = true
 		},
@@ -230,6 +240,7 @@ export default {
 .__uic_ltf_
 	&root
 		font-size: 0px
+		outline: none
 	&body
 		cursor: pointer
 	&input
