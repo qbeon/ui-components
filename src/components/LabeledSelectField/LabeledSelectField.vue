@@ -1,7 +1,8 @@
 <template>
 <div
 class="__uic_lsf_root"
-@click="openContextMenu">
+tabindex="0"
+@focus="showMenu = true">
 	<labeled-field
 	:title="title"
 	:selected="value ? true : false"
@@ -26,7 +27,7 @@ class="__uic_lsf_root"
 		<context-menu
 		:show="showMenu"
 		:appearance="appearance.contextMenu"
-		@lostFocus="onMenuLostFocus">
+		@close="showMenu = false">
 			<scrollable class="__uic_lsf_scroll-area">
 				<ul class="__uic_lsf_option-list">
 					<li
@@ -117,7 +118,6 @@ export default {
 	methods: {
 		select(value) {
 			this.showMenu = false
-			this.$emit('closed')
 			if (value === null) {
 				this.currentSelection = null
 				this.$emit('input', null)
@@ -126,14 +126,6 @@ export default {
 			if (this.options == null || !(value in this.options)) return
 			this.currentSelection = value
 			this.$emit('input', this.currentSelection)
-		},
-		openContextMenu() {
-			this.showMenu = true
-			this.$emit('opened')
-		},
-		onMenuLostFocus() {
-			this.showMenu = false
-			this.$emit('closed')
 		}
 	}
 }
@@ -147,6 +139,7 @@ export default {
 		font-size: 0px
 		line-height: 0px
 		width: 8rem
+		outline: none
 	&body
 		cursor: pointer
 	&context-menu
