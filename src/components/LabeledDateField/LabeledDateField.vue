@@ -1,7 +1,8 @@
 <template>
 <div
 class="__uic_ldf_root"
-@click="openContextMenu">
+tabindex="0"
+@focus="onFocus">
 	<labeled-field
 	:title="title"
 	:selected="value ? true : false"
@@ -26,7 +27,7 @@ class="__uic_ldf_root"
 		<context-menu
 		:show="showMenu"
 		:appearance="appearance.contextMenu"
-		@lostFocus="onMenuLostFocus">
+		@close="showMenu = false">
 			<date-picker class="__uic_ldf_picker"
 			:locale="locale"
 			:value="value"
@@ -106,16 +107,10 @@ export default {
 	methods: {
 		onInput(value) {
 			this.showMenu = false
-			this.$emit('closed')
 			this.$emit('input', value)
 		},
-		openContextMenu() {
+		onFocus() {
 			this.showMenu = true
-			this.$emit('opened')
-		},
-		onMenuLostFocus() {
-			this.showMenu = false
-			this.$emit('closed')
 		}
 	}
 }
@@ -129,6 +124,7 @@ export default {
 		font-size: 0px
 		line-height: 0px
 		width: 8rem
+		outline: none
 	&body
 		cursor: pointer
 	&context-menu

@@ -42,11 +42,16 @@ const appearance = {
 	}
 }
 
+const shared = {
+	displayed: null
+}
+
 export default {
 	name: 'context-menu',
 	appearance,
 	data() {
 		return {
+			shared,
 			blurred: false
 		}
 	},
@@ -64,12 +69,16 @@ export default {
 		}
 	},
 	watch: {
+		'shared.displayed'() {
+			if (this.shared.displayed !== this.$el) this.$emit('close')
+		},
 		show(val) {
 			if (!val) {
 				this.onFocusLost()
 				this.blurred = true
 				return
 			}
+			this.shared.displayed = this.$el
 			this.blurred = false
 
 			this.$nextTick(() => {
@@ -134,7 +143,7 @@ export default {
 			prependElement(this.$refs.root, this.$refs.container)
 			prependElement(this.$refs.root, this.$refs.background)
 
-			this.$emit("lostFocus")
+			this.$emit('close')
 			this.removeInteractionListeners()
 		},
 		onKeydown(event) {
@@ -143,7 +152,7 @@ export default {
 				(event.target.nodeName == 'BODY')
 			) {
 				event.preventDefault()
-				this.$emit("lostFocus")
+				this.$emit('close')
 				this.removeInteractionListeners()
 			}
 		},
