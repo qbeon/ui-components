@@ -62,8 +62,8 @@ export default {
 	name: 'labeled-chip-field',
 	appearance,
 	components: {
-		'text-field': TextField,
-		'labeled-field': LabeledField
+		TextField,
+		LabeledField
 	},
 	props: {
 		'title': {
@@ -271,6 +271,8 @@ export default {
 		margin-right: .25rem
 		padding-left: .5rem
 		border-radius: 1rem
+		span
+			color: inherit
 
 	&input
 		margin-left: .25rem
