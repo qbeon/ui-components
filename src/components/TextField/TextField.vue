@@ -7,11 +7,12 @@
 	ref="input"
 	class="__uic_tf_input"
 	v-model="currentValue"
-	@change="onInputComplete"
+	@change="() => $emit('accepted', currentValue)"
+	@focus="event => $emit('focus', event)"
 	@input="onInput"
-	@blur="onBlur"
-	@click="onClick"
-	@keydown="onKeydown"/>
+	@blur="event => $emit('blur', event)"
+	@click="event => $emit('click', event)"
+	@keydown="event => $emit('keydown', event)"/>
 </div>
 </template>
 
@@ -46,12 +47,10 @@ export default {
 	methods: {
 		clearValue() {
 			this.currentValue = ''
+			this.$emit('input', this.currentValue)
 		},
-		focus() {
-			this.$refs.input.focus()
-		},
-		onInputComplete() {
-			this.$emit('accepted', this.currentValue)
+		focus(...args) {
+			this.$refs.input.focus(...args)
 		},
 		onInput() {
 			this.updateSize()
@@ -71,15 +70,6 @@ export default {
 				width: textWidth,
 				height: textHeight
 			})
-		},
-		onBlur(event) {
-			this.$emit('blur', event)
-		},
-		onKeydown(event) {
-			this.$emit('keydown', event)
-		},
-		onClick(event) {
-			this.$emit('click', event)
 		}
 	}
 }

@@ -1,7 +1,8 @@
 <template>
 	<div
 	class="__uic_lcf_root"
-	@click="focus"
+	:tabindex="tabindex"
+	@focus="onFocus"
 	@mousedown="onMousedown"
 	@mouseup="onMouseup">
 		<labeled-field
@@ -36,9 +37,11 @@
 				<text-field
 				ref="input"
 				class="__uic_lcf_input"
+				tabindex="-1"
 				v-model="inputValue"
 				@input="onInput"
 				@accepted="onInputFinished"
+				@focus="onInputFocused"
 				@blur="onBlur"
 				@keydown="onKeydown"/>
 			</div>
@@ -106,6 +109,8 @@ export default {
 	},
 	data() {
 		return {
+			tabindex: 0,
+
 			// Is set to true when the root element ist clicked
 			// to prevent unselecting on text field blur
 			mouseDown: false,
@@ -172,11 +177,11 @@ export default {
 			if (this.maxLines != null && this.maxLines != 1) return true
 			return false
 		},
-		focus() {
+		onFocus() {
 			this.focused = true
 			// Defer the focus until the input is actually rendered
 			this.$nextTick(() => {
-				this.$refs.input.focus()
+				this.$refs.input.focus({preventScroll: true})
 			})
 		},
 		addChip(value) {
@@ -201,6 +206,10 @@ export default {
 		},
 		onMouseup() {
 			this.mouseDown = false
+		},
+		onInputFocused() {
+			// Make the root temporarily not tab-focusable
+			this.tabindex = -1
 		},
 		onInput(value) {
 			this.inputValue = value
@@ -234,6 +243,9 @@ export default {
 			// while the input was focused
 			if (this.mouseDown) return
 			this.focused = false
+
+			// Make the root tab-focusable again
+			this.tabindex = 0
 		},
 		onContentSizeChanged() {
 			if (this.isMultiline()) this.updateSize()
@@ -246,6 +258,7 @@ export default {
 .__uic_lcf_
 	&root
 		font-size: 0px
+		outline: none
 
 	&list
 		margin-top: .25rem
