@@ -1,32 +1,34 @@
 <template>
 	<div
 	ref="root"
-	:tabindex="-1"
-	:style="{pointerEvents: blurred ? 'none' : 'auto'}">
-		<transition name="anim">
-			<div
-			ref="background"
-			class="__uic_ctxm_background"
-			@wheel="onFocusLost"
-			v-show="show"
-			@click="onFocusLost">
-			</div>
-		</transition>
-
-		<transition name="__uic_ctxm_container">
-			<div
-			ref="container"
-			class="__uic_ctxm_container"
-			v-show="show">
+	class="__uic_ctxm_root"
+	:tabindex="-1">
+		<div :style="{pointerEvents: blurred ? 'none' : 'auto'}">
+			<transition name="anim">
 				<div
-				ref="content"
-				class="__uic_ctxm_content"
-				tabindex="-1"
-				@contextmenu.capture.prevent>
-					<slot></slot>
+				ref="background"
+				class="__uic_ctxm_background"
+				@wheel="onFocusLost"
+				v-show="show"
+				@click="onFocusLost">
 				</div>
-			</div>
-		</transition>
+			</transition>
+
+			<transition name="__uic_ctxm_container">
+				<div
+				ref="container"
+				class="__uic_ctxm_container"
+				v-show="show">
+					<div
+					ref="content"
+					class="__uic_ctxm_content"
+					tabindex="-1"
+					@contextmenu.capture.prevent>
+						<slot></slot>
+					</div>
+				</div>
+			</transition>
+		</div>
 	</div>
 </template>
 
@@ -35,7 +37,7 @@ import { prependElement, isParent, onFocusChanged } from '../util'
 
 const appearance = {
 	default: {
-		screenSpaceMargin: 16
+		screenSpaceMargin: 8
 	},
 	validator(val) {
 		if(typeof val.screenSpaceMargin !== 'number') return false
@@ -63,6 +65,11 @@ export default {
 			required: true,
 			default: false
 		},
+		preferParentWidth: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		'appearance': {
 			type: [Object],
 			required: false,
@@ -84,6 +91,8 @@ export default {
 			this.blurred = false
 
 			this.$nextTick(() => {
+				this.$refs.content.focus()
+
 				// Move the component elements to the document scope
 				// to prevent any backround interactions
 				prependElement(document.body, this.$refs.background)
@@ -123,6 +132,8 @@ export default {
 			let szHeight = contentDimensions.height
 			let szWidth = contentDimensions.width
 
+			if (this.preferParentWidth && rootRect.width > szWidth) szWidth = rootRect.width
+
 			// Determine actual screen space boundaries taking ssm into account
 			const maxWidth = viewportDimensions.width - ssm * 2
 			const maxHeight = viewportDimensions.height - ssm * 2
@@ -157,6 +168,9 @@ export default {
 			prependElement(this.$refs.root, this.$refs.container)
 			prependElement(this.$refs.root, this.$refs.background)
 
+			// Reset focus
+			document.activeElement.blur()
+
 			this.$emit('close')
 			this.removeInteractionListeners()
 		},
@@ -181,6 +195,14 @@ export default {
 
 <style lang="stylus">
 .__uic_ctxm_
+	&root
+		position: absolute
+		width: 100%
+		height: 100%
+		top: 0px
+		left: 0px
+		pointer-events: none
+
 	&background
 		position: fixed
 		top: 0px
@@ -212,6 +234,7 @@ export default {
 
 	&content
 		height: 100%
+		width: 100%
 		outline: none
 		display: inline-block
 </style>

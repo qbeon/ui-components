@@ -23,20 +23,18 @@ tabindex="0"
 			</transition>
 		</div>
 	</labeled-field>
-	<div class="__uic_ldf_context-menu">
-		<context-menu
-		:show="showMenu"
-		:appearance="appearance.contextMenu"
-		@close="showMenu = false">
-			<date-picker class="__uic_ldf_picker"
-			:locale="locale"
-			:value="value"
-			:min-year="minYear"
-			:max-year="maxYear"
-			:years-per-page="yearsPerPage"
-			@input="onInput"/>
-		</context-menu>
-	</div>
+	<context-menu
+	:show="showMenu"
+	:appearance="appearance.contextMenu"
+	@close="showMenu = false">
+		<date-picker class="__uic_ldf_picker"
+		:locale="locale"
+		:value="value"
+		:min-year="minYear"
+		:max-year="maxYear"
+		:years-per-page="yearsPerPage"
+		@input="onInput"/>
+	</context-menu>
 </div>
 </template>
 
@@ -127,13 +125,6 @@ export default {
 		outline: none
 	&body
 		cursor: pointer
-	&context-menu
-		position: absolute
-		min-width: 100%
-		max-height: 0px
-		top: 0px
-		left: 0px
-		z-index: 99999999
 	&picker
 		padding: 1rem
 		padding-top: .5rem

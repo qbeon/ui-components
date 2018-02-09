@@ -23,24 +23,23 @@ tabindex="0"
 			</transition>
 		</div>
 	</labeled-field>
-	<div class="__uic_lsf_context-menu">
-		<context-menu
-		:show="showMenu"
-		:appearance="appearance.contextMenu"
-		@close="showMenu = false">
-			<scrollable class="__uic_lsf_scroll-area">
-				<ul class="__uic_lsf_option-list">
-					<li
-					class="__uic_lsf_option"
-					@click="select(value)"
-					v-for="(name, value) in options"
-					:key="value">
-						<span>{{name}}</span>
-					</li>
-				</ul>
-			</scrollable>
-		</context-menu>
-	</div>
+	<context-menu
+	:show="showMenu"
+	:appearance="appearance.contextMenu"
+	prefer-parent-width
+	@close="showMenu = false">
+		<scrollable class="__uic_lsf_scroll-area">
+			<ul class="__uic_lsf_option-list">
+				<li
+				class="__uic_lsf_option"
+				@click="select(value)"
+				v-for="(name, value) in options"
+				:key="value">
+					<span>{{name}}</span>
+				</li>
+			</ul>
+		</scrollable>
+	</context-menu>
 </div>
 </template>
 
@@ -142,13 +141,6 @@ export default {
 		outline: none
 	&body
 		cursor: pointer
-	&context-menu
-		position: absolute
-		min-width: 100%
-		max-height: 0px
-		top: 0px
-		left: 0px
-		z-index: 99999999
 	&scroll-area
 		height: 100%
 	&option-list
