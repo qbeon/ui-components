@@ -124,6 +124,7 @@ export default {
 	&container
 		box-sizing: content-box
 		display: inline-block
+		overflow: hidden
 		&_animated
 			-webkit-transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
 			transition: all .5s cubic-bezier(0.19, 1, 0.22, 1)
