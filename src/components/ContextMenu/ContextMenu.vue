@@ -1,6 +1,7 @@
 <template>
 	<div
 	ref="root"
+	:tabindex="-1"
 	:style="{pointerEvents: blurred ? 'none' : 'auto'}">
 		<transition name="anim">
 			<div
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { prependElement } from '../util'
+import { prependElement, isParent, onFocusChanged } from '../util'
 
 const appearance = {
 	default: {
@@ -43,7 +44,8 @@ const appearance = {
 }
 
 const shared = {
-	displayed: null
+	displayed: null,
+	previouslyFocusedElement: null
 }
 
 export default {
@@ -100,6 +102,11 @@ export default {
 			window.addEventListener('resize', this.onFocusLost)
 		}
 	},
+	created() {
+		// Don't track focus changes on the server where there's no window API
+		if (this.$isServer) return
+		onFocusChanged(this.onFocusChanged)
+	},
 	methods: {
 		// Calculates and directly sets the position of the context menu on screen
 		calculatePosition() {
@@ -137,6 +144,13 @@ export default {
 			containerStyle.top = posTop + 'px'
 			containerStyle.width = szWidth + 'px'
 			containerStyle.height = szHeight + 'px'
+		},
+		onFocusChanged() {
+			if (!this.show) return
+			if (isParent(this.$refs.content, document.activeElement)) return
+
+			// Close the context menu when the currently focused element is outside of it
+			this.$emit('close')
 		},
 		onFocusLost() {
 			// Move the elements back to the root scope

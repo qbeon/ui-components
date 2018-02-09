@@ -113,3 +113,20 @@ export function prependElement(node, el) {
 		throw new Error(err.toString())
 	}
 }
+
+// Returns true if either the child node is a child of the given parent node
+// or the parent and child point to the same node, otherwise returns false
+export function isParent(parent, child) {
+	if (parent === child) return true
+	let current = child.parentNode
+	while (current != null) {
+		if (parent === current) return true
+		current = current.parentNode
+	}
+	return false
+}
+
+export function onFocusChanged(callback) {
+	window.addEventListener ? window.addEventListener('focus', callback, true) :
+		window.attachEvent('onfocusout', callback)
+}
