@@ -65,6 +65,11 @@ export default {
 			required: false,
 			default: true
 		},
+		posY: {
+			type: Number,
+			required: false,
+			default: 0
+		},
 		'appearance': {
 			type: Object,
 			required: false,
@@ -82,6 +87,10 @@ export default {
 			}
 			this.draggerEnabled = false
 			styles['overflow-y'] = 'hidden'
+		},
+		posY(val) {
+			this.$refs.content.scrollTop = val
+			this.refreshScrollbar()
 		},
 		appearance() {
 			this.refreshScrollbar()
@@ -259,6 +268,10 @@ export default {
 			Styles & DOM
 		\*------------------------------------*/
 		updateDragger(options) {
+			this.$emit("scrollYChanged", {
+				y: this.$refs.content.scrollTop
+			})
+
 			options = options ? options : {}
 
 			// Hide dragger if there's no overflowing contents
