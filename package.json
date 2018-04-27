@@ -41,7 +41,6 @@
     "css-loader": "^0.28.11",
     "file-loader": "^1.1.11",
     "friendly-errors-webpack-plugin": "^1.7.0",
-    "node-sass": "^4.9.0",
     "rimraf": "^2.6.2",
     "sass-loader": "^7.0.1",
     "stylus": "^0.54.5",
