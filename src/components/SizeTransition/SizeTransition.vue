@@ -122,6 +122,7 @@ export default {
 <style lang="stylus">
 .__uic_szt_
 	&container
+		height: 0px
 		box-sizing: content-box
 		display: inline-block
 		overflow: hidden
