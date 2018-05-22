@@ -79,6 +79,11 @@ export default {
 				return true
 			}
 		},
+		validateOnInit: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		'appearance': {
 			type: Object,
 			required: false,
@@ -88,6 +93,7 @@ export default {
 	},
 	data() {
 		return {
+			isInitValue: true,
 			empty: true,
 			currentValue: '',
 			currentLineNumber: 1,
@@ -110,8 +116,6 @@ export default {
 		value(val) {
 			if (val && val.length > 0) this.setValue(val)
 			else this.setValue(null)
-
-			this.validate()
 		},
 		currentValue(value) {
 			// Update size only in case of multiline inputs
@@ -135,8 +139,11 @@ export default {
 		onInput() {
 			this.$emit('input', this.currentValue)
 
-			// Validate if necessary
-			if (this.validateOn === 'input') this.validate()
+			if (!this.isInitValue) this.validate()
+			else {
+				if (this.validateOnInit) this.validate()
+				this.isInitValue = false
+			}
 		},
 		validate() {
 			if (this.validator) {

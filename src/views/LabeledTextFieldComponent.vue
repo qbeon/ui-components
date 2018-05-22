@@ -61,7 +61,9 @@ name="Labeled Text Field"
 			@valid="validation_valid = true"
 			@invalid="validation_valid = false">
 			</uic-labeled-text-field>
-			<p v-if="validation_valid != null"
+
+			<p
+			v-if="validation_valid != null"
 			class="validation-indicator"
 			:class="{valid: validation_valid}">{{validation_valid ? 'Valid' : 'Invalid'}}</p>
 		</section-card>
@@ -82,6 +84,24 @@ name="Labeled Text Field"
 			<p v-if="validationOnInput_valid != null"
 			class="validation-indicator"
 			:class="{valid: validationOnInput_valid}">{{validationOnInput_valid ? 'Valid' : 'Invalid'}}</p>
+		</section-card>
+
+		<!-- Validation on initialization -->
+		<section-card name="Validation on input">
+			<p slot="description">Text fields won't validate the value on initialization by default, this behavior can be enabled using the validate-on-init property though</p>
+
+			<uic-labeled-text-field
+			class="field styled medium"
+			title="Validated on initialization"
+			v-model="validationOnInit_input"
+			:validator="isBigger4"
+			:validate-on-init="true"
+			@valid="validationOnInput_input = true"
+			@invalid="validationOnInput_input = false">
+			</uic-labeled-text-field>
+			<p v-if="validationOnInput_input != null"
+			class="validation-indicator"
+			:class="{valid: validationOnInput_input}">{{validationOnInput_input ? 'Valid' : 'Invalid'}}</p>
 		</section-card>
 	</div>
 </component-page>
@@ -106,10 +126,12 @@ export default {
 			customization_values: [null, null],
 
 			validation_value: null,
-			validation_valid: false,
+			validation_valid: null,
 
 			validationOnInput_value: null,
-			validationOnInput_valid: false,
+			validationOnInput_valid: null,
+			validationOnInput_input: null,
+			validationOnInit_input: 'Sample content'
 		}
 	},
 	methods: {
