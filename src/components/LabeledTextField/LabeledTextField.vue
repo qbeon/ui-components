@@ -139,7 +139,7 @@ export default {
 		onInput() {
 			this.$emit('input', this.currentValue)
 
-			if (!this.isInitValue) this.validate()
+			if (!this.isInitValue && this.validateOn === 'input') this.validate()
 			else {
 				if (this.validateOnInit) this.validate()
 				this.isInitValue = false

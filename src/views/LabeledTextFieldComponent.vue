@@ -49,7 +49,7 @@ name="Labeled Text Field"
 			</uic-labeled-text-field>
 		</section-card>
 
-		<!-- Validation -->
+		<!-- Validation on completion -->
 		<section-card name="Validation">
 			<p slot="description">Text fields can validate inputs (on complete by default)</p>
 
@@ -77,7 +77,7 @@ name="Labeled Text Field"
 			title="At least 5 characters"
 			v-model="validationOnInput_value"
 			:validator="isBigger4"
-			validateOn="input"
+			validate-on="input"
 			@valid="validationOnInput_valid = true"
 			@invalid="validationOnInput_valid = false">
 			</uic-labeled-text-field>
