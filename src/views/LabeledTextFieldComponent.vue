@@ -87,7 +87,7 @@ name="Labeled Text Field"
 		</section-card>
 
 		<!-- Validation on initialization -->
-		<section-card name="Validation on input">
+		<section-card name="Validation on initialization">
 			<p slot="description">Text fields won't validate the value on initialization by default, this behavior can be enabled using the validate-on-init property though</p>
 
 			<uic-labeled-text-field
@@ -140,7 +140,6 @@ export default {
 			return elements[keys[Math.floor(Math.random() * keys.length)]]
 		},
 		isBigger4(val) {
-			console.log('VAL', val)
 			if(val != null && val.length > 4) return true
 		}
 	}
