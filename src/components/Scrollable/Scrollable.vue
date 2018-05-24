@@ -219,6 +219,14 @@ export default {
 		// initial calculations using refresh scrollbar
 		this.refreshScrollbar({immediate: true})
 	},
+	beforeDestroy() {
+		this.$refs.content.removeEventListener('scroll', this.scrollHandlerFn)
+		this.$refs.dragger.removeEventListener('mousedown', this.barMousedownFn)
+		this.$refs.content.removeEventListener('wheel', this.wheelHandlerFn)
+		window.removeEventListener('resize', this.windowResizeFn)
+		document.removeEventListener('mousemove', this.documentMousemoveFn)
+		document.removeEventListener('mouseup', this.documentMouseupFn)
+	},
 	methods: {
 		/*------------------------------------*\
 			Computing Properties
