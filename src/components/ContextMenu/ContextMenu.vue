@@ -4,7 +4,7 @@
 	class="__uic_ctxm_root"
 	:tabindex="-1">
 		<div :style="{pointerEvents: blurred ? 'none' : 'auto'}">
-			<transition name="anim">
+			<transition name="__uic_ctxm_background">
 				<div
 				ref="background"
 				class="__uic_ctxm_background"
@@ -233,6 +233,15 @@ export default {
 		width: 100%
 		height: 100%
 		z-index: 99999998
+		background-color: rgba(0,0,0,.5)
+		&-enter-active
+			transition: opacity .3s
+		&-leave-active
+			transition: opacity .3s
+		&-enter
+			opacity: 0
+		&-leave-to
+			opacity: 0
 
 	&container
 		position: fixed
