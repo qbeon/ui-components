@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { prependElement, isParent, onFocusChanged } from '../util'
+import { prependElement, isParent } from '../util'
 
 const appearance = {
 	default: {
@@ -60,7 +60,7 @@ export default {
 		}
 	},
 	props: {
-		'show': {
+		show: {
 			type: Boolean,
 			required: true,
 			default: false
@@ -70,7 +70,7 @@ export default {
 			required: false,
 			default: false
 		},
-		'appearance': {
+		appearance: {
 			type: [Object],
 			required: false,
 			default: () => appearance.default,
@@ -79,7 +79,10 @@ export default {
 	},
 	watch: {
 		'shared.displayed'() {
-			if (this.shared.displayed !== this.$el) this.$emit('close')
+			if (this.shared.displayed !== this.$el) this.close()
+		},
+		$route(val) {
+			this.onFocusLost()
 		},
 		show(val) {
 			if (!val) {
@@ -114,7 +117,25 @@ export default {
 	created() {
 		// Don't track focus changes on the server where there's no window API
 		if (this.$isServer) return
-		onFocusChanged(this.onFocusChanged)
+		window.addEventListener('focus', this.onFocusChanged, true)
+	},
+	beforeDestroy() {
+		// Remove aborting interaction event listeners
+		this.unlink()
+
+		if (!this.show) return
+
+		// Destroy nodes temporarily moved to the document body
+		const body = document.body;
+		let back, cont;
+		for (let i = 0; i < body.childNodes.length; i++) {
+			const node = body.childNodes[i]
+			if (node.className == "__uic_ctxm_background") back = node
+			else if (node.className == "__uic_ctxm_container") cont = node
+			if (back && cont) break
+		}
+		body.removeChild(back)
+		body.removeChild(cont)
 	},
 	methods: {
 		// Calculates and directly sets the position of the context menu on screen
@@ -161,7 +182,16 @@ export default {
 			if (isParent(this.$refs.content, document.activeElement)) return
 
 			// Close the context menu when the currently focused element is outside of it
-			this.$emit('close')
+			this.close()
+		},
+		onKeydown(event) {
+			if (
+				(event.key == 'Escape' || event.key == 'Esc' || event.keyCode == 27) &&
+				(event.target.nodeName == 'BODY')
+			) {
+				event.preventDefault()
+				this.onFocusLost()
+			}
 		},
 		onFocusLost() {
 			// Move the elements back to the root scope
@@ -171,23 +201,16 @@ export default {
 			// Reset focus
 			document.activeElement.blur()
 
-			this.$emit('close')
-			this.removeInteractionListeners()
+			this.close()
+			this.unlink()
 		},
-		onKeydown(event) {
-			if (
-				(event.key == 'Escape' || event.key == 'Esc' || event.keyCode == 27) &&
-				(event.target.nodeName == 'BODY')
-			) {
-				event.preventDefault()
-				this.$emit('close')
-				this.removeInteractionListeners()
-			}
-		},
-		removeInteractionListeners() {
-			// Remove aborting interaction event listeners
+		unlink() {
 			window.removeEventListener('keydown', this.onKeydown)
 			window.removeEventListener('resize', this.onFocusLost)
+			window.removeEventListener('focus', this.onFocusChanged)
+		},
+		close() {
+			this.$emit('close')
 		}
 	}
 }

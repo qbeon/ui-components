@@ -125,8 +125,3 @@ export function isParent(parent, child) {
 	}
 	return false
 }
-
-export function onFocusChanged(callback) {
-	window.addEventListener ? window.addEventListener('focus', callback, true) :
-		window.attachEvent('onfocusout', callback)
-}
