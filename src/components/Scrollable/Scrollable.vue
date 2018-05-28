@@ -292,7 +292,7 @@ export default {
 			// setting dragger styles
 			const draggerStyles = this.$refs.dragger.style
 			draggerStyles.height = parseInt(Math.round(this.barHeight)) + 'px'
-			draggerStyles.top = parseInt(Math.round(this.barTop)) + 'px'
+			draggerStyles.transform = `translateY(${parseInt(Math.round(this.barTop))}px`
 
 			if (options.withScrollingClasses) {
 				this.setActivate()
@@ -626,7 +626,8 @@ export default {
 	&dragger
 		display: block
 		position: absolute
-		right: 0px
+		top: 0
+		right: 0
 		width: 16px
 		z-index: 999999
 		-webkit-backface-visibility: hidden
