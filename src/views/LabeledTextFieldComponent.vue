@@ -49,6 +49,39 @@ name="Labeled Text Field"
 			</uic-labeled-text-field>
 		</section-card>
 
+		<!-- Placeholder -->
+		<section-card
+		name="Placeholder"
+		:controls="{
+			'Clear': () => {placeholder_text = null},
+			'Random': () => {
+				placeholder_text = random()
+			}
+		}">
+			<uic-labeled-text-field
+			class="field"
+			title="Dynamic Placeholder Text"
+			placeholder="Placeholder text goes here"
+			v-model="placeholder_text"/>
+
+			<p slot="description">The text field component can get a dynamic placeholder</p>
+			<uic-labeled-text-field
+			class="field styled small"
+			:title="placeholder_text == null ?
+				'Field without a placeholder' :
+				'Field with a placeholder'"
+			v-model="placeholder_values[0]"
+			:placeholder="placeholder_text"/>
+
+			<uic-labeled-text-field
+			class="field styled large"
+			:title="placeholder_text == null ?
+				'Field without a placeholder' :
+				'Field with a placeholder'"
+			v-model="placeholder_values[1]"
+			:placeholder="placeholder_text"/>
+		</section-card>
+
 		<!-- Validation on completion -->
 		<section-card name="Validation">
 			<p slot="description">Text fields can validate inputs (on complete by default)</p>
@@ -124,6 +157,9 @@ export default {
 			default_value: null,
 
 			customization_values: [null, null],
+
+			placeholder_values: [null, null],
+			placeholder_text: 'Sample Placeholder',
 
 			validation_value: null,
 			validation_valid: null,
