@@ -5,12 +5,18 @@ class="__uic_ltf_root"
 @focus="onFocused">
 	<labeled-field
 	:title="title"
-	:selected="!empty"
+	:selected="inputIsFocused || !empty || placeholder != null"
 	class="__uic_ltf_body"
 	@contentSizeChanged="onContentSizeChanged">
 		<div slot="contents">
+			<transition name="__uic_ltf_placeholder">
+				<span
+				class="__uic_ltf_placeholder"
+				v-show="!inputIsFocused && value == null">{{placeholder}}</span>
+			</transition>
+
 			<input
-			v-show="!isMultilineField"
+			v-if="!isMultiline"
 			ref="input"
 			class="__uic_ltf_input"
 			tabindex="-1"
@@ -21,7 +27,7 @@ class="__uic_ltf_root"
 			@blur="onBlur"/>
 
 			<textarea
-			v-show="isMultilineField"
+			v-if="isMultiline"
 			ref="textarea"
 			class="__uic_ltf_textarea"
 			:rows="currentLineNumber"
@@ -54,21 +60,20 @@ export default {
 		'labeled-field': LabeledField,
 	},
 	props: {
-		'title': {
-			type: String,
-			required: false
+		title: {
+			type: String
 		},
-		'value': {
-			type: String,
-			required: false
+		placeholder: {
+			type: String
+		},
+		value: {
+			type: String
 		},
 		maxLines: {
-			type: Number,
-			required: false
+			type: Number
 		},
 		validator: {
-			type: Function,
-			required: false
+			type: Function
 		},
 		validateOn: {
 			type: String,
@@ -84,7 +89,7 @@ export default {
 			required: false,
 			default: false
 		},
-		'appearance': {
+		appearance: {
 			type: Object,
 			required: false,
 			default: () => appearance.default,
@@ -95,14 +100,16 @@ export default {
 		return {
 			isInitValue: true,
 			empty: true,
-			currentValue: '',
+			currentValue: null,
 			currentLineNumber: 1,
-			tabindex: 0
+			tabindex: 0,
+			inputIsFocused: false,
 		}
 	},
 	computed: {
-		isMultilineField() {
-			return this.isMultiline()
+		isMultiline() {
+			if (this.maxLines != null && this.maxLines != 1) return true
+			return false
 		}
 	},
 	created() {
@@ -119,17 +126,13 @@ export default {
 		},
 		currentValue(value) {
 			// Update size only in case of multiline inputs
-			if (this.isMultiline()) this.$nextTick(this.updateSize)
+			if (this.isMultiline) this.$nextTick(this.updateSize)
 		},
 		maxLines() {
-			if (this.isMultiline()) this.$nextTick(this.updateSize)
+			if (this.isMultiline) this.$nextTick(this.updateSize)
 		}
 	},
 	methods: {
-		isMultiline() {
-			if (this.maxLines != null && this.maxLines != 1) return true
-			return false
-		},
 		onInputComplete() {
 			this.$emit('valueChanged', this.currentValue)
 
@@ -137,6 +140,10 @@ export default {
 			if (this.validateOn === 'complete') this.validate()
 		},
 		onInput() {
+			if (this.currentValue != null && this.currentValue.length < 1) {
+				this.empty = true
+				this.currentValue = null
+			}
 			this.$emit('input', this.currentValue)
 
 			if (!this.isInitValue && this.validateOn === 'input') this.validate()
@@ -212,8 +219,8 @@ export default {
 				this.currentValue = ''
 				const activeEl = document.activeElement
 				if (
-					(!this.isMultiline() && this.$refs.input !== activeEl) ||
-					(this.isMultiline() && this.$refs.textarea !== activeEl)
+					(!this.isMultiline && this.$refs.input !== activeEl) ||
+					(this.isMultiline && this.$refs.textarea !== activeEl)
 				) this.empty = true
 			} else {
 				this.currentValue = value
@@ -223,21 +230,22 @@ export default {
 		},
 		onInputFocused() {
 			this.tabindex = -1
+			this.inputIsFocused = true
 		},
 		onFocused() {
-			this.empty = false
+			this.inputIsFocused = true
 			this.$nextTick(() => {
-				if (this.isMultiline()) this.$refs.textarea.focus()
+				if (this.isMultiline) this.$refs.textarea.focus()
 				else this.$refs.input.focus()
 			})
 		},
 		onBlur() {
 			this.tabindex = 0
+			this.inputIsFocused = false
 			if (this.currentValue && this.currentValue.length > 0) return
-			this.empty = true
 		},
 		onContentSizeChanged() {
-			if (this.isMultiline()) this.updateSize()
+			if (this.isMultiline) this.updateSize()
 		}
 	}
 }
@@ -250,6 +258,29 @@ export default {
 		outline: none
 	&body
 		cursor: pointer
+	&placeholder
+		position: absolute
+		width: 100%
+		outline: none
+		border: 0px
+		font-size: 1rem
+		height: 1.75rem
+		line-height: 1.75rem
+		overflow: hidden
+		white-space: nowrap
+		text-overflow: ellipsis
+		background: none
+		color: inherit
+		pointer-events: none
+		color: #aaa
+		&-enter-active
+			transition: opacity .2s
+		&-leave-active
+			transition: opacity .2s
+		&-enter
+			opacity: 0
+		&-leave-to
+			opacity: 0
 	&input
 		width: 100%
 		outline: none
