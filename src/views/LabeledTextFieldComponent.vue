@@ -82,6 +82,25 @@ name="Labeled Text Field"
 			:placeholder="placeholder_text"/>
 		</section-card>
 
+		<!-- Password -->
+		<section-card
+		name="Password"
+		:controls="{
+			'Clear': () => {password_value = null},
+			'Random': () => {
+				password_value = random()
+			}
+		}">
+			<p slot="description">The text field component can be used as a password input</p>
+			<uic-labeled-text-field
+			type="password"
+			class="field styled"
+			title="Styled text field"
+			v-model="password_value">
+			</uic-labeled-text-field>
+			<p>{{password_value}}</p>
+		</section-card>
+
 		<!-- Validation on completion -->
 		<section-card name="Validation">
 			<p slot="description">Text fields can validate inputs (on complete by default)</p>
@@ -157,6 +176,8 @@ export default {
 			default_value: null,
 
 			customization_values: [null, null],
+
+			password_value: null,
 
 			placeholder_values: [null, null],
 			placeholder_text: 'Sample Placeholder',

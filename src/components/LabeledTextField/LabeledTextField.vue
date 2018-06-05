@@ -16,6 +16,7 @@ class="__uic_ltf_root"
 			</transition>
 
 			<input
+			:type="type"
 			v-if="!isMultiline"
 			ref="input"
 			class="__uic_ltf_input"
@@ -60,6 +61,13 @@ export default {
 		'labeled-field': LabeledField,
 	},
 	props: {
+		type: {
+			type: String,
+			validator(val) {
+				if (val !== 'password') return false
+				return true
+			}
+		},
 		title: {
 			type: String
 		},
