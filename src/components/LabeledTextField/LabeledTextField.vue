@@ -20,10 +20,10 @@ class="__uic_ltf_root"
 			ref="input"
 			class="__uic_ltf_input"
 			tabindex="-1"
-			v-model="currentValue"
+			:value="value"
 			@focus="onInputFocused"
 			@change="onInputComplete"
-			@input="onInput"
+			@input="(e) => onInput(e.target.value)"
 			@blur="onBlur"/>
 
 			<textarea
@@ -32,10 +32,10 @@ class="__uic_ltf_root"
 			class="__uic_ltf_textarea"
 			:rows="currentLineNumber"
 			tabindex="-1"
-			v-model="currentValue"
+			:value="value"
 			@focus="onInputFocused"
 			@change="onInputComplete"
-			@input="onInput"
+			@input="(e) => onInput(e.target.value)"
 			@blur="onBlur">
 			</textarea>
 		</div>
@@ -100,7 +100,6 @@ export default {
 		return {
 			isInitValue: true,
 			empty: true,
-			currentValue: null,
 			currentLineNumber: 1,
 			tabindex: 0,
 			inputIsFocused: false,
@@ -113,20 +112,16 @@ export default {
 		}
 	},
 	created() {
-		if (this.value) {
-			this.empty = false
-			this.currentValue = this.value
-		}
-		this.onInput()
+		this.onInput(this.value)
 	},
 	watch: {
 		value(val) {
-			if (val && val.length > 0) this.setValue(val)
-			else this.setValue(null)
-		},
-		currentValue(value) {
-			// Update size only in case of multiline inputs
-			if (this.isMultiline) this.$nextTick(this.updateSize)
+			if (val != null && val.length > 0) this.empty = false
+			else {
+				this.empty = true
+				val = null
+			}
+			this.$emit('valueChanged', val)
 		},
 		maxLines() {
 			if (this.isMultiline) this.$nextTick(this.updateSize)
@@ -134,29 +129,32 @@ export default {
 	},
 	methods: {
 		onInputComplete() {
-			this.$emit('valueChanged', this.currentValue)
+			this.$emit('valueChanged', this.value)
 
 			// Validate if necessary
-			if (this.validateOn === 'complete') this.validate()
+			if (this.validateOn === 'complete') this.validate(this.value)
 		},
-		onInput() {
-			if (this.currentValue != null && this.currentValue.length < 1) {
-				this.empty = true
-				this.currentValue = null
-			}
-			this.$emit('input', this.currentValue)
-
-			if (!this.isInitValue && this.validateOn === 'input') this.validate()
+		onInput(val) {
+			if (val != null && val.length > 0) this.empty = false
 			else {
-				if (this.validateOnInit) this.validate()
+				this.empty = true
+				val = null
+			}
+
+			this.$emit('input', val)
+
+			// Validate
+			if (!this.isInitValue && this.validateOn === 'input') {
+				this.validate(val)
+			} else {
+				if (this.validateOnInit) this.validate(val)
 				this.isInitValue = false
 			}
 		},
-		validate() {
+		validate(val) {
 			if (this.validator) {
-				if (this.validator(this.currentValue) === true) this.$emit('valid')
+				if (this.validator(val) === true) this.$emit('valid')
 				else this.$emit('invalid')
-				return
 			}
 		},
 		countLines() {
@@ -214,20 +212,6 @@ export default {
 			this.currentLineNumber = lines.total
 			textarea.style.height = height + 'px'
 		},
-		setValue(value) {
-			if (value === null) {
-				this.currentValue = ''
-				const activeEl = document.activeElement
-				if (
-					(!this.isMultiline && this.$refs.input !== activeEl) ||
-					(this.isMultiline && this.$refs.textarea !== activeEl)
-				) this.empty = true
-			} else {
-				this.currentValue = value
-				this.empty = false
-			}
-			this.$emit('valueChanged', value)
-		},
 		onInputFocused() {
 			this.tabindex = -1
 			this.inputIsFocused = true
@@ -242,7 +226,7 @@ export default {
 		onBlur() {
 			this.tabindex = 0
 			this.inputIsFocused = false
-			if (this.currentValue && this.currentValue.length > 0) return
+			if (this.value && this.value.length > 0) return
 		},
 		onContentSizeChanged() {
 			if (this.isMultiline) this.updateSize()
