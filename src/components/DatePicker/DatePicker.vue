@@ -83,7 +83,7 @@
 			:maxYear="maxYear"
 			:minYear="minYear"
 			:fullMonthCalendar="fullMonthCalendar"
-			@input="onInput"
+			@input="onDaySelectorInput"
 			@monthClick="goToMonthSelection"/>
 		</transition>
 	</div>
@@ -133,7 +133,6 @@ export default {
 				case 'year-date':
 					return true
 				}
-				console.error('Invalid date picker mode: ' + mode)
 				return false
 			}
 		},
@@ -152,6 +151,13 @@ export default {
 			required: false,
 			default: 2100
 		},
+		validator: {
+			type: Function
+		},
+		validateOnInit: {
+			type: Boolean,
+			default: false
+		},
 		// Includes extra foreign weeks
 		// to preserve the 6-rows layout when enabled
 		fullMonthCalendar: MonthCalendar.props.fullMonthCalendar,
@@ -168,6 +174,7 @@ export default {
 			selectedMonth: null,
 			monthCalendarModel: null,
 			currentPicker: 'year',
+			isInitValue: true,
 		}
 	},
 	computed: {
@@ -187,10 +194,12 @@ export default {
 	created() {
 		this.init()
 		this.initMonthNames()
+		this.onInput(this.value)
 	},
 	watch: {
-		value() {
+		value(val) {
 			this.init()
+			this.onInput(val)
 		},
 		locale() {
 			this.initMonthNames()
@@ -223,18 +232,16 @@ export default {
 				itr++
 			) this.years.push(itr)
 
-			this.selectedDay = this.value
-
-			if (this.selectedDay == null) {
+			if (this.value == null) {
 				this.selectedYear = 1970
 				this.selectedMonth = 0
 				this.currentPicker = 'year'
 			} else {
-				this.selectedYear = this.selectedDay.getFullYear()
-				this.selectedMonth = this.selectedDay.getMonth()
+				this.selectedYear = this.value.getFullYear()
+				this.selectedMonth = this.value.getMonth()
 				this.monthCalendarModel = {
-					displayedMonth: this.selectedDay,
-					selectedDay: this.selectedDay
+					displayedMonth: this.value,
+					selectedDay: this.value
 				}
 				this.currentPicker = 'day'
 			}
@@ -315,28 +322,39 @@ export default {
 			this.selectedMonth = month
 			this.currentPicker = 'day'
 			this.monthCalendarModel = {
-				displayedMonth: new Date(Date.UTC(this.selectedYear, this.selectedMonth, 1)),
+				displayedMonth: new Date(
+					Date.UTC(this.selectedYear, this.selectedMonth, 1)
+				),
 				selectedDay: this.selectedDay
 			}
 		},
+		onDaySelectorInput(val) {
+			if (val.selectedDay) this.onInput(val.selectedDay)
+		},
+		// onInput expects either null or a Date object
 		onInput(val) {
-			this.selectedYear = val.displayedMonth.getFullYear()
-			this.selectedMonth = val.displayedMonth.getMonth()
-
-			// Emit input only if the selected day has changed
-			// XOR
-			if (val.selectedDay == null && this.selectedDay == null) return
-			if ((this.selectedDay == null && val.selectedDay != null) ||
-				(val.selectedDay == null && this.selectedDay != null)
-			) {
-				this.$emit('input', val.selectedDay)
-				return
+			if (val == null) {
+				this.goToYearSelection()
+				this.selectedMonth = null
+			} else {
+				this.selectedYear = val.getFullYear()
+				this.selectedMonth = val.getMonth()
+				this.$emit('input', val)
 			}
 
-			if (this.selectedDay.getTime() != val.selectedDay.getTime()) {
-				this.$emit('input', val.selectedDay)
+			// Validate
+			this.validate(val)
+		},
+		validate(val) {
+			if (this.validator) {
+				if (this.isInitValue && !this.validateOnInit) {
+					this.isInitValue = false
+					return
+				} else this.isInitValue = false
+				if (this.validator(val) === true) this.$emit('valid')
+				else this.$emit('invalid')
 			}
-		}
+		},
 	}
 }
 </script>

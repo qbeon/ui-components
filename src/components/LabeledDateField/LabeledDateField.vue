@@ -33,7 +33,11 @@ tabindex="0"
 		:min-year="minYear"
 		:max-year="maxYear"
 		:years-per-page="yearsPerPage"
-		@input="onInput"/>
+		@input="onInput"
+		:validator="validator"
+		:validate-on-init="validateOnInit"
+		@valid="$emit('valid')"
+		@invalid="$emit('invalid')"/>
 	</context-menu>
 </div>
 </template>
@@ -84,6 +88,8 @@ export default {
 		minYear: DatePicker.props.minYear,
 		maxYear: DatePicker.props.maxYear,
 		yearsPerPage: DatePicker.props.yearsPerPage,
+		validator: DatePicker.props.validator,
+		validateOnInit: DatePicker.props.validateOnInit,
 		appearance: {
 			type: Object,
 			required: false,

@@ -46,12 +46,40 @@ name="Date Picker"
 			:value="i18n_locale"
 			@input="i18n_localeChanged"/>
 		</section-card>
+
+		<!-- Validation -->
+		<section-card
+		name="validation"
+		:controls="{
+			'Clear': () => validation_model = null,
+			'Random': () => validation_model = randomDate()
+		}">
+			<p slot="description">The date picker uses the same validation API as the month calendar component. In the below example, dates below the current date are considered invalid.</p>
+
+			<uic-date-picker
+			class="field"
+			v-model="validation_model"
+			:validator="validateDateNotBelowNow"
+			@valid="validation_valid = true"
+			@invalid="validation_valid = false"/>
+
+			<p
+			:class="{
+				'valid': validation_valid === true,
+				'invalid': validation_valid !== true
+			}"
+			v-if="validation_valid != null">
+				<b v-show="validation_valid === true">Valid date:</b>
+				<b v-show="validation_valid !== true">Invalid date:</b>
+				{{validation_model}}
+			</p>
+		</section-card>
 	</div>
 </component-page>
 </template>
 
 <script>
-import { elements } from '../util/testData.js'
+import randomNumber from '../util/randomNumber'
 
 import UtilComponentPage from '../util/ComponentPage.vue'
 import SectionCard from '../util/SectionCard.vue'
@@ -65,6 +93,8 @@ export default {
 		return {
 			// Sections
 			customization_model: new Date(Date.now()),
+			validation_model: null,
+			validation_valid: null,
 			i18n_model: null,
 			i18n_locale: 'ru-RU'
 		}
@@ -76,6 +106,12 @@ export default {
 		i18n_localeChanged(val) {
 			if (val.length != 5) return
 			else this.i18n_locale = val
+		},
+		validateDateNotBelowNow(val) {
+			if (val == null) return
+			const current = new Date()
+			if (val.getTime() < current.getTime()) return false
+			return true
 		}
 	}
 }
@@ -108,4 +144,10 @@ h6
 		//padding-left: .5rem
 		//padding-right: .5rem
 		padding: 1rem
+
+.valid
+	color: green
+
+.invalid
+	color: red
 </style>
