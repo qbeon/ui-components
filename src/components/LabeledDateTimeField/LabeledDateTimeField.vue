@@ -138,6 +138,7 @@ export default {
 	&picker
 		padding: 1rem
 		padding-top: .5rem
+		height: 22rem
 	&displayed-date
 		span
 			display: block
