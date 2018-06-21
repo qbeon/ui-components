@@ -109,6 +109,18 @@ export default {
 	computed: {
 		formattedValue() {
 			if (this.value == null) return
+
+			if (this.mode === 'ydhm') return new Intl.DateTimeFormat(
+				this.locale,
+				{
+					year: 'numeric',
+					month: 'short',
+					day: '2-digit',
+					minute: '2-digit',
+					hour: '2-digit'
+				}
+			).format(this.value)
+
 			return new Intl.DateTimeFormat(this.locale).format(this.value)
 		}
 	},
