@@ -13,10 +13,10 @@ name="Labeled Date Field"
 		<!-- Default -->
 		<section-card
 		name="Default">
-			<uic-labeled-date-time-field/>
+			<uic-labeled-date-time-field v-model="default_model"/>
 
 			<p class="indicator" v-if="default_model">
-				<b>Selected date:</b> {{default_model}}
+				<b>Selected date:</b> {{default_model ? default_model.toString() : 'null'}}
 			</p>
 		</section-card>
 
@@ -33,7 +33,7 @@ name="Labeled Date Field"
 			v-model="customization_model"/>
 
 			<p class="indicator" v-if="customization_model">
-				<b>Selected date:</b> {{customization_model}}
+				<b>Selected date:</b> {{customization_model ? customization_model.toString() : 'null'}}
 			</p>
 		</section-card>
 
