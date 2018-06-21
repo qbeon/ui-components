@@ -27,7 +27,7 @@ name="Date Time Picker"
 			v-model="customization_model"/>
 
 			<p v-if="customization_model">
-				<b>Selected date:</b> {{customization_model}}
+				<b>Selected date:</b> {{customization_model ? customization_model.toString() : 'null'}}
 			</p>
 		</section-card>
 
