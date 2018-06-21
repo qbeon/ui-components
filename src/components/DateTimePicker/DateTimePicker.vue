@@ -481,7 +481,7 @@ export default {
 		padding-left: .5rem
 		padding-right: .5rem
 	&year-list-scroll
-		height: 14rem
+		height: 16rem
 	&year
 		width: 16,666666667%
 		font-size: 1rem
