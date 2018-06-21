@@ -443,20 +443,24 @@ export default {
 <style lang="stylus">
 .__uic_dtp_
 	&root
-		position: relative
 		display: inline-block
 		font-size: 0px
 		line-height: 0px
 		width: 17rem
-		box-sizing: content-box
 	&body
 		width: 100%
 		height: 100%
 		overflow: hidden
+		position: relative
+		box-sizing: content-box
 		&-enter-active
 			transition: all .75s
 		&-leave-active
 			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
 			transition: all .1s
 		&-enter
 			opacity: 0
