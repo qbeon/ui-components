@@ -46,6 +46,10 @@ const routes = [{
 	name: 'SizeTransitionComponent',
 	component: _import('SizeTransitionComponent')
 }, {
+	path: '/resize-observer',
+	name: 'ResizeObserverComponent',
+	component: _import('ResizeObserverComponent')
+}, {
 	path: '/menu-component',
 	name: 'MenuComponent',
 	component: _import('MenuComponent')
