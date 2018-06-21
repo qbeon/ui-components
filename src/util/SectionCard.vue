@@ -9,7 +9,11 @@
 			</div>
 		</div>
 		<div class="__util_sectioncard_content">
-			<slot></slot>
+			<uic-size-transition
+			class="__util_sectioncard_content-container"
+			mode="height">
+				<slot></slot>
+			</uic-size-transition>
 		</div>
 		<ul class="__util_sectioncard_footer">
 			<li
@@ -61,6 +65,10 @@ export default {
 	&header, &content
 		padding: 1rem
 		font-size: 0px
+	&content-container
+		height: 100%
+		width: 100%
+		box-sizing: border-box
 	&header
 		border-bottom: 1px solid #FAFAFA
 	&footer

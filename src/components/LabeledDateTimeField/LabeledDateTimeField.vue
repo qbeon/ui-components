@@ -27,13 +27,15 @@ tabindex="0"
 	:show="showMenu"
 	:appearance="appearance.contextMenu"
 	@close="showMenu = false">
-		<date-picker class="__uic_ldf_picker"
+		<date-time-picker class="__uic_ldf_picker"
 		:locale="locale"
 		:value="value"
 		:min-year="minYear"
 		:max-year="maxYear"
 		:years-per-page="yearsPerPage"
 		@input="onInput"
+		:mode="mode"
+		:default-time="defaultTime"
 		:validator="validator"
 		:validate-on-init="validateOnInit"
 		@valid="$emit('valid')"
@@ -45,7 +47,7 @@ tabindex="0"
 <script>
 import LabeledField from '../LabeledField/LabeledField.vue'
 import ContextMenu from '../ContextMenu/ContextMenu.vue'
-import DatePicker from '../DatePicker/DatePicker.vue'
+import DateTimePicker from '../DateTimePicker/DateTimePicker.vue'
 
 const appearance = {
 	default: {
@@ -59,12 +61,12 @@ const appearance = {
 }
 
 export default {
-	name: 'labeled-date-field',
+	name: 'labeled-date-time-field',
 	appearance,
 	components: {
 		'labeled-field': LabeledField,
 		'context-menu': ContextMenu,
-		'date-picker': DatePicker,
+		'date-time-picker': DateTimePicker,
 	},
 	props: {
 		locale: {
@@ -85,11 +87,13 @@ export default {
 			required: false,
 			default: ''
 		},
-		minYear: DatePicker.props.minYear,
-		maxYear: DatePicker.props.maxYear,
-		yearsPerPage: DatePicker.props.yearsPerPage,
-		validator: DatePicker.props.validator,
-		validateOnInit: DatePicker.props.validateOnInit,
+		mode: DateTimePicker.props.mode,
+		defaultTime: DateTimePicker.props.defaultTime,
+		minYear: DateTimePicker.props.minYear,
+		maxYear: DateTimePicker.props.maxYear,
+		yearsPerPage: DateTimePicker.props.yearsPerPage,
+		validator: DateTimePicker.props.validator,
+		validateOnInit: DateTimePicker.props.validateOnInit,
 		appearance: {
 			type: Object,
 			required: false,

@@ -1,35 +1,35 @@
 <template>
-<div class="__uic_dp_root">
-	<div class="__uic_dp_body">
+<div class="__uic_dtp_root">
+	<div class="__uic_dtp_body">
 		<!-- YEAR PICKER -->
 		<transition
-		name="__uic_dp_body"
+		name="__uic_dtp_body"
 		mode="out-in">
 			<div
-			class="__uic_dp_year-body"
+			class="__uic_dtp_year-body"
 			v-if="currentPicker === 'year'">
-				<div class="__uic_dp_year-header">
+				<div class="__uic_dtp_year-header">
 					<div
-					class="__uic_dp_to-previous-year-page"
+					class="__uic_dtp_to-previous-year-page"
 					:class="{'inactive': !hasPreviousYearPage}"
 					@click="previousYearPage"
 					v-html="arrowRightIcon"/>
-					<span class="__uic_dp_current-displayed-years">
+					<span class="__uic_dtp_current-displayed-years">
 						{{displayedYears.from}} <i>-</i> {{displayedYears.to}}
 					</span>
 					<div
-					class="__uic_dp_to-next-year-page"
+					class="__uic_dtp_to-next-year-page"
 					:class="{'inactive': !hasNextYearPage}"
 					@click="nextYearPage"
 					v-html="arrowRightIcon"/>
 				</div>
-				<scrollable class="__uic_dp_year-list-scroll">
-					<ul class="__uic_dp_year-list">
+				<scrollable class="__uic_dtp_year-list-scroll">
+					<ul class="__uic_dtp_year-list">
 						<li
-						class="__uic_dp_year"
+						class="__uic_dtp_year"
 						v-for="year in years"
 						:key="year"
-						@click="selectYear(year)">{{year}}</li>
+						@click="onYearSelected(year)">{{year}}</li>
 					</ul>
 				</scrollable>
 			</div>
@@ -37,54 +37,91 @@
 
 		<!-- MONTH PICKER -->
 		<transition
-		name="__uic_dp_body"
+		name="__uic_dtp_body"
 		mode="out-in">
 			<scrollable
-			class="__uic_dp_month-body"
+			class="__uic_dtp_month-body"
 			v-if="currentPicker === 'month'">
-				<div class="__uic_dp_month-header">
+				<div class="__uic_dtp_month-header">
 					<div
-					class="__uic_dp_to-previous-month-page"
+					class="__uic_dtp_to-previous-month-page"
 					:class="{'inactive': !hasPreviousMonthPage}"
 					@click="previousMonthPage"
 					v-html="arrowRightIcon"/>
 					<span
-					class="__uic_dp_current-displayed-months"
+					class="__uic_dtp_current-displayed-months"
 					@click="goToYearSelection">
 						{{selectedYear}}
 					</span>
 					<div
-					class="__uic_dp_to-next-month-page"
+					class="__uic_dtp_to-next-month-page"
 					:class="{'inactive': !hasNextMonthPage}"
 					@click="nextMonthPage"
 					v-html="arrowRightIcon"/>
 				</div>
-				<ul class="__uic_dp_month-list">
+				<ul class="__uic_dtp_month-list">
 					<li
-					class="__uic_dp_month"
+					class="__uic_dtp_month"
 					v-for="(monthName, index) in monthNames"
 					:key="index"
-					@click="selectMonth(index)">{{monthName}}</li>
+					@click="onMonthSelected(index)">{{monthName}}</li>
 				</ul>
 			</scrollable>
 		</transition>
 
 		<!-- DAY PICKER -->
 		<transition
-		name="__uic_dp_body"
+		name="__uic_dtp_body"
 		mode="out-in">
 			<month-calendar
-			class="__uic_dp_month-calendar"
-			v-if="currentPicker === 'day'"
+			class="__uic_dtp_month-calendar"
+			v-if="mode === 'yd' && currentPicker === 'day'"
 			navigable
 			selectionMode="day"
 			:locale="locale"
 			v-model="monthCalendarModel"
 			:maxYear="maxYear"
-			:minYear="minYear"
+			:mininYear="minYear"
 			:fullMonthCalendar="fullMonthCalendar"
 			@input="onDaySelectorInput"
 			@monthClick="goToMonthSelection"/>
+		</transition>
+
+		<!-- DAY & TIME PICKER -->
+		<transition
+		name="__uic_dtp_body"
+		mode="out-in">
+			<div v-if="mode === 'ydhm' && currentPicker === 'day'">
+				<month-calendar
+				class="__uic_dtp_month-calendar"
+				v-if="currentPicker === 'day'"
+				navigable
+				selectionMode="day"
+				:locale="locale"
+				v-model="monthCalendarModel"
+				:maxYear="maxYear"
+				:minYear="minYear"
+				:fullMonthCalendar="fullMonthCalendar"
+				@input="onDaySelectorInput"
+				@monthClick="goToMonthSelection"/>
+				<div
+				class="__uic_dtp_datetime_time-body"
+				:class="{'inactive': selectedDate == null}">
+					<div
+					class="__uic_dtp_datetime_time-icon"
+					v-html="timeIcon"/>
+					<input
+					class="__uic_dtp_datetime_time-input"
+					type="time"
+					v-model="selectedTime"
+					@change="onTimeInput">
+					<div
+					class="__uic_dtp_datetime_accept"
+					:class="{'inactive': selectedTime.length < 5}"
+					v-html="acceptIcon"
+					@click="accept"/>
+				</div>
+			</div>
 		</transition>
 	</div>
 </div>
@@ -93,8 +130,9 @@
 <script>
 import MonthCalendar from '../MonthCalendar/MonthCalendar.vue'
 import Scrollable from '../Scrollable/Scrollable.vue'
-import { ArrowRight } from '../icons'
+import { ArrowRight, Time, Accept } from '../icons'
 import getMonthName from '../getMonthName'
+import { parseTime } from '../util'
 
 function calculateMiddleYearSpan(min, max, perPage) {
 	// Prevent out of range
@@ -109,7 +147,7 @@ function calculateMiddleYearSpan(min, max, perPage) {
 }
 
 export default {
-	name: 'date-picker',
+	name: 'date-time-picker',
 	components: {
 		'scrollable': Scrollable,
 		'month-calendar': MonthCalendar,
@@ -127,14 +165,21 @@ export default {
 		mode: {
 			type: String,
 			required: false,
-			default: 'year-date',
+			default: 'ydhm',
 			validator(mode) {
 				switch (mode) {
-				case 'year-date':
+				case 'ydhm':
+					return true
+				case 'yd':
 					return true
 				}
 				return false
 			}
+		},
+		defaultTime: {
+			type: String,
+			required: false,
+			default: '12:00',
 		},
 		yearsPerPage: {
 			type: Number,
@@ -166,12 +211,16 @@ export default {
 		return {
 			// Provides the SVG icon
 			arrowRightIcon: ArrowRight,
+			timeIcon: Time,
+			acceptIcon: Accept,
 			monthNames: null,
 
 			years: [],
 			displayedYears: null,
 			selectedYear: null,
 			selectedMonth: null,
+			selectedDate: null,
+			selectedTime: this.defaultTime,
 			monthCalendarModel: null,
 			currentPicker: 'year',
 			isInitValue: true,
@@ -235,6 +284,7 @@ export default {
 			if (this.value == null) {
 				this.selectedYear = 1970
 				this.selectedMonth = 0
+				this.selectedTime = this.defaultTime
 				this.currentPicker = 'year'
 			} else {
 				this.selectedYear = this.value.getFullYear()
@@ -242,6 +292,12 @@ export default {
 				this.monthCalendarModel = {
 					displayedMonth: this.value,
 					selectedDay: this.value
+				}
+
+				if (this.mode === 'ydhm') {
+					const h = this.value.getHours()
+					const m = this.value.getMinutes()
+					this.selectedTime = `${h}:${m}`
 				}
 				this.currentPicker = 'day'
 			}
@@ -313,12 +369,14 @@ export default {
 		goToMonthSelection() {
 			this.currentPicker = 'month'
 		},
-
-		selectYear(year) {
+		goToDaySelection() {
+			this.currentPicker = 'day'
+		},
+		onYearSelected(year) {
 			this.selectedYear = year
 			this.currentPicker = 'month'
 		},
-		selectMonth(month) {
+		onMonthSelected(month) {
 			this.selectedMonth = month
 			this.currentPicker = 'day'
 			this.monthCalendarModel = {
@@ -329,16 +387,32 @@ export default {
 			}
 		},
 		onDaySelectorInput(val) {
-			if (val.selectedDay) this.onInput(val.selectedDay)
+			if (val.selectedDay == null) return
+			this.selectedDate = val.selectedDay
+			if (this.mode !== 'ydhm') this.onInput(this.selectedDate)
+		},
+		onTimeInput() {
+			parseTime(this.selectedTime, this.selectedDate)
 		},
 		// onInput expects either null or a Date object
 		onInput(val) {
 			if (val == null) {
 				this.goToYearSelection()
 				this.selectedMonth = null
+			} else if (this.mode == 'ydhm') {
+				this.selectedYear = val.getFullYear()
+				this.selectedMonth = val.getMonth()
+				this.selectedDate = val
+				let h = val.getHours()
+				if (h < 10) h = '0' + h
+				let m = val.getMinutes()
+				if (m < 10) m = '0' + m
+				this.selectedTime = `${h}:${m}`
+				this.$emit('input', val)
 			} else {
 				this.selectedYear = val.getFullYear()
 				this.selectedMonth = val.getMonth()
+				this.selectedDate = val
 				this.$emit('input', val)
 			}
 
@@ -355,19 +429,25 @@ export default {
 				else this.$emit('invalid')
 			}
 		},
+		accept() {
+			if (this.selectedTime.length < 5) {
+				this.selectedTime = this.defaultTime
+			}
+			const dt = parseTime(this.selectedTime, new Date(this.selectedDate))
+			this.onInput(dt)
+		}
 	}
 }
 </script>
 
 <style lang="stylus">
-.__uic_dp_
+.__uic_dtp_
 	&root
 		position: relative
 		display: inline-block
 		font-size: 0px
 		line-height: 0px
 		width: 17rem
-		height: 17rem
 		box-sizing: content-box
 	&body
 		width: 100%
@@ -376,6 +456,7 @@ export default {
 		&-enter-active
 			transition: all .75s
 		&-leave-active
+			position: absolute
 			transition: all .1s
 		&-enter
 			opacity: 0
@@ -515,4 +596,63 @@ export default {
 	&month-calendar&month-calendar
 		width: 100%
 		height: 100%
+
+	&datetime_
+		&time-body
+			display: flex
+			flex-direction: row
+			align-items: center
+			line-height: 1.5rem
+			margin-top: .5rem
+			border-top: 1px solid #EEE
+			padding-top: calc(.5rem - 1px)
+			-webkit-transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1)
+			transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1)
+			&.inactive
+				pointer-events: none
+				opacity: .3
+		&time-icon
+		&accept
+			height: 2rem
+			width: 2rem
+			line-height: 2rem
+			display: inline-block
+			margin-right: 1rem
+			display: flex
+			justify-content: center
+			align-items: center
+			-webkit-transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1)
+			transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1)
+			svg
+				height: 1.25rem
+				width: 1.25rem
+				-webkit-transition: transform .25s cubic-bezier(0.19, 1, 0.22, 1)
+				transition: transform .25s cubic-bezier(0.19, 1, 0.22, 1)
+			&.inactive
+				pointer-events: none
+				opacity: .3
+		&accept
+			margin-right: 0
+			margin-left: 1rem
+			&:hover
+				svg
+					transform: scale(1.25)
+					fill: green
+		&time-input
+			font-size: 1rem
+			height: 2rem
+			line-height: 2rem
+			border: 0
+			flex-grow: 1
+			-webkit-appearance: none
+			-moz-appearance: none
+			appearance: none
+			text-align: center
+			&::-webkit-inner-spin-button
+			&::-webkit-outer-spin-button
+			&::-webkit-clear-button
+				-webkit-appearance: none
+				-moz-appearance: none
+				appearance: none
+
 </style>

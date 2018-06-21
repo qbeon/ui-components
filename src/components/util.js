@@ -125,3 +125,17 @@ export function isParent(parent, child) {
 	}
 	return false
 }
+
+// parseTime parses time strings
+export function parseTime(timeStr, dt) {
+	if (!dt) dt = new Date()
+
+	const time = timeStr.match(/(\d+)(?::(\d\d))?\s*(p?)/i)
+	if (!time) return NaN
+
+	dt.setHours(parseInt(time[1], 10))
+	dt.setMinutes(parseInt(time[2], 10) || 0)
+	dt.setSeconds(0, 0)
+
+	return dt
+}

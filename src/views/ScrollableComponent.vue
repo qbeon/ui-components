@@ -50,12 +50,13 @@ export default {
 <style lang="stylus" scoped>
 .scrollable-area
 	width: 100%
-	height: 16rem
+	height: 32rem
 	background-color: wheat
 
 .placeholder
-	width: 100%
-	padding: 1rem
+	width: calc(100% - .5rem)
+	padding: 4rem
+	margin: .25rem
 	background-color: #5bb8ff
 	font-size: 1rem
 	color: white

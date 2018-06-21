@@ -4,7 +4,7 @@ name="Labeled Date Field"
 :subComponents="{
 	LabeledFieldComponent: 'LabeledField',
 	MenuComponent: 'Menu',
-	DatePickerComponent: 'DatePicker',
+	DateTimePickerComponent: 'DateTimePicker',
 	MonthCalendarComponent: 'MonthCalendar'
 }">
 	<p slot="description">SampleDescription</p>
@@ -13,7 +13,7 @@ name="Labeled Date Field"
 		<!-- Default -->
 		<section-card
 		name="Default">
-			<uic-labeled-date-field/>
+			<uic-labeled-date-time-field/>
 
 			<p class="indicator" v-if="default_model">
 				<b>Selected date:</b> {{default_model}}
@@ -27,7 +27,7 @@ name="Labeled Date Field"
 			'Clear': () => {customization_model = null},
 			'Random': () => {customization_model = randomDate()}
 		}">
-			<uic-labeled-date-field
+			<uic-labeled-date-time-field
 			title="Customized Date Field"
 			class="field styled"
 			v-model="customization_model"/>
@@ -41,7 +41,7 @@ name="Labeled Date Field"
 		<section-card
 		name="Internationalization">
 			<p slot="description">The locale property defines the translations locale of all texts of the component.</p>
-			<uic-labeled-date-field
+			<uic-labeled-date-time-field
 			class="field"
 			:title="'Localized Date (' + i18n_locale + ')'"
 			:locale="i18n_locale"

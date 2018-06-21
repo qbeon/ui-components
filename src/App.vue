@@ -30,9 +30,9 @@ export default {
 			pages: {
 				'Home': 'Home',
 				'MonthCalendarComponent': 'Month Calendar Component',
-				'DatePickerComponent': 'Date Picker Component',
+				'DateTimePickerComponent': 'Date Time Picker Component',
 				'TextFieldComponent': 'Text Field Component',
-				'LabeledDateFieldComponent': 'Labeled Date Field Component',
+				'LabeledDateTimeFieldComponent': 'Labeled Date Field Component',
 				'LabeledTextFieldComponent': 'Labeled Text Field Component',
 				'LabeledSelectFieldComponent': 'Labeled Select Field Component',
 				'LabeledChipFieldComponent': 'Labeled Chip Field Component',

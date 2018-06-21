@@ -14,13 +14,13 @@ const routes = [{
 	name: 'MonthCalendarComponent',
 	component: _import('MonthCalendarComponent')
 }, {
-	path: '/date-picker-component',
-	name: 'DatePickerComponent',
-	component: _import('DatePickerComponent')
+	path: '/date-time-picker-component',
+	name: 'DateTimePickerComponent',
+	component: _import('DateTimePickerComponent')
 }, {
-	path: '/labeled-date-field-component',
-	name: 'LabeledDateFieldComponent',
-	component: _import('LabeledDateFieldComponent')
+	path: '/labeled-date-time-field-component',
+	name: 'LabeledDateTimeFieldComponent',
+	component: _import('LabeledDateTimeFieldComponent')
 }, {
 	path: '/labeled-text-field-component',
 	name: 'LabeledTextFieldComponent',

@@ -1,17 +1,18 @@
 <template>
 <component-page
-name="Date Picker"
+name="Date Time Picker"
 :subComponents="{
 	LabeledFieldComponent: 'LabeledField'
 }">
-	<p slot="description">The date picker component is a date picker element providing consistent UX across all browsers and devices.</p>
+	<p slot="description">The date time picker component is a date time picker element providing consistent UX across all browsers and devices.</p>
 	<!-- DEMO -->
 	<div slot="demo">
 		<!-- Default -->
 		<section-card
 		name="Default">
-			<p slot="description">The default date picker is mostly unstyled</p>
-			<uic-date-picker/>
+			<p slot="description">The default date time picker is mostly unstyled</p>
+			<p>Selected: {{default_model ? default_model.toString() : 'null'}}</p>
+			<uic-date-time-picker v-model="default_model"/>
 		</section-card>
 
 		<!-- Customization -->
@@ -21,7 +22,7 @@ name="Date Picker"
 			'Clear': () => {customization_model = null},
 			'Random': () => {customization_model = randomDate()}
 		}">
-			<uic-date-picker
+			<uic-date-time-picker
 			class="field styled"
 			v-model="customization_model"/>
 
@@ -34,7 +35,7 @@ name="Date Picker"
 		<section-card
 		name="Internationalization">
 			<p slot="description">The locale property defines the translations locale of all texts of the component.</p>
-			<uic-date-picker
+			<uic-date-time-picker
 			class="field"
 			navigable
 			:locale="i18n_locale"
@@ -54,9 +55,9 @@ name="Date Picker"
 			'Clear': () => validation_model = null,
 			'Random': () => validation_model = randomDate()
 		}">
-			<p slot="description">The date picker uses the same validation API as the month calendar component. In the below example, dates below the current date are considered invalid.</p>
+			<p slot="description">The date time picker uses the same validation API as the month calendar component. In the below example, dates below the current date are considered invalid.</p>
 
-			<uic-date-picker
+			<uic-date-time-picker
 			class="field"
 			v-model="validation_model"
 			:validator="validateDateNotBelowNow"
@@ -92,6 +93,7 @@ export default {
 	data() {
 		return {
 			// Sections
+			default_model: new Date(Date.now()),
 			customization_model: new Date(Date.now()),
 			validation_model: null,
 			validation_valid: null,
@@ -112,6 +114,12 @@ export default {
 			const current = new Date()
 			if (val.getTime() < current.getTime()) return false
 			return true
+		}
+	},
+	computed: {
+		defModStr() {
+			if (this.default_model == null) return 'null'
+			return this.default_model.toString()
 		}
 	}
 }
@@ -137,13 +145,14 @@ h6
 	&:last-child
 		margin-bottom: 0px
 	&.styled
-		width: calc(100% - 2rem)
+		width: 100%
 		border: 1px solid #DDD
 		border-radius: .25rem
 		//padding: .2rem
 		//padding-left: .5rem
 		//padding-right: .5rem
 		padding: 1rem
+		box-sizing: border-box
 
 .valid
 	color: green

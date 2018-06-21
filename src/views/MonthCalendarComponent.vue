@@ -7,7 +7,7 @@ name="Month Calendar">
 		<!-- Default -->
 		<section-card
 		name="Default">
-			<p slot="description">The default date picker is mostly unstyled, points at January 1970 and prints a full 6-row layout. The individual days are not selectable by default.</p>
+			<p slot="description">The default date time picker is mostly unstyled, points at January 1970 and prints a full 6-row layout. The individual days are not selectable by default.</p>
 			
 			<uic-month-calendar/>
 		</section-card>
