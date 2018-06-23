@@ -644,10 +644,12 @@ export default {
 					fill: green
 		&time-input
 			font-size: 1rem
+			font-family: inherit
 			height: 2rem
 			line-height: 2rem
 			border: 0
 			flex-grow: 1
+			min-width: 1rem
 			-webkit-appearance: none
 			-moz-appearance: none
 			appearance: none
